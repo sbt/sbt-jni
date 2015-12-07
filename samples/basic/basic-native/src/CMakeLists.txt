@@ -27,11 +27,12 @@ endif()
 
 # Include directories
 include_directories(.)
+include_directories(include)
 include_directories(${JNI_INCLUDE_DIRS})
 
 # Setup main shared library
 # Note: major version is appended to library name
-add_library(${LIB_NAME} SHARED main.c)
+add_library(${LIB_NAME} SHARED library.c)
 if (ENABLE_VERSIONED_LIB)
    set_target_properties(
 	${LIB_NAME}

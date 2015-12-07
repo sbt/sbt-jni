@@ -20,15 +20,16 @@ case class Platform private (arch: String, kernel: String) {
 
 object Platform {
 
+  /** The unknown platform. */
   final val Unknown = Platform("unknown", "unknown")
 
-  /** Create a platform with spaces stripped and case normalized. */
+  /** Creates a platform with spaces stripped and case normalized. */
   def normalized(arch: String, kernel: String): Platform = {
     def normalize(str: String) = str.toLowerCase.filter(!_.isWhitespace)
     Platform(normalize(arch), normalize(kernel))
   }
 
-  /** Run 'uname' to determine current platform. Returns None if uname does not exist. */
+  /** Runs 'uname' to determine current platform. Returns None if uname does not exist. */
   def uname: Option[Platform] = {
     val lineOpt = try {
       Some(Process("uname -sm").lines.head)
@@ -45,6 +46,7 @@ object Platform {
     }
   }
 
+  /** Determines platform the current JVM is running on. */
   def current = uname
 
 }

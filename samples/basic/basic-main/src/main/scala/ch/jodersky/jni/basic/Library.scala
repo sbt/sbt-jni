@@ -1,4 +1,4 @@
-package org.example.jni.demo
+package ch.jodersky.jni.basic
 
 /** A demo object, mapping to a native library. */
 object Library {
