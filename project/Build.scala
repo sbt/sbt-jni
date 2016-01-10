@@ -3,7 +3,7 @@ import sbt.Keys._
 
 object JniBuild extends Build {
 
-  val scalaVersions = List("2.11.7", "2.10.5")
+  val scalaVersions = List("2.11.7", "2.12.0-M3", "2.10.5")
 
   val commonSettings = Seq(
     version := "0.2-SNAPSHOT",
@@ -28,7 +28,7 @@ object JniBuild extends Build {
     base = file("jni-library"),
     settings = commonSettings ++ Seq(
       scalaVersion := scalaVersions.head,
-      crossScalaVersions := scalaVersions.reverse
+      crossScalaVersions := scalaVersions
     )
   )
 

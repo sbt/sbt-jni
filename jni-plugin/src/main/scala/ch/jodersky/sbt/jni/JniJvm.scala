@@ -62,7 +62,6 @@ object JniJvm extends AutoPlugin {
   lazy val clientSettings = Seq(
     //enable enhanced native library extraction
     libraryDependencies += "ch.jodersky" %% "jni-library" % Version.PluginVersion,
-    crossPaths := false, //don't need to appends scala version to native jars
     fork in run := true //fork new JVM as native libraries can only be loaded once
   )
 

@@ -21,19 +21,19 @@ object JniNative extends AutoPlugin {
   }
   import autoImport._
 
-  lazy val rawSettings: Seq[Setting[_]] = Seq(
+  lazy val settings: Seq[Setting[_]] = Seq(
 
     sourceDirectory in jni := baseDirectory.value / "src",
 
-    target in Global in jni := target.value / "native" / (jniPlatform in jni).value.id,
+    target in jni := target.value / "native" / (jniPlatform in jni).value.id,
 
-    jniPlatform in Global in jni := Platform.current.getOrElse {
+    jniPlatform in jni := Platform.current.getOrElse {
       sLog.value.warn("Warning: cannot determine platform! It will be set to 'unknown'.")
       Platform.Unknown
     },
 
     jniBuildTool in jni := {
-      val tools = Seq(CMake)
+      val tools = Seq(CMake, Autotools)
 
       val base = (sourceDirectory in jni).value
 
@@ -109,6 +109,9 @@ object JniNative extends AutoPlugin {
 
   )
 
-  override lazy val projectSettings = inConfig(Compile)(rawSettings)
+  override lazy val projectSettings = inConfig(Compile)(settings) ++  Seq(
+    //don't scala version to native jars
+    crossPaths := false
+  )
 
 }
