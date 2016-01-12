@@ -45,11 +45,11 @@ object NativeLoader {
   )
 
   /**
-   * Gets the absolute, full path of a resource on the classpath, given a libraryPath
+   * Gets the absolute, full path of a native library on the classpath, given a libraryPath
    * and platform.
    */
   def fullLibraryPath(libraryPath: String, platform: Platform) = {
-    libraryPath + "/native/" + platform.id + "/" + LibraryName
+    libraryPath + "/" + platform.id + "/" + LibraryName
   }
 
   private def loadFromJar(libraryPath: String): Unit = {
@@ -66,7 +66,7 @@ object NativeLoader {
   }
 
   /**
-   * Loads a native library from the available library path or fall back
+   * Loads a native library from the available library path or falls back
    * to extracting and loading a native library from available resources.
    */
   def load(libraryPath: String, library: String): Unit = try {

@@ -6,7 +6,7 @@ object JniBuild extends Build {
   val scalaVersions = List("2.11.7", "2.12.0-M3", "2.10.5")
 
   val commonSettings = Seq(
-    version := "0.2-SNAPSHOT",
+    version := "0.3-SNAPSHOT",
     organization := "ch.jodersky",
     scalacOptions ++= Seq("-deprecation", "-feature")
   )

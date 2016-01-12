@@ -49,4 +49,10 @@ object Platform {
   /** Determines platform the current JVM is running on. */
   def current = uname
 
+  /** Parse an id to a platform. */
+  def fromId(id: String) = {
+    val (arch, dashKernel) = id.span(_ != '-')
+    Platform(arch, dashKernel.drop(1))
+  }
+
 }

@@ -21,7 +21,7 @@ object JniNative extends AutoPlugin {
   }
   import autoImport._
 
-  lazy val settings: Seq[Setting[_]] = Seq(
+  lazy val mainSettings: Seq[Setting[_]] = Seq(
 
     sourceDirectory in jni := baseDirectory.value / "src",
 
@@ -86,11 +86,15 @@ object JniNative extends AutoPlugin {
 
     jniLibraryPath in jni := {
       "/" + organization.value.replaceAll("\\.", "/") + "/" + name.value
-    },
+    }
 
-    unmanagedResourceDirectories += baseDirectory.value / "lib_native",
+  )
 
-    resourceGenerators += Def.task {
+  lazy val resourceSettings: Seq[Setting[_]] = Seq(
+
+    unmanagedResourceDirectories in Compile += baseDirectory.value / "lib_native",
+
+    resourceGenerators in Compile += Def.task {
       //build native library
       val library = jni.value
 
@@ -109,8 +113,10 @@ object JniNative extends AutoPlugin {
 
   )
 
-  override lazy val projectSettings = inConfig(Compile)(settings) ++  Seq(
-    //don't scala version to native jars
+
+
+  override lazy val projectSettings = mainSettings ++ resourceSettings ++ Seq(
+    //don't add scala version to native jars
     crossPaths := false
   )
 

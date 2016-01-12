@@ -14,7 +14,7 @@ object ByteCode {
     val _nativeClasses = new HashSet[String]
     def nativeClasses = _nativeClasses.toSet
 
-    private var fullyQualifiedName: String = "" 
+    private var fullyQualifiedName: String = ""
 
     override def visit(version: Int, access: Int, name: String, signature: String,
       superName: String, interfaces: Array[String]): Unit = {
@@ -30,7 +30,7 @@ object ByteCode {
         _nativeClasses += fullyQualifiedName
       }
 
-      null //do not visit method further
+      null //return null, do not visit method further
     }
 
   }
