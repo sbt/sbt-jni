@@ -16,11 +16,12 @@ object Autotools extends BuildTool {
       val targetPath = target.getAbsolutePath
 
       Process(
-         s"${base.getAbsolutePath}/configure " +
+        s"${base.getAbsolutePath}/configure " +
           s"--prefix=$targetPath " +
           s"--libdir=$targetPath  " +
           "--disable-versioned-lib",
-        build)
+        build
+      )
     }
 
   }

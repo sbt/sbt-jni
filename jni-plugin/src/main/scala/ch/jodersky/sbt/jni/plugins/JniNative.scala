@@ -1,13 +1,13 @@
 package ch.jodersky.sbt.jni
+package plugins
 
 import build._
 import ch.jodersky.jni.{NativeLoader, Platform}
 import sbt._
 import sbt.Keys._
 
-object Jni extends AutoPlugin {
-
-  override def requires = plugins.JvmPlugin
+/** Wraps a native build system in sbt tasks. */
+object JniNative extends AutoPlugin {
 
   object autoImport {
 
@@ -17,17 +17,18 @@ object Jni extends AutoPlugin {
     val nativePlatform = settingKey[Platform]("Platform of the system this build is running on.")
 
     val nativeBuildTools = taskKey[Seq[BuildTool]](
-      "A collection of build tools that are tested to determine the current build environment")
+      "A collection of build tools that are tested to determine the current build environment"
+    )
     val nativeBuildTool = taskKey[BuildTool](
-      "The build tool to be used when building a native library.")
-
+      "The build tool to be used when building a native library."
+    )
 
   }
   import autoImport._
 
-  lazy val mainSettings: Seq[Setting[_]] = Seq(
+  lazy val settings: Seq[Setting[_]] = Seq(
 
-    nativePlatform := Platform.current.getOrElse{
+    nativePlatform := Platform.current.getOrElse {
       sLog.value.warn("Warning: cannot determine platform! It will be set to 'unknown'.")
       Platform.Unknown
     },
@@ -95,5 +96,5 @@ object Jni extends AutoPlugin {
 
   )
 
-  override lazy val projectSettings = inConfig(Compile)(mainSettings)
+  override lazy val projectSettings = inConfig(Compile)(settings)
 }

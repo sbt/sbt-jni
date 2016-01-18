@@ -3,22 +3,29 @@ val commonSettings = Seq(
   organization := "ch.jodersky"
 )
 
-lazy val main = Project(
-  id = "sample-basic-main",
-  base = file("basic-main"),
+lazy val root = Project(
+  id = "root",
+  base = file("."),
+  aggregate = Seq(core, native)
+)
+
+lazy val core = Project(
+  id = "basic-core",
+  base = file("basic-core"),
   settings = commonSettings ++ Seq(
-    target in (Compile, javah) :=
-      (sourceDirectory in native).value / "include"
+    target in javah in Compile := (sourceDirectory in native).value / "include"
   ),
   dependencies = Seq(
     native % Runtime
   )
-).enablePlugins(JniJvm)
+).enablePlugins(JniLoading)
 
 lazy val native = Project(
-  id = "sample-basic-native",
+  id = "basic-native",
   base = file("basic-native"),
   settings = commonSettings ++ Seq(
-    jniLibraryPath in (Compile, jni) := "/ch/jodersky/jni/basic"
+    //enableNativeCompilation in Compile := false,
+    sourceDirectory in nativeCompile in Compile := sourceDirectory.value,
+    nativeLibraryPath in Compile := "/ch/jodersky/jni/basic/native"
   )
 ).enablePlugins(JniNative)
