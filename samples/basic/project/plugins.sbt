@@ -1,1 +1,1 @@
-addSbtPlugin("ch.jodersky" % "sbt-jni" % "0.3.0")
+addSbtPlugin("ch.jodersky" % "sbt-jni" % "0.4.0-SNAPSHOT")
