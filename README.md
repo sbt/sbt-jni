@@ -80,7 +80,7 @@ Customization: `sourceDirectory in nativeCompile := file("src")`, to point to a 
 - Automake
 - CMake
 
-*Make sure the native build configurations respect the arguments and output directories as specified in the [native build templates](templates)*
+*Make sure the native build configurations respect the arguments and output directories as specified in the sample build configurations.*
 
 ### JniLoading
 *Add to sub-projects: JVM*
