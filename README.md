@@ -1,5 +1,3 @@
-[Work in progress]
-
 # SBT-JNI
 
 A suite of plugins for simplifying creation and distribution of JNI programs.
