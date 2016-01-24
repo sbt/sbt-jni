@@ -9,7 +9,7 @@ object JniBuild extends Build {
   val scalaVersions = List("2.11.7", "2.12.0-M3", "2.10.5")
 
   val commonSettings = Seq(
-    version := "0.4.0",
+    version := "0.4.1-SNAPSHOT",
     organization := "ch.jodersky",
     licenses := Seq(("BSD New", url("http://opensource.org/licenses/BSD-3-Clause"))),
     scalacOptions ++= Seq("-deprecation", "-feature")
