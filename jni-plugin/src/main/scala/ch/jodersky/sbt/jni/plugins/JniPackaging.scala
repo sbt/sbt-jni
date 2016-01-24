@@ -39,6 +39,10 @@ object JniPackaging extends AutoPlugin {
       "Maps locally built, platform-dependant libraries."
     )
 
+    val nativeLibraries = taskKey[Map[Platform, File]](
+      "All native libraries, managed and unmanaged."
+    )
+
   }
   import autoImport._
   import JniNative.autoImport._
@@ -83,9 +87,12 @@ object JniPackaging extends AutoPlugin {
       }
     }.value,
 
+    // managed native libraries take precedence
+    nativeLibraries := unmanagedNativeLibraries.value ++ unmanagedNativeLibraries.value,
+
     resourceGenerators += Def.task {
 
-      val libraries: Seq[(Platform, File)] = (managedNativeLibraries.value ++ unmanagedNativeLibraries.value).toSeq
+      val libraries: Seq[(Platform, File)] = nativeLibraries.value.toSeq
 
       val resources: Seq[File] = for ((plat, file) <- libraries) yield {
 

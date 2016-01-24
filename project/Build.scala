@@ -2,13 +2,14 @@ import sbt._
 import sbt.Keys._
 
 import bintray.BintrayPlugin.autoImport._
+import sbtdoge.CrossPerProjectPlugin
 
 object JniBuild extends Build {
 
   val scalaVersions = List("2.11.7", "2.12.0-M3", "2.10.5")
 
   val commonSettings = Seq(
-    version := "0.4.0-SNAPSHOT",
+    version := "0.4.0",
     organization := "ch.jodersky",
     licenses := Seq(("BSD New", url("http://opensource.org/licenses/BSD-3-Clause"))),
     scalacOptions ++= Seq("-deprecation", "-feature")
@@ -25,7 +26,7 @@ object JniBuild extends Build {
       publishLocal := {},
       publishTo := Some(Resolver.file("Unused transient repository", target.value / "unusedrepo")) // make sbt-pgp happy
     )
-  )
+  ).enablePlugins(CrossPerProjectPlugin)
 
   lazy val library = Project(
     id = "jni-library",
