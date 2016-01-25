@@ -88,7 +88,7 @@ object JniPackaging extends AutoPlugin {
     }.value,
 
     // managed native libraries take precedence
-    nativeLibraries := unmanagedNativeLibraries.value ++ unmanagedNativeLibraries.value,
+    nativeLibraries := unmanagedNativeLibraries.value ++ managedNativeLibraries.value,
 
     resourceGenerators += Def.task {
 
