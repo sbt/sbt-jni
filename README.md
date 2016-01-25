@@ -28,7 +28,7 @@ The reason for dividing a project into two subprojects is two-fold: it enables f
 ## Usage
 Add plugin dependency. In `project/plugins.sbt`:
 ```scala
-addSbtPlugin("ch.jodersky" % "sbt-jni" % "0.4.0")
+addSbtPlugin("ch.jodersky" % "sbt-jni" % "0.4.1")
 ```
 
 Define sub-projects for JVM and native sources. In `myproject/build.sbt`:
