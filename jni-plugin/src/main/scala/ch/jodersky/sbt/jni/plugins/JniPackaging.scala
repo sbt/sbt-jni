@@ -108,13 +108,12 @@ object JniPackaging extends AutoPlugin {
         resource
       }
       resources
-    }.taskValue,
-
-    //don't add scala version to native jars
-    crossPaths in Global := false
+    }.taskValue
 
   )
 
-  override lazy val projectSettings = inConfig(Compile)(settings)
+  override lazy val projectSettings = inConfig(Compile)(settings) ++
+    Seq(crossPaths := false) //don't add scala version to native jars
+
 
 }
