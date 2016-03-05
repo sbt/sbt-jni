@@ -26,9 +26,11 @@ A project using this suite of plugins must be divided into two sub-projects, cor
 The reason for dividing a project into two subprojects is two-fold: it enables flexible plugging of native sources and also integrates easily into the existing maven ecosystem. Adding the native binaries as additional artifacts has issues with scala versioning.
 
 ## Usage
-Add plugin dependency. In `project/plugins.sbt`:
+Add jcenter resolver and plugin dependency. In `project/plugins.sbt`:
 ```scala
-addSbtPlugin("ch.jodersky" % "sbt-jni" % "0.4.2")
+resolvers += Resolver.jcenterRepo
+
+addSbtPlugin("ch.jodersky" % "sbt-jni" % "0.4.3")
 ```
 
 Define sub-projects for JVM and native sources. In `myproject/build.sbt`:
