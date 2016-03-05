@@ -96,5 +96,15 @@ See projects in the `samples` directory for some simple use-case examples. Note 
 
 Another, more involved example is a [serial communication library](https://jodersky.github.io/flow).
 
+## Building
+Both a library (`jni-library`) and an sbt plugin (`sbt-jni`) are published. Since both the plugin and user code can depend on the library, supporting multiple scala versions is not easy. Hence this project uses sbt-doge to allow cross-building on a per-project basis:
+
+- jni-library is built against scala 2.10, 2.11 and 2.12
+- sbt-jni is built against scala 2.10 (the scala version that sbt 0.13 uses)
+
+This configuration makes it necessary to always cross-compile and cross-publish this project, i.e. append a "+" before every task.
+
+Run `+publishLocal` to build and use this plugin locally.
+
 ## Copying
 This project is released under the terms of the 3-clause BSD license. See LICENSE for details.
