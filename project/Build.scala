@@ -6,10 +6,10 @@ import sbtdoge.CrossPerProjectPlugin
 
 object JniBuild extends Build {
 
-  val scalaVersions = List("2.11.7", "2.12.0-M3", "2.10.5")
+  val scalaVersions = List("2.11.8", "2.12.0-M4", "2.12.0-M3", "2.10.6")
 
   val commonSettings = Seq(
-    version := "0.4.4-SNAPSHOT",
+    version := "0.4.4",
     organization := "ch.jodersky",
     licenses := Seq(("BSD New", url("http://opensource.org/licenses/BSD-3-Clause"))),
     scalacOptions ++= Seq("-deprecation", "-feature")
