@@ -30,7 +30,7 @@ Add jcenter resolver and plugin dependency. In `project/plugins.sbt`:
 ```scala
 resolvers += Resolver.jcenterRepo
 
-addSbtPlugin("ch.jodersky" % "sbt-jni" % "0.4.3")
+addSbtPlugin("ch.jodersky" % "sbt-jni" % "0.4.4")
 ```
 
 Define sub-projects for JVM and native sources. In `myproject/build.sbt`:
