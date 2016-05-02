@@ -1,110 +1,171 @@
-# SBT-JNI
+[![Build Status](https://travis-ci.org/jodersky/sbt-jni.svg?branch=master)](https://travis-ci.org/jodersky/sbt-jni)
+[![Download](https://api.bintray.com/packages/jodersky/sbt-plugins/sbt-jni/images/download.svg) ](https://bintray.com/jodersky/sbt-plugins/sbt-jni/_latestVersion)
 
-A suite of plugins for simplifying creation and distribution of JNI programs.
+# sbt-jni
+
+A suite of sbt plugins for simplifying creation and distribution of JNI programs.
 
 ## Motivation
-Java Native Interface (JNI), is a standard interface to allow programs written in a JVM language to interact with native code. Such programs can be divided into two logical parts: the JVM part, consisting of source files that will generate java bytecode (e.g. Scala or Java), and the native part, consisting of source files that will be compiled down to machine-native code (e.g. C, C++ or assembly). Interaction between the two parts is managed by header files generated through the `javah` utility.
+Java Native Interface (JNI), is a framework that enables programs written in a JVM language to interact with native code and vice-versa. Such programs can be divided into two logical parts: the JVM part, consisting of sources that will be compiled to bytecode (e.g. Scala or Java), and the native part, consisting of sources that will be compiled to machine-native code (e.g. C, C++ or assembly).
 
-Using native code can be beneficial in some situations, it can for example provide performance gains or otherwise infeasable features such as system-level interaction with peripherals. However, it also adds a few complexities, notably:
+Using native code can be beneficial in some situations: it can, for example, provide raw performance boosts or enable otherwise infeasable features such as interaction with peripherals. However, it also adds a few layers of complexities, most notably:
 
-- Compilation: the project is divided into two parts, each of which require separate compilation. Furthermore, header generation with `javah` has to be dealt with.
+- Compilation: the project is divided into two parts, each of which require separate compilation.
 - Portability: native binaries only run on the platform on which they were compiled.
 - Distribution: native binaries must be made available and packaged for every supported platform.
 
 The second point, portability, is inherent to JNI and thus unavoidable. However the first and last points can be greatly simplified with the help of build tools.
 
-## Plugin Overview
-This project consists of four autoplugins that aim to solve the difficulties in compiling and distributing JNI programs. These plugins provide two functionalities (compiling and distributing) for two parts of a project (JVM and native). The plugins are listed in the following table:
+## Plugin Summary
 
-Functionality | JVM part        | Native part
---------------|-----------------|-------------
-Compiling     | JniJavah        | JniNative
-Packaging     | JniLoading      | JniPackaging
+| Plugin     | Description                                                                                            |
+|------------|--------------------------------------------------------------------------------------------------------|
+| JniJavah   | Adds support for generating headers from classfiles that have `@native` methods.                       |
+| JniLoad    | Makes `@nativeLoader` annotation available, that injects code to transparently load native libraries.  |
+| JniNative  | Adds sbt wrapper tasks around native build tools to ease building and integrating native libraries.    |
+| JniPackage | Packages native libraries into multi-platform fat jars. No more manual library path configuration!     |
 
-A project using this suite of plugins must be divided into two sub-projects, corresponding to the two parts: one that will contain JVM sources and one that will contain native sources.
-
-The reason for dividing a project into two subprojects is two-fold: it enables flexible plugging of native sources and also integrates easily into the existing maven ecosystem. Adding the native binaries as additional artifacts has issues with scala versioning.
-
-## Usage
-Add jcenter resolver and plugin dependency. In `project/plugins.sbt`:
+All plugins are made available by adding
 ```scala
 resolvers += Resolver.jcenterRepo
 
-addSbtPlugin("ch.jodersky" % "sbt-jni" % "0.4.4")
+addSbtPlugin("ch.jodersky" % "sbt-jni" % "1.0.0-RC1")
 ```
+to `project/plugins.sbt`.
 
-Define sub-projects for JVM and native sources. In `myproject/build.sbt`:
-
-```scala
-lazy val core = project in file("myproject-core") // contains regular jvm sources and @native methods
-lazy val native = project in file("myproject-native") // contains native sources
-```
-
-Select plugins to enable on sub-projects:
-
-- In `myproject-core/build.sbt`:
-
-    ```scala
-    //enablePlugin(JniJavah) // this plugin is added to all JVM projects by default
-    enablePlugin(JniLoading)
-    ```
-
-- In `myproject-native/build.sbt`:
-
-    ```scala
-    enablePlugin(JniNative)
-    //enablePlugin(JniPackaging) // this plugin is added to all projects using JniNative by default
-    ```
-
-See an example [build.sbt](samples/basic/build.sbt).
-
-Note that some plugins are added by default. To disable their functionality (for example if you don't wish to package native libraries), add `disablePlugin(<plugin>)` to the corresponding build definition.
+Note that most plugins are enabled in projects by default. Disabling their functionality can be achieved by adding `disablePlugin(<plugin>)` to the corresponding project definition (for example, to disable packaging native libraries).
 
 ## Plugin Details
-The following gives a detailed description about the various JNI plugins and the ways to customize their behaviour. More details can be found in their [implementations](jni-plugin/src/main/scala/ch/jodersky/sbt/jni/plugins).
 
 ### JniJavah
-*Add to sub-projects: JVM*
 
-Adds `javah` task to generate header files for classes containing `@native` methods.
+| Enabled                        | Source        |
+|--------------------------------|---------------|
+| automatic, for all projects    | [JniJavah.scala](plugin/src/main/scala/ch/jodersky/sbt/jni/plugins/JniJavah.scala)|
 
-Customization: `target in javah := file("myproject-native") / "src" / "include"`, to point to `include` directory of native sources.
+This plugin wraps the JDK `javah` command.
+
+Run `sbt-javah` to generate C header files with prototypes for any methods marked as native.
+E.g. the following scala class
+```scala
+package org.example
+class Adder(val base: Int) {
+  @native def plus(term: Int): Int // implemented in a native library
+}
+```
+will yield this prototype
+```c
+/*
+ * Class:     org_example_Adder
+ * Method:    plus
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_org_example_Adder_plus
+  (JNIEnv *, jobject, jint);
+
+```
+
+The header output directory can be configured
+```
+target in javah := <dir> // defaults to target/native/include
+```
+
+Note that native methods declared both in Scala and Java are supported. Whereas Scala uses the `@native` annotation, Java uses the
+`native` keyword.
+
+### JniLoad
+| Enabled                        | Source        |
+|--------------------------------|---------------|
+| automatic, for all projects    | [JniLoad.scala](plugin/src/main/scala/ch/jodersky/sbt/jni/plugins/JniLoad.scala) |
+
+This plugin enables loading native libraries in a safe and transparent manner to the developer (no more explicit, static `System.load("library")` calls required). It does so by providing a class annotation which injects native loading code to all its annottees. Furthermore, in case a native library is not available on the current `java.library.path`, the code injected by the annotation will fall back to loading native libraries packaged according to the rules of `JniPackage` and available on the classpath.
+
+Example use:
+```scala
+import ch.jodersky.sbt.jni.nativeLoader
+
+// By adding this annotation, there is no need to call
+// System.load("adder0") before accessing native methods.
+@nativeLoader("adder0")
+class Adder(val base: Int) {
+  @native def plus(term: Int): Int // implemented in libadder0.so
+}
+
+// The application feels like a pure Scala app.
+object Main extends App {
+  (new Adder(0)).plus(1)
+}
+```
+
+Note: this plugin is just shorthand for adding `sbt-jni-macros` and `scala macros paradise` projects as provided dependencies.
+Projects must use Scala versions 2.11 or 2.12.0-M4.
+
+See the [annotation's implementation](macros/src/main/scala/ch/jodersky/sbt/jni/annotations.scala) for details about the injected code.
 
 ### JniNative
-*Add to sub-projects: native*
+| Enabled                        | Source        |
+|--------------------------------|---------------|
+| manual                         | [JniNative.scala](plugin/src/main/scala/ch/jodersky/sbt/jni/plugins/JniNative.scala) |
 
-Provides sbt tasks to call into a native build system such as Automake or CMake. Run `nativeCompile` to compile native sources.
+TODO: explanation
 
-Customization: `sourceDirectory in nativeCompile := file("src")`, to point to a directory containing the native build definition. Supported build tools are:
+### JniPackage
+| Enabled                        | Source        |
+|--------------------------------|---------------|
+| automatic, when JniNative enabled | [JniPackage.scala](plugin/src/main/scala/ch/jodersky/sbt/jni/plugins/JniPackage.scala) |
 
-- Automake
-- CMake
+TODO: explanation
 
-*Make sure the native build configurations respect the arguments and output directories as specified in the sample build configurations.*
+## Canonical Use
 
-### JniLoading
-*Add to sub-projects: JVM*
+1. Define separate sub-projects for JVM and native sources. In `myproject/build.sbt`:
 
-Enables loading of libraries packaged with `JniPackaging` plugin.
+   ```scala
+   lazy val core = project in file("myproject-core"). // contains regular jvm sources and @native methods
+     dependsOn(native % Runtime) // natives only required for running, compilation can be done without
 
-### JniPackaging
-*Add to sub-projects: native*
+   lazy val native = project in file("myproject-native"). // contains native sources
+     enablePlugin(JniNative)
+   ```
+   Note that separate projects are not strictly required. They are recommended nevertheless, as a portability-convenience tradeoff: programs
+   written in a jvm language are expected to run anywhere without recompilation, but including native libraries in jars limits this portability
+   to only platforms of the packaged libraries.
 
-Packages native libraries in main jar, thus enabling easy publshing and distribution.
+2. Initialize the native build tool from a template: `sbt nativeInit cmake <libname>`
+
+3. Implement core project: *just a regular scala project*
+
+4. Generate native headers: `sbt javah`
+
+5. Implement native headers in library: *project specific, see examples*
+
+6. Build/run/test:
+
+   - Library: `publish`
+   - Application: `core/run`
+
+7. Develop:
+
+   - Re-run `javah` only if `@native` methods changed
+   - Otherwise, go to 6
 
 ## Examples
+The [plugins' unit tests](plugin/src/sbt-test/sbt-jni) offer some simple examples. They can be run individually through these steps:
 
-See projects in the `samples` directory for some simple use-case examples. Note that in order to run these, sbt-jni will have to published locally first.
+1. Publish the macros library locally `sbt publishLocal`.
+2. Change to the test's directory and run `sbt -Dplugin.version=<version>-SNAPSHOT`.
+3. Follow the instructions in the `test` file (only enter the lines that start with ">" into sbt).
 
-Another, more involved example is a [serial communication library](https://jodersky.github.io/flow).
+Real-world use-cases of sbt-jni include:
+- [serial communication library for scala](https://jodersky.github.io/flow)
 
 ## Building
-Both a library (`jni-library`) and an sbt plugin (`sbt-jni`) are published. Since both the plugin and user code can depend on the library, supporting multiple scala versions is not easy. Hence this project uses sbt-doge to allow cross-building on a per-project basis:
+Both the macro library (`sbt-jni-macros`) and the sbt plugins (`sbt-jni`) are published. This project uses sbt-doge to allow cross-building on a per-project basis:
 
-- jni-library is built against scala 2.10, 2.11 and 2.12
-- sbt-jni is built against scala 2.10 (the scala version that sbt 0.13 uses)
+- sbt-jni-macros is built against Scala 2.11 and 2.12
+- sbt-jni is built against Scala 2.10 (the Scala version that sbt 0.13 uses)
 
-This configuration makes it necessary to always cross-compile and cross-publish this project, i.e. append a "+" before every task.
+The differing Scala versions make it necessary to always cross-compile and cross-publish this project, i.e. append a "+" before every task.
 
 Run `+publishLocal` to build and use this plugin locally.
 
