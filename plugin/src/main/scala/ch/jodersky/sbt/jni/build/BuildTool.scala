@@ -5,6 +5,7 @@ import java.io.{ File, InputStream }
 import java.nio.file.Files
 
 import scala.io.Source
+
 import sbt.Logger
 
 trait BuildTool {

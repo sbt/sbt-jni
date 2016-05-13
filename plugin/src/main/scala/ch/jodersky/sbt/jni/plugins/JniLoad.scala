@@ -16,6 +16,7 @@ object JniLoad extends AutoPlugin {
     addCompilerPlugin(
       "org.scalamacros" % "paradise" % ProjectVersion.MacrosParadise cross CrossVersion.full
     ),
+    resolvers += Resolver.jcenterRepo,
     libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value % Provided,
     libraryDependencies += "ch.jodersky" %% "sbt-jni-macros" % ProjectVersion.Macros % Provided
   )

@@ -23,17 +23,16 @@ The second point, portability, is inherent to JNI and thus unavoidable. However 
 | JniJavah   | Adds support for generating headers from classfiles that have `@native` methods.                       |
 | JniLoad    | Makes `@nativeLoader` annotation available, that injects code to transparently load native libraries.  |
 | JniNative  | Adds sbt wrapper tasks around native build tools to ease building and integrating native libraries.    |
-| JniPackage | Packages native libraries into multi-platform fat jars. No more manual library path configuration!     |
+| JniPackage | Packages native libraries into multi-platform fat jars. No more manual library installation!     |
 
-All plugins are made available by adding
+All plugins are made available with the following sbt configuration
 ```scala
-resolvers += Resolver.jcenterRepo
 
 addSbtPlugin("ch.jodersky" % "sbt-jni" % "1.0.0-RC1")
 ```
-to `project/plugins.sbt`.
+in `project/plugins.sbt`.
 
-Note that most plugins are enabled in projects by default. Disabling their functionality can be achieved by adding `disablePlugin(<plugin>)` to the corresponding project definition (for example, to disable packaging native libraries).
+Note that most plugins are enabled in projects by default. Disabling their functionality can be achieved by adding `disablePlugin(<plugin>)` to the corresponding project definition (for example, should you wish to disable packaging of native libraries).
 
 ## Plugin Details
 
@@ -78,7 +77,7 @@ Note that native methods declared both in Scala and Java are supported. Whereas 
 |--------------------------------|---------------|
 | automatic, for all projects    | [JniLoad.scala](plugin/src/main/scala/ch/jodersky/sbt/jni/plugins/JniLoad.scala) |
 
-This plugin enables loading native libraries in a safe and transparent manner to the developer (no more explicit, static `System.load("library")` calls required). It does so by providing a class annotation which injects native loading code to all its annottees. Furthermore, in case a native library is not available on the current `java.library.path`, the code injected by the annotation will fall back to loading native libraries packaged according to the rules of `JniPackage` and available on the classpath.
+This plugin enables loading native libraries in a safe and transparent manner to the developer (no more explicit, static `System.load("library")` calls required). It does so by providing a class annotation which injects native loading code to all its annottees. Furthermore, in case a native library is not available on the current `java.library.path`, the code injected by the annotation will fall back to loading native libraries packaged according to the rules of `JniPackage`.
 
 Example use:
 ```scala
@@ -97,8 +96,7 @@ object Main extends App {
 }
 ```
 
-Note: this plugin is just shorthand for adding `sbt-jni-macros` and `scala macros paradise` projects as provided dependencies.
-Projects must use Scala versions 2.11 or 2.12.0-M4.
+Note: this plugin is just a shorthand for adding `sbt-jni-macros` (the project in `macros/`) and the scala-macros-paradise projects as provided dependencies. Projects must use Scala versions 2.11 or 2.12.0-M4.
 
 See the [annotation's implementation](macros/src/main/scala/ch/jodersky/sbt/jni/annotations.scala) for details about the injected code.
 
@@ -118,36 +116,42 @@ TODO: explanation
 
 ## Canonical Use
 
+*Keep in mind that sbt-jni is a _suite_ of plugins, there are many other use cases. This is a just a description of the most common one.*
+
 1. Define separate sub-projects for JVM and native sources. In `myproject/build.sbt`:
 
    ```scala
-   lazy val core = project in file("myproject-core"). // contains regular jvm sources and @native methods
+   lazy val core = project in file("myproject-core"). // regular scala code with @native methods
      dependsOn(native % Runtime) // natives only required for running, compilation can be done without
 
-   lazy val native = project in file("myproject-native"). // contains native sources
-     enablePlugin(JniNative)
+   lazy val native = project in file("myproject-native"). // native code and build script
+     enablePlugin(JniNative) // JniNative needs to be explicitly enabled
    ```
-   Note that separate projects are not strictly required. They are recommended nevertheless, as a portability-convenience tradeoff: programs
-   written in a jvm language are expected to run anywhere without recompilation, but including native libraries in jars limits this portability
-   to only platforms of the packaged libraries.
+   Note that separate projects are not strictly required. They are recommended nevertheless, as a portability-convenience tradeoff: programs written in a JVM language are expected to run anywhere without recompilation, but including native libraries in jars limits this portability to only platforms of the packaged libraries. Having a separate native project enables the users to easily swap out the native library with their own implementation.
 
-2. Initialize the native build tool from a template: `sbt nativeInit cmake <libname>`
+2. Initialize the native build tool from a template:
 
-3. Implement core project: *just a regular scala project*
+   Run `sbt nativeInit cmake <libname>`
 
-4. Generate native headers: `sbt javah`
+3. Implement core project:
 
-5. Implement native headers in library: *project specific, see examples*
+   This step is identical to building a regular scala project, with the addition that some classes will also contain `@native` methods.
+
+4. Generate native headers:
+
+   Run `sbt javah`
+
+5. Implement native headers:
+
+   The function prototypes in the header files must be implemented in native code (such as C, C++) and built into a shared library. Run `sbt nativeCompile` to call the native build tool and build a shared library.
 
 6. Build/run/test:
 
-   - Library: `publish`
-   - Application: `core/run`
+   At this point, the project can be tested and run as any standard sbt project. For example, you can publish your project as a library (`sbt publish`), run it (`sbt core/run`) or simply run unit tests (`sbt test`). Packaging and recompiling of the native library will happen transparently.
 
 7. Develop:
 
-   - Re-run `javah` only if `@native` methods changed
-   - Otherwise, go to 6
+   The usual iterative development process. Nothing speial needs to be done, except in case any `@native` methods are added/removed or their signature changed, then `sbt javah` needs to be run again.
 
 ## Examples
 The [plugins' unit tests](plugin/src/sbt-test/sbt-jni) offer some simple examples. They can be run individually through these steps:
@@ -157,6 +161,7 @@ The [plugins' unit tests](plugin/src/sbt-test/sbt-jni) offer some simple example
 3. Follow the instructions in the `test` file (only enter the lines that start with ">" into sbt).
 
 Real-world use-cases of sbt-jni include:
+
 - [serial communication library for scala](https://jodersky.github.io/flow)
 
 ## Building
@@ -167,7 +172,7 @@ Both the macro library (`sbt-jni-macros`) and the sbt plugins (`sbt-jni`) are pu
 
 The differing Scala versions make it necessary to always cross-compile and cross-publish this project, i.e. append a "+" before every task.
 
-Run `+publishLocal` to build and use this plugin locally.
+Run `sbt +publishLocal` to build and use this plugin locally.
 
 ## Copying
 This project is released under the terms of the 3-clause BSD license. See LICENSE for details.
