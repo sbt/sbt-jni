@@ -26,3 +26,22 @@ JNIEXPORT jint JNICALL Java_multiclasses_Adder_00024_sum
 {
 	return term1 + term2;
 }
+
+/* Class:     multiclasses_Adder
+ * Method:    plusValue
+ * Signature: (Lmulticlasses/Value;)I
+ */
+JNIEXPORT jint JNICALL Java_multiclasses_Adder_plusValue
+  (JNIEnv* env, jobject instance, jobject value)
+{
+	jclass adderClass = (*env)->GetObjectClass(env, instance);
+	jfieldID baseField = (*env)->GetFieldID(env, adderClass, "base", "I");
+	jint base = (*env)->GetIntField(env, instance, baseField);
+
+	// Value.x
+	jclass valueClass = (*env)->GetObjectClass(env, value);
+	jmethodID xGetter = (*env)->GetMethodID(env, valueClass, "x", "()I");
+	jint x = (*env)->CallIntMethod(env, value, xGetter);
+
+	return base + x;
+}
