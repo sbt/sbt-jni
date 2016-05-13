@@ -39,7 +39,14 @@ object JniJavah extends AutoPlugin {
 
     javah := {
       val out = (target in javah).value
-      val jcp: Seq[File] = { (compile in Compile).value; Seq((classDirectory in Compile).value) }
+
+      // fullClasspath can't be used here since it also generates resources. In
+      // a project combining JniJavah and JniPackage, we would have a chicken-and-egg
+      // problem.
+      val jcp: Seq[File] = (dependencyClasspath in Compile).value.map(_.data) ++ {
+        (compile in Compile).value; Seq((classDirectory in Compile).value)
+      }
+
       val cp = jcp.mkString(sys.props("path.separator"))
       val log = streams.value.log
 

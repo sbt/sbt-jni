@@ -7,7 +7,9 @@ object Main {
     val one = new Adder(1)
     assert((zero plus 1) == 1)
     assert((one plus 1) == 2)
-    assert(Adder.sum(0,1) == 1)
+    assert(Adder.sum(0, 1) == 1)
+
+    assert((one plusValue Value(1)) == 2)
   }
 
   def multiplication(): Unit = {
