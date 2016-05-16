@@ -28,7 +28,7 @@ The second point, portability, is inherent to JNI and thus unavoidable. However 
 All plugins are made available with the following sbt configuration
 ```scala
 
-addSbtPlugin("ch.jodersky" % "sbt-jni" % "1.0.0-RC1")
+addSbtPlugin("ch.jodersky" % "sbt-jni" % "1.0.0-RC2")
 ```
 in `project/plugins.sbt`.
 
@@ -114,7 +114,7 @@ Since this plugin is basically a command-line wrapper, native build tools must f
 An initial, compatible build template can be obtained by running `sbt nativeInit <tool>`. Once the native build tool initialised, projects are built by calling the `sbt nativeCompile` task.
 
 Source and output directories are configurable
-```
+```scala
 sourceDirectory in nativeCompile := sourceDirectory.value / "native",
 target in nativeCompile := target.value / "native" / (nativePlatform).value,
 ```
