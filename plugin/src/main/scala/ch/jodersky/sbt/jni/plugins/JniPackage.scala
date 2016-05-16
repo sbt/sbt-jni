@@ -22,16 +22,17 @@ object JniPackage extends AutoPlugin {
     val unmanagedNativeDirectories = settingKey[Seq[File]](
       "Unmanaged directories containing native libraries. The libraries must be regular files " +
         "contained in a subdirectory corresponding to a platform. For example " +
-        "`<unamagedNativeDirectory>/x86_64-linux/libfoo.so` is an unmanaged library for machines having " +
+        "`<unmanagedNativeDirectory>/x86_64-linux/libfoo.so` is an unmanaged library for machines having " +
         "the x86_64 architecture and running the Linux kernel."
     )
 
     val unmanagedNativeLibraries = taskKey[Seq[(File, String)]](
-      "Reads `unmanagedNativeDirectories` and maps platforms to library files specified theirin."
+      "Reads `unmanagedNativeDirectories` and maps libraries to their locations on the classpath " +
+        "(i.e. their path in a fat jar)."
     )
 
     val managedNativeLibraries = taskKey[Seq[(File, String)]](
-      "Maps locally built, platform-dependant libraries."
+      "Maps locally built, platform-dependant libraries to their locations on the classpath."
     )
 
     val nativeLibraries = taskKey[Seq[(File, String)]](
