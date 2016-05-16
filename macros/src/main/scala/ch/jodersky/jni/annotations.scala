@@ -37,8 +37,8 @@ object nativeLoaderMacro {
 
       //q"$mods object $name extends ..$parents {$self => ..$body }" :: Nil =>
       case ModuleDef(mods, name, Template(parents, self, body)) :: Nil =>
-        val loadPackagedDef: DefDef = q"""
-          private def loadPackaged(): Unit = {
+        val extra = q"""{
+          def loadPackaged(): Unit = {
             import java.io.File
             import java.nio.file.{Files, Path}
 
@@ -65,22 +65,17 @@ object nativeLoaderMacro {
 
             System.load(extractedPath.toAbsolutePath.toString)
           }
-          """
-        val loadDef: DefDef = q"""
-          private def load(): Unit = try {
+
+          def load(): Unit = try {
             System.loadLibrary($nativeLibrary)
           } catch {
             case ex: UnsatisfiedLinkError => loadPackaged()
           }
-          """
 
-        val extraBody = q"""
-          $loadPackagedDef
-          $loadDef
           load()
-          """
+          }"""
 
-        ModuleDef(mods, name, Template(parents, self, body :+ extraBody)) :: Nil
+        ModuleDef(mods, name, Template(parents, self, body :+ extra)) :: Nil
 
       case _ =>
         c.abort(c.enclosingPosition, "nativeLoader can only be annotated to classes and singleton objects")
