@@ -96,7 +96,7 @@ object Main extends App {
 }
 ```
 
-Note: this plugin is just a shorthand for adding `sbt-jni-macros` (the project in `macros/`) and the scala-macros-paradise projects as provided dependencies. Projects must use Scala versions 2.11 or 2.12.0-M4.
+Note: this plugin is just a shorthand for adding `sbt-jni-macros` (the project in `macros/`) and the scala-macros-paradise projects as provided dependencies.
 
 See the [annotation's implementation](macros/src/main/scala/ch/jodersky/jni/annotations.scala) for details about the injected code.
 
@@ -105,14 +105,26 @@ See the [annotation's implementation](macros/src/main/scala/ch/jodersky/jni/anno
 |--------------------------------|---------------|
 | manual                         | [JniNative.scala](plugin/src/main/scala/ch/jodersky/sbt/jni/plugins/JniNative.scala) |
 
-TODO: explanation
+JniNative adds the capability of building native code (compiling and linking) to sbt, by interfacing with commonly used build tools.
+
+Since this plugin is basically a command-line wrapper, native build tools must follow certain calling conventions to be compatible. The supported build tools are currently:
+
+- CMake
+
+An initial, compatible build template can be obtained by running `sbt nativeInit <tool>`. Once the native build tool initialised, projects are built by calling the `sbt nativeCompile` task.
+
+Source and output directories are configurable
+```
+sourceDirectory in nativeCompile := sourceDirectory.value / "native",
+target in nativeCompile := target.value / "native" / (nativePlatform).value,
+```
 
 ### JniPackage
 | Enabled                        | Source        |
 |--------------------------------|---------------|
 | automatic, when JniNative enabled | [JniPackage.scala](plugin/src/main/scala/ch/jodersky/sbt/jni/plugins/JniPackage.scala) |
 
-TODO: explanation
+This plugin packages native libraries produced by JniNative in a way that they can be transparently loaded with JniLoad. It uses the notion of a native "platform", defined as the architecture-kernel values returned by `uname -sm`. A native binary of a given platform is assumed to be executable on any machines of the same platform.
 
 ## Canonical Use
 
@@ -127,7 +139,7 @@ TODO: explanation
    lazy val native = project in file("myproject-native"). // native code and build script
      enablePlugin(JniNative) // JniNative needs to be explicitly enabled
    ```
-   Note that separate projects are not strictly required. They are recommended nevertheless, as a portability-convenience tradeoff: programs written in a JVM language are expected to run anywhere without recompilation, but including native libraries in jars limits this portability to only platforms of the packaged libraries. Having a separate native project enables the users to easily swap out the native library with their own implementation.
+   Note that separate projects are not strictly required. They are strongly recommended nevertheless, as a portability-convenience tradeoff: programs written in a JVM language are expected to run anywhere without recompilation, but including native libraries in jars limits this portability to only platforms of the packaged libraries. Having a separate native project enables the users to easily swap out the native library with their own implementation.
 
 2. Initialize the native build tool from a template:
 
@@ -163,6 +175,13 @@ The [plugins' unit tests](plugin/src/sbt-test/sbt-jni) offer some simple example
 Real-world use-cases of sbt-jni include:
 
 - [serial communication library for scala](https://jodersky.github.io/flow)
+
+## Requirements and Dependencies
+
+- projects using `JniLoad` must use Scala versions 2.11 or 2.12
+- only POSIX platforms are supported (actually, any platform that has the `uname` command available)
+
+The goal of sbt-jni is to be the least intrusive possible. No transitive dependencies are added to projects using any plugin (some dependencies are added to the `provided` configuration, however these do not affect any downstream projects).
 
 ## Building
 Both the macro library (`sbt-jni-macros`) and the sbt plugins (`sbt-jni`) are published. This project uses sbt-doge to allow cross-building on a per-project basis:
