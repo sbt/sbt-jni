@@ -32,7 +32,7 @@ addSbtPlugin("ch.jodersky" % "sbt-jni" % "1.0.0-RC1")
 ```
 in `project/plugins.sbt`.
 
-Note that most plugins are enabled in projects by default. Disabling their functionality can be achieved by adding `disablePlugin(<plugin>)` to the corresponding project definition (for example, should you wish to disable packaging of native libraries).
+Note that most plugins are enabled in projects by default. Disabling their functionality can be achieved by adding `disablePlugins(<plugin>)` to the corresponding project definition (for example, should you wish to disable packaging of native libraries).
 
 ## Plugin Details
 
@@ -81,7 +81,7 @@ This plugin enables loading native libraries in a safe and transparent manner to
 
 Example use:
 ```scala
-import ch.jodersky.sbt.jni.nativeLoader
+import ch.jodersky.jni.nativeLoader
 
 // By adding this annotation, there is no need to call
 // System.load("adder0") before accessing native methods.
@@ -98,7 +98,7 @@ object Main extends App {
 
 Note: this plugin is just a shorthand for adding `sbt-jni-macros` (the project in `macros/`) and the scala-macros-paradise projects as provided dependencies. Projects must use Scala versions 2.11 or 2.12.0-M4.
 
-See the [annotation's implementation](macros/src/main/scala/ch/jodersky/sbt/jni/annotations.scala) for details about the injected code.
+See the [annotation's implementation](macros/src/main/scala/ch/jodersky/jni/annotations.scala) for details about the injected code.
 
 ### JniNative
 | Enabled                        | Source        |
