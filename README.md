@@ -134,7 +134,7 @@ This plugin packages native libraries produced by JniNative in a way that they c
 
    ```scala
    lazy val core = project in file("myproject-core"). // regular scala code with @native methods
-     dependsOn(native % Runtime) // natives only required for running, compilation can be done without
+     dependsOn(native % Runtime) // remove this if `core` is a library, leave choice to end-user
 
    lazy val native = project in file("myproject-native"). // native code and build script
      enablePlugin(JniNative) // JniNative needs to be explicitly enabled
