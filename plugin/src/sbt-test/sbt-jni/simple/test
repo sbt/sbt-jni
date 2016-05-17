@@ -1,4 +1,5 @@
 > javah
 $ exists native/src/include/simple_Library__.h
 > nativeInit cmake demo
+> test
 > core/run
