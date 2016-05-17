@@ -174,7 +174,7 @@ The [plugins' unit tests](plugin/src/sbt-test/sbt-jni) offer some simple example
 
 Real-world use-cases of sbt-jni include:
 
-- [serial communication library for scala](https://jodersky.github.io/flow)
+- [serial communication library for scala](https://github.com/jodersky/flow/tree/akka-serial)
 
 ## Requirements and Dependencies
 
