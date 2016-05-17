@@ -90,7 +90,7 @@ object JniPackage extends AutoPlugin {
 
   )
 
-  override lazy val projectSettings = inConfig(Compile)(settings) ++
+  override lazy val projectSettings = inConfig(Compile)(settings) ++ inConfig(Test)(settings) ++
     Seq(crossPaths := false) // don't add scala version to native jars
 
 }
