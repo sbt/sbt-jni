@@ -14,7 +14,7 @@ object SbtJniBuild  extends Build {
   val macrosParadiseVersion = "2.1.0"
 
   val commonSettings = Seq(
-    version := "1.0.0",
+    version := "1.0.1-SNAPSHOT",
     organization := "ch.jodersky",
     licenses := Seq(("BSD New", url("http://opensource.org/licenses/BSD-3-Clause"))),
     scalacOptions ++= Seq("-deprecation", "-feature"),
