@@ -28,7 +28,7 @@ The second point, portability, is inherent to JNI and thus unavoidable. However 
 All plugins are made available with the following sbt configuration
 ```scala
 
-addSbtPlugin("ch.jodersky" % "sbt-jni" % "1.0.0")
+addSbtPlugin("ch.jodersky" % "sbt-jni" % "1.0.1")
 ```
 in `project/plugins.sbt`.
 
@@ -174,7 +174,7 @@ The [plugins' unit tests](plugin/src/sbt-test/sbt-jni) offer some simple example
 
 Real-world use-cases of sbt-jni include:
 
-- [serial communication library for scala](https://github.com/jodersky/flow/tree/akka-serial)
+- [serial communication library for scala](https://github.com/jodersky/flow)
 
 ## Requirements and Dependencies
 
