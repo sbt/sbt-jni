@@ -52,7 +52,7 @@ object JniPackage extends AutoPlugin {
     unmanagedNativeLibraries := {
       val baseDirs: Seq[File] = unmanagedNativeDirectories.value
       val mappings: Seq[(File, String)] = unmanagedNativeDirectories.value.flatMap { dir =>
-        val files: Seq[File] = (dir ** "*").get
+        val files: Seq[File] = (dir ** "*").get.filter(_.isFile)
         files pair rebase(dir, "/native")
       }
       mappings
