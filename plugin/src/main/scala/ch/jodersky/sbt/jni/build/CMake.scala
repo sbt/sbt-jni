@@ -23,8 +23,8 @@ object CMake extends BuildTool with ConfigureMakeInstall {
       // disable producing versioned library files, not needed for fat jars
       "cmake " +
         s"-DCMAKE_INSTALL_PREFIX:PATH=${target.getAbsolutePath} " +
-        s"-DLIB_INSTALL_DIR:PATH=${target.getAbsolutePath} " +
-        "-DLIB_ENABLE_MINOR_VERSIONS:BOOLEAN=OFF " +
+        s"-DCMAKE_BUILD_TYPE=Release" +
+        s"-DSBT:BOOLEAN=true " +
         baseDirectory.getAbsolutePath,
       buildDirectory
     )
