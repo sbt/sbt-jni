@@ -19,7 +19,7 @@ trait ConfigureMakeInstall { self: BuildTool =>
 
     def configure(targetDirectory: File): ProcessBuilder
 
-    def make(): ProcessBuilder = Process("make", buildDirectory)
+    def make(): ProcessBuilder = Process("make VERBOSE=1", buildDirectory)
 
     def install(): ProcessBuilder = Process("make install", buildDirectory)
 
