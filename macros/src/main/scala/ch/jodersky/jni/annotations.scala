@@ -1,16 +1,17 @@
 package ch.jodersky.jni
 
+import macrocompat.bundle
 import util.PlatformMacros
 
 import scala.language.experimental.macros
-
 import scala.reflect.macros.whitebox.Context
 import scala.annotation.StaticAnnotation
 import scala.annotation.compileTimeOnly
 
-object nativeLoaderMacro {
+@bundle
+class nativeLoaderMacro(val c: Context) {
 
-  def impl(c: Context)(annottees: c.Expr[Any]*): c.Expr[Any] = {
+  def impl(annottees: c.Expr[Any]*): c.Expr[Any] = {
     import c.universe._
 
     val nativeLibrary: String = c.prefix.tree match {
