@@ -29,6 +29,7 @@ include_directories(${JNI_INCLUDE_DIRS})
 # Sources
 file(GLOB LIB_SRC
   "*.c"
+  "*.cc"
   "*.cpp"
 )
 
