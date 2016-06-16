@@ -1,7 +1,6 @@
 package ch.jodersky.jni
 
 import macrocompat.bundle
-import util.PlatformMacros
 
 import scala.language.experimental.macros
 import scala.reflect.macros.whitebox.Context
@@ -38,43 +37,59 @@ class nativeLoaderMacro(val c: Context) {
 
       //q"$mods object $name extends ..$parents {$self => ..$body }" :: Nil =>
       case ModuleDef(mods, name, Template(parents, self, body)) :: Nil =>
-        val extra = q"""{
-          def loadPackaged(): Unit = {
-            import java.io.File
-            import java.nio.file.{Files, Path}
+        val extra = q"""
+          {
+            def loadPackaged(): Unit = {
+              import java.io.File
+              import java.nio.file.{Files, Path}
 
-            val lib: String = System.mapLibraryName($nativeLibrary)
+              val lib: String = System.mapLibraryName($nativeLibrary)
 
-            val tmp: Path = Files.createTempDirectory("jni-")
-            val plat: String = ${PlatformMacros.current(c)}
+              val tmp: Path = Files.createTempDirectory("jni-")
+              val plat: String = {
+                val line = try {
+                  scala.sys.process.Process("uname -sm").lines.head
+                } catch {
+                  case ex: Exception => sys.error("Error running `uname` command")
+                }
+                val parts = line.split(" ")
+                if (parts.length != 2) {
+                  sys.error("Could not determine platform: 'uname -sm' returned unexpected string: " + line)
+                } else {
+                  val arch = parts(1).toLowerCase.replaceAll("\\s", "")
+                  val kernel = parts(0).toLowerCase.replaceAll("\\s", "")
+                  arch + "-" + kernel
+                }
+              }
 
-            val resourcePath: String = "/native/" + plat + "/" + lib
-            val resourceStream = Option($name.getClass.getResourceAsStream(resourcePath)) match {
-              case Some(s) => s
-              case None => throw new UnsatisfiedLinkError(
-                "Native library " + lib + " (" + resourcePath + ") cannot be found on the classpath.")
+              val resourcePath: String = "/native/" + plat + "/" + lib
+              val resourceStream = Option($name.getClass.getResourceAsStream(resourcePath)) match {
+                case Some(s) => s
+                case None => throw new UnsatisfiedLinkError(
+                  "Native library " + lib + " (" + resourcePath + ") cannot be found on the classpath.")
+              }
+
+              val extractedPath = tmp.resolve(lib)
+
+              try {
+                Files.copy(resourceStream, extractedPath)
+              } catch {
+                case ex: Exception => throw new UnsatisfiedLinkError(
+                  "Error while extracting native library: " + ex)
+              }
+
+              System.load(extractedPath.toAbsolutePath.toString)
             }
 
-            val extractedPath = tmp.resolve(lib)
-
-            try {
-              Files.copy(resourceStream, extractedPath)
+            def load(): Unit = try {
+              System.loadLibrary($nativeLibrary)
             } catch {
-              case ex: Exception => throw new UnsatisfiedLinkError(
-                "Error while extracting native library: " + ex)
+              case ex: UnsatisfiedLinkError => loadPackaged()
             }
 
-            System.load(extractedPath.toAbsolutePath.toString)
+            load()
           }
-
-          def load(): Unit = try {
-            System.loadLibrary($nativeLibrary)
-          } catch {
-            case ex: UnsatisfiedLinkError => loadPackaged()
-          }
-
-          load()
-          }"""
+          """
 
         ModuleDef(mods, name, Template(parents, self, body :+ extra)) :: Nil
 
