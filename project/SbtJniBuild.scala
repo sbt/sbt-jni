@@ -10,7 +10,7 @@ import com.typesafe.sbt.SbtScalariform.ScalariformKeys
 
 object SbtJniBuild  extends Build {
 
-  val scalaVersions: Seq[String] = List("2.10.6", "2.11.8", "2.12.0-M4")
+  val scalaVersions: Seq[String] = List("2.11.8", "2.10.6", "2.12.0-M4")
   val macrosParadiseVersion = "2.1.0"
 
   val commonSettings = Seq(
