@@ -28,7 +28,7 @@ The second point, portability, is inherent to JNI and thus unavoidable. However 
 All plugins are made available with the following sbt configuration
 ```scala
 
-addSbtPlugin("ch.jodersky" % "sbt-jni" % "1.1.1")
+addSbtPlugin("ch.jodersky" % "sbt-jni" % "1.2.0")
 ```
 in `project/plugins.sbt`.
 
@@ -128,7 +128,7 @@ This plugin packages native libraries produced by JniNative in a way that they c
 
 ## Canonical Use
 
-*Keep in mind that sbt-jni is a _suite_ of plugins, there are many other use cases. This is a just a description of the most common one.*
+*Keep in mind that sbt-jni is a __suite__ of plugins, there are many other use cases. This is a just a description of the most common one.*
 
 1. Define separate sub-projects for JVM and native sources. In `myproject/build.sbt`:
 
@@ -178,7 +178,7 @@ Real-world use-cases of sbt-jni include:
 
 ## Requirements and Dependencies
 
-- projects using `JniLoad` must use Scala versions 2.11 or 2.12
+- projects using `JniLoad` must use Scala versions 2.10, 2.11 or 2.12
 - only POSIX platforms are supported (actually, any platform that has the `uname` command available)
 
 The goal of sbt-jni is to be the least intrusive possible. No transitive dependencies are added to projects using any plugin (some dependencies are added to the `provided` configuration, however these do not affect any downstream projects).
@@ -186,7 +186,7 @@ The goal of sbt-jni is to be the least intrusive possible. No transitive depende
 ## Building
 Both the macro library (`sbt-jni-macros`) and the sbt plugins (`sbt-jni`) are published. This project uses sbt-doge to allow cross-building on a per-project basis:
 
-- sbt-jni-macros is built against Scala 2.11 and 2.12
+- sbt-jni-macros is built against Scala 2.10, 2.11 and 2.12
 - sbt-jni is built against Scala 2.10 (the Scala version that sbt 0.13 uses)
 
 The differing Scala versions make it necessary to always cross-compile and cross-publish this project, i.e. append a "+" before every task.
