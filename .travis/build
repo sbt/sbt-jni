@@ -1,0 +1,32 @@
+#!/bin/bash
+set -ev
+
+sbt test-plugin
+
+# Automatic publishing for tags that start with `v<digit>`
+if [[ "$TRAVIS_PULL_REQUEST" == "false" && "$TRAVIS_TAG" =~ ^v[0-9].* ]]; then
+    # Import gpg keys (download public key to check for renewal)
+    gpg --keyserver keyserver.ubuntu.com --recv-keys "DC6A9A5E884B2D680E080467E107A4A6CF561C67"
+    openssl aes-256-cbc -K $encrypted_406cb857227a_key -iv $encrypted_406cb857227a_iv -in .travis/sec.gpg.enc -out sec.gpg -d
+    gpg --import sec.gpg
+
+    # Setup sbt-pgp plugin
+    cat <<EOF > project/gpg.sbt
+    addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.0.0")
+EOF
+    cat <<EOF > gpg.sbt
+    pgpSigningKey in Global := Some(0xE107A4A6CF561C67l)
+    useGpgAgent in Global := true
+    useGpg in Global := true
+EOF
+
+    # Setup bitray publishing plugin
+    cat <<EOF > project/bintray.sbt
+    addSbtPlugin("me.lessis" % "bintray-sbt" % "0.3.0")
+EOF
+    mkdir ~/.bintray
+    openssl aes-256-cbc -K $encrypted_9971283457ae_key -iv $encrypted_9971283457ae_iv -in .travis/bintray.enc -out ~/.bintray/.credentials -d
+
+    # Publish
+    sbt +publishSigned
+fi

@@ -3,13 +3,12 @@ language: scala
 jdk:
   - oraclejdk8
 
-script:
-   - sbt test-plugin
+script: .travis/build
 
 cache:
   directories:
-    - $HOME/.ivy2/cache
-    - $HOME/.sbt/boot/
+    - "$HOME/.ivy2/cache"
+    - "$HOME/.sbt/boot/"
 
 before_cache:
   - find $HOME/.ivy2/cache/ch.jodersky -depth -name "sbt-jni*" -exec rm -r {} \;
