@@ -28,7 +28,7 @@ The second point, portability, is inherent to JNI and thus unavoidable. However 
 All plugins are made available with the following sbt configuration
 ```scala
 
-addSbtPlugin("ch.jodersky" % "sbt-jni" % "1.2.2")
+addSbtPlugin("ch.jodersky" % "sbt-jni" % "1.2.3")
 ```
 in `project/plugins.sbt`.
 
