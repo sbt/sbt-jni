@@ -40,7 +40,7 @@ trait ConfigureMakeInstall { self: BuildTool =>
       products match {
         case Nil =>
           sys.error(s"No files were created during compilation, " +
-            "something went wrong with the ${name} configuration.")
+            s"something went wrong with the ${name} configuration.")
         case head :: Nil =>
           head
         case head :: tail =>
