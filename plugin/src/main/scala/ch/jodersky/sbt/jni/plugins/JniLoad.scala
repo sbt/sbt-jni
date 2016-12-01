@@ -12,12 +12,14 @@ object JniLoad extends AutoPlugin {
   lazy val settings: Seq[Setting[_]] = Seq(
     // Macro Paradise plugin and dependencies are needed to expand annotation macros.
     // Once expanded however, downstream projects don't need these dependencies anymore
-    // (hence the "Provided" configuration).
+    // (hence the "Provided" configurations).
+    resolvers += Resolver.url("scalameta",
+      url("http://dl.bintray.com/scalameta/maven"))(Resolver.ivyStylePatterns),
     addCompilerPlugin(
-      "org.scalamacros" % "paradise" % ProjectVersion.MacrosParadise cross CrossVersion.full
+      "org.scalameta" % "paradise" % ProjectVersion.MacrosParadise cross CrossVersion.full
     ),
     resolvers += Resolver.jcenterRepo,
-    libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value % Provided,
+    //libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value % Provided,
     libraryDependencies += "ch.jodersky" %% "sbt-jni-macros" % ProjectVersion.Macros % Provided
   )
 

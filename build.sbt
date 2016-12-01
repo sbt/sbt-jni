@@ -1,8 +1,8 @@
-val scalaVersions = Seq("2.12.0", "2.11.8", "2.10.6")
-val macrosParadiseVersion = "2.1.0"
+val scalaVersions = Seq("2.11.8", "2.12.0", "2.10.6")
+val macrosParadiseVersion = "3.0.0.132"
 
 // version is derived from latest git tag
-version in ThisBuild := ("git describe --always --dirty --match v[0-9].*" !!).tail.trim
+version in ThisBuild := ("git describe --always --dirty=-SNAPSHOT --match v[0-9].*" !!).tail.trim
 organization in ThisBuild := "ch.jodersky"
 scalacOptions in ThisBuild ++= Seq(
   "-deprecation",
@@ -28,10 +28,11 @@ lazy val macros = (project in file("macros"))
     name := "sbt-jni-macros",
     scalaVersion := scalaVersions.head,
     crossScalaVersions := scalaVersions,
-    addCompilerPlugin("org.scalamacros" % "paradise" % macrosParadiseVersion cross CrossVersion.full),
-    libraryDependencies += "org.typelevel" %% "macro-compat" % "1.1.1",
-    libraryDependencies += "org.scala-lang" % "scala-compiler" % scalaVersion.value % Provided,
-    libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value
+    resolvers += Resolver.url(
+      "scalameta",
+      url("http://dl.bintray.com/scalameta/maven"))(Resolver.ivyStylePatterns),
+    addCompilerPlugin("org.scalameta" % "paradise" % macrosParadiseVersion cross CrossVersion.full),
+    libraryDependencies += "org.scalameta" %% "scalameta" % "1.3.0"
   )
 
 lazy val plugin = (project in file("plugin"))
