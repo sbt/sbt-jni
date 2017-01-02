@@ -25,12 +25,12 @@ The second point, portability, is inherent to JNI and thus unavoidable. However 
 | JniNative  | Adds sbt wrapper tasks around native build tools to ease building and integrating native libraries.    |
 | JniPackage | Packages native libraries into multi-platform fat jars. No more manual library installation!     |
 
-All plugins are made available with the following sbt configuration
+All plugins are made available by adding the following to `project/plugins.sbt`:
 ```scala
 
 addSbtPlugin("ch.jodersky" % "sbt-jni" % "<latest version>")
 ```
-in `project/plugins.sbt`.
+where `<latest version>` refers to the version indicated by the download badge above, or, equivalently, to the [latest version available on bintray](https://bintray.com/jodersky/sbt-plugins/sbt-jni/_latestVersion).
 
 Note that most plugins are enabled in projects by default. Disabling their functionality can be achieved by adding `disablePlugins(<plugin>)` to the corresponding project definition (for example, should you wish to disable packaging of native libraries).
 
@@ -169,7 +169,7 @@ This plugin packages native libraries produced by JniNative in a way that they c
 The [plugins' unit tests](plugin/src/sbt-test/sbt-jni) offer some simple examples. They can be run individually through these steps:
 
 1. Publish the macros library locally `sbt publishLocal`.
-2. Change to the test's directory and run `sbt -Dplugin.version=<version>-SNAPSHOT`.
+2. Change to the test's directory and run `sbt -Dplugin.version=<version>`.
 3. Follow the instructions in the `test` file (only enter the lines that start with ">" into sbt).
 
 Real-world use-cases of sbt-jni include:
