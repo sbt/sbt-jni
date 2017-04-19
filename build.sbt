@@ -1,4 +1,4 @@
-val scalaVersions = Seq("2.12.1", "2.11.8", "2.10.6")
+val scalaVersions = Seq("2.12.2", "2.11.11", "2.10.6")
 val macrosParadiseVersion = "2.1.0"
 
 // version is derived from latest git tag
