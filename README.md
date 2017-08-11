@@ -186,10 +186,10 @@ Real-world use-cases of sbt-jni include:
 The goal of sbt-jni is to be the least intrusive possible. No transitive dependencies are added to projects using any plugin (some dependencies are added to the `provided` configuration, however these do not affect any downstream projects).
 
 ## Building
-Both the macro library (`sbt-jni-macros`) and the sbt plugins (`sbt-jni`) are published. This project uses sbt-doge to allow cross-building on a per-project basis:
+Both the macro library (`sbt-jni-macros`) and the sbt plugins (`sbt-jni`) are published. Cross-building happens on a per-project basis:
 
 - sbt-jni-macros is built against Scala 2.10, 2.11 and 2.12
-- sbt-jni is built against Scala 2.10 (the Scala version that sbt 0.13 uses)
+- sbt-jni is built against Scala 2.12 (the Scala version that sbt 1.x uses)
 
 The differing Scala versions make it necessary to always cross-compile and cross-publish this project, i.e. append a "+" before every task.
 
