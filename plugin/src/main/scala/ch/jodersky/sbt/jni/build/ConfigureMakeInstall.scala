@@ -3,6 +3,7 @@ package build
 
 import java.io.File
 import sbt._
+import sys.process._
 
 trait ConfigureMakeInstall { self: BuildTool =>
 

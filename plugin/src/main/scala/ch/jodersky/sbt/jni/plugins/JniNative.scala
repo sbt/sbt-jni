@@ -4,6 +4,7 @@ package plugins
 import build._
 import sbt._
 import sbt.Keys._
+import sys.process._
 
 /** Wraps a native build system in sbt tasks. */
 object JniNative extends AutoPlugin {
@@ -37,7 +38,7 @@ object JniNative extends AutoPlugin {
     // the value retruned must match that of `ch.jodersky.jni.PlatformMacros#current()` of project `macros`
     nativePlatform := {
       try {
-        val lines = Process("uname -sm").lines
+        val lines = Process("uname -sm").lineStream
         if (lines.length == 0) {
           sys.error("Error occured trying to run `uname`")
         }

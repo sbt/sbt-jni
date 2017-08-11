@@ -1,4 +1,6 @@
-val scalaVersions = Seq("2.12.2", "2.11.11", "2.10.6")
+import scala.sys.process._
+
+val scalaVersions = Seq("2.12.3", "2.11.11", "2.10.6")
 val macrosParadiseVersion = "2.1.0"
 
 // version is derived from latest git tag
@@ -13,7 +15,6 @@ scalacOptions in ThisBuild ++= Seq(
 licenses in ThisBuild := Seq(("BSD New", url("http://opensource.org/licenses/BSD-3-Clause")))
 
 lazy val root = (project in file("."))
-  .enablePlugins(CrossPerProjectPlugin)
   .aggregate(macros, plugin)
   .settings(
     publish := {},
@@ -24,6 +25,7 @@ lazy val root = (project in file("."))
   )
 
 lazy val macros = (project in file("macros"))
+  .disablePlugins(ScriptedPlugin)
   .settings(
     name := "sbt-jni-macros",
     scalaVersion := scalaVersions.head,
@@ -35,13 +37,10 @@ lazy val macros = (project in file("macros"))
   )
 
 lazy val plugin = (project in file("plugin"))
-  .settings(scriptedSettings)
   .settings(
     name := "sbt-jni",
     sbtPlugin := true,
     publishMavenStyle := false,
-    scalaVersion := "2.10.6",
-    crossScalaVersions := Seq(scalaVersion.value),
     libraryDependencies += "org.ow2.asm" % "asm" % "5.0.4",
     // make project settings available to source
     sourceGenerators in Compile += Def.task {

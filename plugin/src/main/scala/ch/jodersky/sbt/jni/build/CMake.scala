@@ -2,6 +2,7 @@ package ch.jodersky.sbt.jni
 package build
 
 import sbt._
+import sys.process._
 
 object CMake extends BuildTool with ConfigureMakeInstall {
 
