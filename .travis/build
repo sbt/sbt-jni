@@ -12,7 +12,7 @@ if [[ "$TRAVIS_PULL_REQUEST" == "false" && "$TRAVIS_TAG" =~ ^v[0-9].* ]]; then
 
     # Setup sbt-pgp plugin
     cat <<EOF > project/gpg.sbt
-    addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.0.0")
+    addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.1.0-M1")
 EOF
     cat <<EOF > gpg.sbt
     pgpSigningKey in Global := Some(0xE107A4A6CF561C67l)
@@ -22,7 +22,7 @@ EOF
 
     # Setup bitray publishing plugin
     cat <<EOF > project/bintray.sbt
-    addSbtPlugin("me.lessis" % "bintray-sbt" % "0.3.0")
+    addSbtPlugin("org.foundweekends" % "sbt-bintray" % "0.5.1")
 EOF
     mkdir ~/.bintray
     openssl aes-256-cbc -K $encrypted_9971283457ae_key -iv $encrypted_9971283457ae_iv -in .travis/bintray.enc -out ~/.bintray/.credentials -d
