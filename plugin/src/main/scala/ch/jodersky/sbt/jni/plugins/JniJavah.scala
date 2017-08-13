@@ -1,9 +1,11 @@
 package ch.jodersky.sbt.jni
 package plugins
 
+import collection.JavaConverters._
+import util.BytecodeUtil
 import sbt._
 import sbt.Keys._
-import util.BytecodeUtil
+import sys.process._
 
 /** Adds `javah` header-generation functionality to projects. */
 object JniJavah extends AutoPlugin {
@@ -27,8 +29,10 @@ object JniJavah extends AutoPlugin {
   lazy val mainSettings: Seq[Setting[_]] = Seq(
 
     javahClasses in javah := {
-      val compiled: inc.Analysis = (compile in Compile).value
-      val classFiles: Set[File] = compiled.relations.allProducts.toSet
+      import xsbti.compile._
+      val compiled: CompileAnalysis = (compile in Compile).value
+      val classFiles: Set[File] = compiled.readStamps().getAllProductStamps()
+        .asScala.keySet.toSet
       val nativeClasses = classFiles flatMap { file =>
         BytecodeUtil.nativeClasses(file)
       }
@@ -63,7 +67,7 @@ object JniJavah extends AutoPlugin {
           clazz
         )
         val cmd = parts.mkString(" ")
-        val ev = Process(cmd) ! streams.value.log
+        val ev = Process(cmd) ! log
         if (ev != 0) sys.error(s"Error occured running javah. Exit code: ${ev}")
       }
       out

@@ -3,6 +3,7 @@ package plugins
 
 import sbt._
 import sbt.Keys._
+import sbt.io.Path._
 import java.io.File
 
 /** Packages libraries built with JniNative. */
@@ -50,7 +51,6 @@ object JniPackage extends AutoPlugin {
     unmanagedNativeDirectories := Seq(baseDirectory.value / "lib_native"),
 
     unmanagedNativeLibraries := {
-      val baseDirs: Seq[File] = unmanagedNativeDirectories.value
       val mappings: Seq[(File, String)] = unmanagedNativeDirectories.value.flatMap { dir =>
         val files: Seq[File] = (dir ** "*").get.filter(_.isFile)
         files pair rebase(dir, "/native")

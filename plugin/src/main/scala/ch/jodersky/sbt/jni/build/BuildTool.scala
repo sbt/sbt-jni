@@ -1,7 +1,7 @@
 package ch.jodersky.sbt.jni
 package build
 
-import java.io.{ File, InputStream }
+import java.io.File
 import java.nio.file.Files
 
 import scala.io.Source
