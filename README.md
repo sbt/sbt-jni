@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/jodersky/sbt-jni.svg?branch=master)](https://travis-ci.org/jodersky/sbt-jni)
-[![Download](https://api.bintray.com/packages/jodersky/sbt-plugins/sbt-jni/images/download.svg) ](https://bintray.com/jodersky/sbt-plugins/sbt-jni/_latestVersion)
+[![Download](https://api.bintray.com/packages/jodersky/sbt-plugins/sbt-jni/images/download.svg?version=1.2.6)](https://bintray.com/jodersky/sbt-plugins/sbt-jni/1.2.6/link)
+
+*This plugin is for sbt version 0.13. Checkout the `sbt-1` branch for a preview that supports sbt version 1.*
 
 # sbt-jni
 
