@@ -1,7 +1,9 @@
 [![Build Status](https://travis-ci.org/jodersky/sbt-jni.svg?branch=master)](https://travis-ci.org/jodersky/sbt-jni)
-[![Download](https://api.bintray.com/packages/jodersky/sbt-plugins/sbt-jni/images/download.svg?version=1.2.6)](https://bintray.com/jodersky/sbt-plugins/sbt-jni/1.2.6/link)
 
-*This plugin is for sbt version 0.13. Checkout the `sbt-1` branch for a preview that supports sbt version 1.*
+sbt version | plugin version
+------------+---------------
+0.13.x      | [![Download](https://api.bintray.com/packages/jodersky/sbt-plugins/sbt-jni/images/download.svg?version=1.2.6)](https://bintray.com/jodersky/sbt-plugins/sbt-jni/1.2.6/link)
+1.0.x       | [![Download](https://api.bintray.com/packages/jodersky/sbt-plugins/sbt-jni/images/download.svg)](https://bintray.com/jodersky/sbt-plugins/sbt-jni/_latestVersion)
 
 # sbt-jni
 
@@ -136,7 +138,7 @@ This plugin packages native libraries produced by JniNative in a way that they c
 
    ```scala
    lazy val core = project in file("myproject-core"). // regular scala code with @native methods
-     dependsOn(native % Runtime) // remove this if `core` is a library, leave choice to end-user
+     dependsOnRun(native) // remove this if `core` is a library, leave choice to end-user
 
    lazy val native = project in file("myproject-native"). // native code and build script
      enablePlugin(JniNative) // JniNative needs to be explicitly enabled

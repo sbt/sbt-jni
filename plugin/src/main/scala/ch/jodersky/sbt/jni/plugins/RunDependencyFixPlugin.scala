@@ -4,8 +4,8 @@ import sbt._
 import sbt.Keys._
 import java.io.File
 
-/** Adds an extension method `dependsOnRun` to projects, to work around an sbt
-  * bug https://github.com/sbt/sbt/issues/3425 */
+/** Adds the extension method `dependsOnRun` to projects, to work around an sbt
+  * bug. */
 object RunDependencyFixPlugin extends AutoPlugin {
 
   override def requires = plugins.CorePlugin
@@ -27,7 +27,8 @@ object RunDependencyFixPlugin extends AutoPlugin {
     )
 
     implicit class RichProject(project: Project) {
-      @deprecated("Temporary fix for https://github.com/sbt/sbt/issues/3425", "1.3.0")
+      @deprecated("Workaround for https://github.com/sbt/sbt/issues/3425. " +
+        "Use `dependsOn(<project> % Runtime)` when fixed.", "1.3.0")
       def dependsOnRun(other: Project) = {
         project.settings(dependsOnRunSettings(other): _*)
       }
