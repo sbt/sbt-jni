@@ -6,8 +6,7 @@ lazy val root = (project in file(".")).
 lazy val core = (project in file("core")).
   settings(libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.0" % "test").
   settings(target in javah := (sourceDirectory in nativeCompile in native).value / "include").
-  dependsOn(native % Runtime).
-  dependsOnRun(native)
+  dependsOn(native % Runtime)
 
 lazy val native = (project in file("native")).
   settings(sourceDirectory in nativeCompile := sourceDirectory.value).

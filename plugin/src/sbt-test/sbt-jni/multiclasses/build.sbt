@@ -5,9 +5,7 @@ lazy val root = (project in file(".")).
 
 lazy val core = (project in file("core")).
   dependsOn(native1 % Runtime).
-  dependsOn(native2 % Runtime).
-  dependsOnRun(native1).
-  dependsOnRun(native2)
+  dependsOn(native2 % Runtime)
 
 lazy val native1 = (project in file("native1")).
   settings(sourceDirectory in nativeCompile := sourceDirectory.value).
