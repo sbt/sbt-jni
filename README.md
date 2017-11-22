@@ -147,7 +147,7 @@ This plugin packages native libraries produced by JniNative in a way that they c
 
 2. Initialize the native build tool from a template:
 
-   Run `sbt nativeInit cmake <libname>`
+   Run `sbt "nativeInit cmake <libname>"`
 
 3. Implement core project:
 
