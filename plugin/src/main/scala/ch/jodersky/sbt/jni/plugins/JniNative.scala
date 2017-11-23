@@ -36,26 +36,19 @@ object JniNative extends AutoPlugin {
 
     // the value retruned must match that of `ch.jodersky.jni.PlatformMacros#current()` of project `macros`
     nativePlatform := {
-      try {
-        val lines = Process("uname -sm").lines
-        if (lines.length == 0) {
-          sys.error("Error occured trying to run `uname`")
+      val osName = {
+        val raw = System.getProperty("os.name").toLowerCase
+        if(raw.indexOf("win") >= 0) "windows"
+        else if(raw.indexOf("mac") >= 0) "mac"
+        else if(raw.indexOf("nux") >= 0) "linux"
+        else {
+          sLog.value.error("Error trying to determine operating system")
+          sLog.value.warn("Setting osName to unknown")
+          "unknown"
         }
-        // uname -sm returns "<kernel> <hardware name>"
-        val parts = lines.head.split(" ")
-        if (parts.length != 2) {
-          sys.error("'uname -sm' returned unexpected string: " + lines.head)
-        } else {
-          val arch = parts(1).toLowerCase.replaceAll("\\s", "")
-          val kernel = parts(0).toLowerCase.replaceAll("\\s", "")
-          arch + "-" + kernel
-        }
-      } catch {
-        case ex: Exception =>
-          sLog.value.error("Error trying to determine platform.")
-          sLog.value.warn("Cannot determine platform! It will be set to 'unknown'.")
-          "unknown-unknown"
       }
+      val osArch = System.getProperty("os.arch")
+      s"$osName-$osArch"
     },
 
     sourceDirectory in nativeCompile := sourceDirectory.value / "native",
