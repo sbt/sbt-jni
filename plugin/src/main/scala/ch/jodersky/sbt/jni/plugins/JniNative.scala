@@ -2,6 +2,7 @@ package ch.jodersky.sbt.jni
 package plugins
 
 import build._
+import ch.jodersky.sbt.jni.util.OsAndArch
 import sbt._
 import sbt.Keys._
 
@@ -36,16 +37,10 @@ object JniNative extends AutoPlugin {
 
     // the value retruned must match that of `ch.jodersky.jni.PlatformMacros#current()` of project `macros`
     nativePlatform := {
-      val osName = {
-        val raw = System.getProperty("os.name").toLowerCase
-        if(raw.indexOf("win") >= 0) "windows"
-        else if(raw.indexOf("mac") >= 0) "mac"
-        else if(raw.indexOf("nux") >= 0) "linux"
-        else {
+      val osName = OsAndArch.OsName
+      if(osName == OsAndArch.UnknownName){
           sLog.value.error("Error trying to determine operating system")
-          sLog.value.warn("Setting osName to unknown")
-          "unknown"
-        }
+          sLog.value.warn(s"Setting osName to ${OsAndArch.UnknownName}")
       }
       val osArch = System.getProperty("os.arch")
       s"$osName-$osArch"

@@ -3,6 +3,7 @@ package build
 
 import java.io.File
 import sbt._
+import ch.jodersky.sbt.jni.util.OsAndArch
 
 trait ConfigureMakeInstall { self: BuildTool =>
 
@@ -19,22 +20,23 @@ trait ConfigureMakeInstall { self: BuildTool =>
 
     def configure(targetDirectory: File): ProcessBuilder
 
-    def make(): ProcessBuilder = Process("make VERBOSE=1", buildDirectory)
+    def make(): ProcessBuilder = {
+      val makeCommand = if(OsAndArch.IsWindows) "msbuild /m ALL_BUILD.vcxproj" else "make VERBOSE=1"
+      Process(makeCommand, buildDirectory)
+    }
 
-    def install(): ProcessBuilder = Process("make install", buildDirectory)
+    def install(): ProcessBuilder = {
+      val installCommand = if(OsAndArch.IsWindows) "msbuild /m INSTALL.vcxproj" else "make install"
+      Process(installCommand, buildDirectory)
+    }
 
-    def library(
-      targetDirectory: File
-    ): File = {
+    def library(targetDirectory: File): File = {
 
-      val ev: Int = (
-        configure(targetDirectory) #&& make() #&& install()
-      ) ! log
+      val ev: Int = (configure(targetDirectory) #&& make() #&& install()) ! log
 
       if (ev != 0) sys.error(s"Building native library failed. Exit code: ${ev}")
 
-      val products: List[File] =
-        (targetDirectory ** ("*.so" | "*.dylib")).get.filter(_.isFile).toList
+      val products: List[File] = (targetDirectory ** ("*.so" | "*.dylib" | "*.dll")).get.filter(_.isFile).toList
 
       // only one produced library is expected
       products match {
