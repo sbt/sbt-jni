@@ -47,19 +47,15 @@ class nativeLoaderMacro(val c: Context) {
 
               val tmp: Path = Files.createTempDirectory("jni-")
               val plat: String = {
-                val line = try {
-                  scala.sys.process.Process("uname -sm").lines.head
-                } catch {
-                  case ex: Exception => sys.error("Error running `uname` command")
+                val osName = {
+                  val raw = System.getProperty("os.name").toLowerCase
+                  if(raw.indexOf("win") >= 0) "windows"
+                  else if(raw.indexOf("mac") >= 0) "mac"
+                  else if(raw.indexOf("nux") >= 0) "linux"
+                  else "unknown"
                 }
-                val parts = line.split(" ")
-                if (parts.length != 2) {
-                  sys.error("Could not determine platform: 'uname -sm' returned unexpected string: " + line)
-                } else {
-                  val arch = parts(1).toLowerCase.replaceAll("\\s", "")
-                  val kernel = parts(0).toLowerCase.replaceAll("\\s", "")
-                  arch + "-" + kernel
-                }
+                val osArch = System.getProperty("os.arch")
+                osName + "-" + osArch
               }
 
               val resourcePath: String = "/native/" + plat + "/" + lib
