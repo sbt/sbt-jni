@@ -1,4 +1,4 @@
-val scalaVersions = Seq("2.12.2", "2.11.11", "2.10.6")
+val scalaVersions = Seq("2.12.4", "2.11.12", "2.10.6")
 val macrosParadiseVersion = "2.1.0"
 
 // version is derived from latest git tag
@@ -31,7 +31,22 @@ lazy val macros = (project in file("macros"))
     addCompilerPlugin("org.scalamacros" % "paradise" % macrosParadiseVersion cross CrossVersion.full),
     libraryDependencies += "org.typelevel" %% "macro-compat" % "1.1.1",
     libraryDependencies += "org.scala-lang" % "scala-compiler" % scalaVersion.value % Provided,
-    libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value
+    libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value,
+    pomExtra := (
+      <url>https://github.com/harshad-deo/sbt-jni</url>
+      <scm>
+        <connection>scm:git:git@github.com:harshad-deo/sbt-jni.git</connection>
+        <developerConnection>scm:git:git@github.com:harshad-deo/sbt-jni.git</developerConnection>
+        <url>git@github.com:harshad-deo/sbt-jni.git</url>
+      </scm>
+      <developers>
+        <developer>
+          <id>harshad-deo</id>
+          <name>Harshad Deo</name>
+          <url>https://github.com/harshad-deo</url>
+        </developer>
+      </developers>
+    )
   )
 
 lazy val plugin = (project in file("plugin"))
