@@ -2,8 +2,8 @@ val scalaVersions = Seq("2.12.4", "2.11.12", "2.10.6")
 val macrosParadiseVersion = "2.1.0"
 
 // version is derived from latest git tag
-version in ThisBuild := "0.1.3" //("git describe --always --dirty --match v[0-9].*" !!).tail.trim
-organization in ThisBuild := "com.simianquant"
+version in ThisBuild := ("git describe --always --dirty --match v[0-9].*" !!).tail.trim
+organization in ThisBuild := "ch.jodersky"
 scalacOptions in ThisBuild ++= Seq(
   "-deprecation",
   "-feature",
