@@ -47,14 +47,8 @@ class nativeLoaderMacro(val c: Context) {
 
               val tmp: Path = Files.createTempDirectory("jni-")
               val plat: String = {
-                val osName = {
-                  val raw = System.getProperty("os.name").toLowerCase
-                  if(raw.indexOf("win") >= 0) "windows"
-                  else if(raw.indexOf("mac") >= 0) "mac"
-                  else if(raw.indexOf("nux") >= 0) "linux"
-                  else "unknown"
-                }
-                val osArch = System.getProperty("os.arch")
+                val osName = ch.jodersky.sbt.jni.util.OsAndArch.OsName
+                val osArch = ch.jodersky.sbt.jni.util.OsAndArch.OsArch
                 osName + "-" + osArch
               }
 

@@ -17,6 +17,20 @@ object OsAndArch {
 
   // Windows requires special treatment
   val IsWindows = OsName == WindowsName
- 
-  val Is64 = System.getProperty("os.arch").toUpperCase == "AMD64" 
+
+  val OsArch = if(IsWindows) {
+    System.getProperty("os.arch")
+  } else {
+    val line = try {
+      scala.sys.process.Process("uname -sm").lines.head
+    } catch {
+      case ex: Exception => sys.error("Error running `uname` command")
+    }
+    val parts = line.split(" ")
+    if (parts.length != 2) {
+      sys.error("Could not determine platform: 'uname -sm' returned unexpected string: " + line)
+    }else {
+      parts(1).toLowerCase.replaceAll("\\s", "")
+    }
+  }
 }

@@ -42,7 +42,7 @@ object JniNative extends AutoPlugin {
           sLog.value.error("Error trying to determine operating system")
           sLog.value.warn(s"Setting osName to ${OsAndArch.UnknownName}")
       }
-      val osArch = System.getProperty("os.arch")
+      val osArch = OsAndArch.OsArch
       s"$osName-$osArch"
     },
 
