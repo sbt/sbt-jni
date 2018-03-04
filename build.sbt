@@ -1,6 +1,6 @@
 import scala.sys.process._
 
-val scalaVersions = Seq("2.12.4", "2.11.11", "2.10.6")
+val scalaVersions = Seq("2.12.4", "2.11.12", "2.10.6")
 val macrosParadiseVersion = "2.1.0"
 
 // version is derived from latest git tag
