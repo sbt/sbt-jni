@@ -1,31 +1,41 @@
 #!/bin/bash
-set -ev
+set -o errexit
+set -o nounset
+set -o verbose
 
 sbt test-plugin
 
 # Automatic publishing for tags that start with `v<digit>`
 if [[ "$TRAVIS_PULL_REQUEST" == "false" && "$TRAVIS_TAG" =~ ^v[0-9].* ]]; then
     # Import gpg keys (download public key to check for renewal)
-    gpg --keyserver keyserver.ubuntu.com --recv-keys "DC6A9A5E884B2D680E080467E107A4A6CF561C67"
-    openssl aes-256-cbc -K $encrypted_406cb857227a_key -iv $encrypted_406cb857227a_iv -in .travis/sec.gpg.enc -out sec.gpg -d
+    gpg --keyserver keyserver.ubuntu.com --recv-keys "2B50AAFF11989ECC8531EB4A7C921C6769797655"
+    openssl aes-256-cbc \
+	    -K "$encrypted_35cdae908c05_key" \
+	    -iv "$encrypted_35cdae908c05_iv" \
+	    -in .travis/sec.gpg.enc \
+	    -out sec.gpg -d
     gpg --import sec.gpg
 
     # Setup sbt-pgp plugin
-    cat <<EOF > project/gpg.sbt
-    addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.1.0-M1")
-EOF
-    cat <<EOF > gpg.sbt
-    pgpSigningKey in Global := Some(0xE107A4A6CF561C67l)
+    cat <<-EOF > project/gpg.sbt
+    addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.1.1")
+    EOF
+    cat <<-EOF > gpg.sbt
+    pgpSigningKey in Global := Some(0x7C921C6769797655l)
     useGpgAgent in Global := true
     useGpg in Global := true
-EOF
+    EOF
 
     # Setup bitray publishing plugin
-    cat <<EOF > project/bintray.sbt
-    addSbtPlugin("org.foundweekends" % "sbt-bintray" % "0.5.1")
-EOF
+    cat <<-EOF > project/bintray.sbt
+    addSbtPlugin("org.foundweekends" % "sbt-bintray" % "0.5.4")
+    EOF
     mkdir ~/.bintray
-    openssl aes-256-cbc -K $encrypted_9971283457ae_key -iv $encrypted_9971283457ae_iv -in .travis/bintray.enc -out ~/.bintray/.credentials -d
+    openssl aes-256-cbc \
+	    -K "$encrypted_35cdae908c05_key" \
+	    -iv "$encrypted_35cdae908c05_iv" \
+	    -in .travis/bintray.enc \
+	    -out ~/.bintray -d
 
     # Publish
     sbt +publishSigned
