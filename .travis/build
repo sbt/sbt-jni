@@ -18,18 +18,18 @@ if [[ "$TRAVIS_PULL_REQUEST" == "false" && "$TRAVIS_TAG" =~ ^v[0-9].* ]]; then
 
     # Setup sbt-pgp plugin
     cat <<-EOF > project/gpg.sbt
-    addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.1.1")
-    EOF
+	addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.1.1")
+	EOF
     cat <<-EOF > gpg.sbt
-    pgpSigningKey in Global := Some(0x7C921C6769797655l)
-    useGpgAgent in Global := true
-    useGpg in Global := true
-    EOF
+	pgpSigningKey in Global := Some(0x7C921C6769797655l)
+	useGpgAgent in Global := true
+	useGpg in Global := true
+	EOF
 
     # Setup bitray publishing plugin
     cat <<-EOF > project/bintray.sbt
-    addSbtPlugin("org.foundweekends" % "sbt-bintray" % "0.5.4")
-    EOF
+	addSbtPlugin("org.foundweekends" % "sbt-bintray" % "0.5.4")
+	EOF
     mkdir ~/.bintray
     openssl aes-256-cbc \
 	    -K "$encrypted_35cdae908c05_key" \
