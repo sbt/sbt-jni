@@ -47,7 +47,7 @@ class nativeLoaderMacro(val c: Context) {
               val tmp: Path = Files.createTempDirectory("jni-")
               val plat: String = {
                 val line = try {
-                  scala.sys.process.Process("uname -sm").lineStream.head
+                  scala.sys.process.Process("uname -sm").lines.head
                 } catch {
                   case ex: Exception => sys.error("Error running `uname` command")
                 }
