@@ -40,7 +40,6 @@ class nativeLoaderMacro(val c: Context) {
         val extra = q"""
           {
             def loadPackaged(): Unit = {
-              import java.io.File
               import java.nio.file.{Files, Path}
 
               val lib: String = System.mapLibraryName($nativeLibrary)
