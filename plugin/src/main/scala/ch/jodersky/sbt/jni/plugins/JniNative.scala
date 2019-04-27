@@ -37,7 +37,8 @@ object JniNative extends AutoPlugin {
 
     // the value retruned must match that of `ch.jodersky.jni.PlatformMacros#current()` of project `macros`
     nativePlatform := {
-      try {
+      val osarch = sys.props("os.arch").toLowerCase.replaceAll("\\s", "")
+      if ("arm" == osarch) try {
         val lines = Process("uname -sm").lineStream
         if (lines.length == 0) {
           sys.error("Error occured trying to run `uname`")
@@ -56,7 +57,7 @@ object JniNative extends AutoPlugin {
           sLog.value.error("Error trying to determine platform.")
           sLog.value.warn("Cannot determine platform! It will be set to 'unknown'.")
           "unknown-unknown"
-      }
+      } else osarch + "-" + sys.props("os.name").toLowerCase.replaceAll("\\s", "")
     },
 
     sourceDirectory in nativeCompile := sourceDirectory.value / "native",

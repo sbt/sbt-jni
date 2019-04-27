@@ -128,7 +128,7 @@ target in nativeCompile := target.value / "native" / (nativePlatform).value,
 |--------------------------------|---------------|
 | automatic, when JniNative enabled | [JniPackage.scala](plugin/src/main/scala/ch/jodersky/sbt/jni/plugins/JniPackage.scala) |
 
-This plugin packages native libraries produced by JniNative in a way that they can be transparently loaded with JniLoad. It uses the notion of a native "platform", defined as the architecture-kernel values returned by `uname -sm`. A native binary of a given platform is assumed to be executable on any machines of the same platform.
+This plugin packages native libraries produced by JniNative in a way that they can be transparently loaded with JniLoad. It uses the notion of a native "platform", defined as the architecture-kernel values returned by `sys.props("os.arch")` and `sys.props("os.name')`.  On ARM-based platforms, where the former fails to provide sufficient granularity, the output of `uname -sm` is used instead. A native binary of a given platform is assumed to be executable on any machines of the same platform.
 
 ## Canonical Use
 
@@ -183,7 +183,7 @@ Real-world use-cases of sbt-jni include:
 ## Requirements and Dependencies
 
 - projects using `JniLoad` must use Scala versions 2.10, 2.11 or 2.12
-- only POSIX platforms are supported (actually, any platform that has the `uname` command available)
+- all platforms are supported (on ARM, the `uname` command is assumed to be available)
 
 The goal of sbt-jni is to be the least intrusive possible. No transitive dependencies are added to projects using any plugin (some dependencies are added to the `provided` configuration, however these do not affect any downstream projects).
 
