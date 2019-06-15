@@ -17,19 +17,16 @@ if [[ "$TRAVIS_PULL_REQUEST" == "false" && "$TRAVIS_TAG" =~ ^v[0-9].* ]]; then
     gpg --import sec.gpg
 
     # Setup sbt-pgp plugin
-    cat <<-EOF > project/gpg.sbt
-	addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.1.1")
-	EOF
     cat <<-EOF > gpg.sbt
-	pgpSigningKey in Global := Some(0x7C921C6769797655l)
-	useGpgAgent in Global := true
-	useGpg in Global := true
+	credentials += Credentials(
+	  "GnuPG Key ID",
+	  "gpg",
+	  "2B50AAFF11989ECC8531EB4A7C921C6769797655", // key identifier
+	  "ignored" // this field is ignored; passwords are supplied by pinentry
+	)
 	EOF
 
-    # Setup bitray publishing plugin
-    cat <<-EOF > project/bintray.sbt
-	addSbtPlugin("org.foundweekends" % "sbt-bintray" % "0.5.4")
-	EOF
+    # Setup bintray publishing plugin
     mkdir ~/.bintray
     openssl aes-256-cbc \
 	    -K "$encrypted_35cdae908c05_key" \
@@ -38,5 +35,5 @@ if [[ "$TRAVIS_PULL_REQUEST" == "false" && "$TRAVIS_TAG" =~ ^v[0-9].* ]]; then
 	    -out ~/.bintray -d
 
     # Publish
-    sbt +publishSigned
+    sbt +publish
 fi

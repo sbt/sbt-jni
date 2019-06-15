@@ -50,9 +50,9 @@ lazy val macros = (project in file("macros"))
   )
 
 lazy val plugin = (project in file("plugin"))
+  .enablePlugins(SbtPlugin)
   .settings(
     name := "sbt-jni",
-    sbtPlugin := true,
     publishMavenStyle := false,
     libraryDependencies += "org.ow2.asm" % "asm" % "6.0",
     // make project settings available to source
