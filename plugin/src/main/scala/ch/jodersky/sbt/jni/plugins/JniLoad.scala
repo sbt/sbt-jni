@@ -13,9 +13,20 @@ object JniLoad extends AutoPlugin {
     // Macro Paradise plugin and dependencies are needed to expand annotation macros.
     // Once expanded however, downstream projects don't need these dependencies anymore
     // (hence the "Provided" configuration).
-    addCompilerPlugin(
-      "org.scalamacros" % "paradise" % ProjectVersion.MacrosParadise cross CrossVersion.full
-    ),
+    libraryDependencies ++= {
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, n)) if n >= 13 => Seq()
+        case _ => Seq(
+          compilerPlugin("org.scalamacros" % "paradise" % ProjectVersion.MacrosParadise cross CrossVersion.full)
+        )
+      }
+    },
+    Compile / scalacOptions ++= {
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, n)) if n >= 13 => Seq("-Ymacro-annotations")
+        case _ => Seq()
+      }
+    },
     resolvers += Resolver.jcenterRepo,
     libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value % Provided,
     libraryDependencies += "ch.jodersky" %% "sbt-jni-macros" % ProjectVersion.Macros % Provided

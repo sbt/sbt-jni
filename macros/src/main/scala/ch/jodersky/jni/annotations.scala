@@ -1,13 +1,10 @@
 package ch.jodersky.jni
 
-import macrocompat.bundle
-
 import scala.language.experimental.macros
 import scala.reflect.macros.whitebox.Context
 import scala.annotation.StaticAnnotation
 import scala.annotation.compileTimeOnly
 
-@bundle
 class nativeLoaderMacro(val c: Context) {
 
   def impl(annottees: c.Expr[Any]*): c.Expr[Any] = {
@@ -47,7 +44,7 @@ class nativeLoaderMacro(val c: Context) {
               val tmp: Path = Files.createTempDirectory("jni-")
               val plat: String = {
                 val line = try {
-                  scala.sys.process.Process("uname -sm").lines.head
+                  scala.sys.process.Process("uname -sm").lineStream.head
                 } catch {
                   case ex: Exception => sys.error("Error running `uname` command")
                 }

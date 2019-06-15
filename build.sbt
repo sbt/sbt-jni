@@ -1,6 +1,6 @@
 import scala.sys.process._
 
-val scalaVersions = Seq("2.12.4", "2.11.12", "2.10.6")
+val scalaVersions = Seq("2.13.0", "2.12.8", "2.11.12")
 val macrosParadiseVersion = "2.1.0"
 
 // version is derived from latest git tag
@@ -30,10 +30,23 @@ lazy val macros = (project in file("macros"))
     name := "sbt-jni-macros",
     scalaVersion := scalaVersions.head,
     crossScalaVersions := scalaVersions,
-    addCompilerPlugin("org.scalamacros" % "paradise" % macrosParadiseVersion cross CrossVersion.full),
-    libraryDependencies += "org.typelevel" %% "macro-compat" % "1.1.1",
     libraryDependencies += "org.scala-lang" % "scala-compiler" % scalaVersion.value % Provided,
-    libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value
+    libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value,
+
+    libraryDependencies ++= {
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, n)) if n >= 13 => Seq()
+        case _ => Seq(
+          compilerPlugin("org.scalamacros" % "paradise" % macrosParadiseVersion cross CrossVersion.full)
+        )
+      }
+    },
+    Compile / scalacOptions ++= {
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, n)) if n >= 13 => Seq("-Ymacro-annotations")
+        case _ => Seq()
+      }
+    }
   )
 
 lazy val plugin = (project in file("plugin"))
@@ -58,6 +71,6 @@ lazy val plugin = (project in file("plugin"))
     }.taskValue,
     scriptedLaunchOpts := Seq(
       "-Dplugin.version=" + version.value,
-      "-XX:MaxPermSize=256m", "-Xmx2g", "-Xss2m"
+      "-Xmx2g", "-Xss2m"
     )
   )
