@@ -46,7 +46,10 @@ Note that most plugins are enabled in projects by default. Disabling their funct
 |--------------------------------|---------------|
 | automatic, for all projects    | [JniJavah.scala](plugin/src/main/scala/ch/jodersky/sbt/jni/plugins/JniJavah.scala)|
 
-This plugin wraps the JDK `javah` command.
+This plugin wraps the JDK `javah` command [^1].
+
+[^1]: Glavo's [gjavah](https://github.com/Glavo/gjavah) is actually used, since `javah` has been
+removed from the JDK since version 1.10.
 
 Run `sbt-javah` to generate C header files with prototypes for any methods marked as native.
 E.g. the following scala class
