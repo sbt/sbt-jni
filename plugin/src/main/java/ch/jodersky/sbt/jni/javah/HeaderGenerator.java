@@ -338,7 +338,9 @@ public final class HeaderGenerator {
             Generator g = new Generator();
             reader.accept(g, ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
 
-            try (PrintWriter writer = new PrintWriter(Files.newBufferedWriter(outputDir.resolve(name.replace('.', '_') + ".h"), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING))) {
+            try (PrintWriter writer = new PrintWriter(Files.newBufferedWriter(
+                outputDir.resolve(name.replace('.', '_').replace("$", "__") + ".h"),
+                StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING))) {
                 generator.classGenerateHeader(g, writer);
             }
         }
