@@ -49,7 +49,7 @@ Note that most plugins are enabled in projects by default. Disabling their funct
 This plugin wraps the JDK `javah` command [^1].
 
 [^1]: Glavo's [gjavah](https://github.com/Glavo/gjavah) is actually used, since `javah` has been
-removed from the JDK since version 1.10.
+removed from the JDK since version 1.10. If something goes wrong, please open an issue to help us improve it.
 
 Run `sbt-javah` to generate C header files with prototypes for any methods marked as native.
 E.g. the following scala class
