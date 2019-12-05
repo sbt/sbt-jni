@@ -61,11 +61,12 @@ object JniJavah extends AutoPlugin {
         log.info("Headers will be generated to " + out.getAbsolutePath)
       }
 
-      import scala.collection.JavaConverters._
-
-      ch.jodersky.sbt.jni.javah.HeaderGenerator.run(new util.ArrayList[String](classes.asJava),
-        Paths.get(out.getAbsolutePath), new util.ArrayList[Path](jcp.map(_.toPath).asJava)
-      )
+      val task = new ch.jodersky.sbt.jni.javah.JavahTask
+      classes.foreach(task.addClass(_))  
+      jcp.map(_.toPath).foreach(task.addClassPath(_))
+      task.addRuntimeSearchPath()
+      task.setOutputDir(Paths.get(out.getAbsolutePath))
+      task.run()
 
       out
     }
