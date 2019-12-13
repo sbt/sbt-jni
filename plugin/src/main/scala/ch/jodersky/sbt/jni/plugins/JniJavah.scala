@@ -1,11 +1,10 @@
 package ch.jodersky.sbt.jni
 package plugins
 
-import java.nio.file.{Path, Paths}
+import java.nio.file.Paths
 
 import collection.JavaConverters._
 import util.BytecodeUtil
-import java.util
 
 import sbt._
 import sbt.Keys._

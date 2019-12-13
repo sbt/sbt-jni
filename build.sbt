@@ -28,7 +28,6 @@ lazy val macros = (project in file("macros"))
   .disablePlugins(ScriptedPlugin)
   .settings(
     name := "sbt-jni-macros",
-    scalaVersion := scalaVersions.head,
     crossScalaVersions := scalaVersions,
     libraryDependencies += "org.scala-lang" % "scala-compiler" % scalaVersion.value % Provided,
     libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value,

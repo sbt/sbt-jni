@@ -14,13 +14,13 @@ public class ClassPath implements SearchPath {
         this.path = path.toAbsolutePath();
 
         Path root = Utils.classPathRoot(path);
-        roots = root == null ? Collections.emptyList() : multiReleaseRoots(root);
+        roots = root == null ? Collections.emptyList() : SearchPath.multiReleaseRoots(root);
     }
 
     @Override
     public Path search(ClassName name) {
         Objects.requireNonNull(name);
-        return searchFromRoots(roots, name);
+        return SearchPath.searchFromRoots(roots, name);
     }
 
     @Override
