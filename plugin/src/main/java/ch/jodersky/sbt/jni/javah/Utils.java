@@ -52,6 +52,8 @@ class Utils {
             char ch = name.charAt(i);
             if (ch == '.') {
                 builder.append('_');
+            } else if (ch == '$') {
+                builder.append("__");
             } else if (ch == '_') {
                 builder.append("_1");
             } else if (ch == ';') {
