@@ -20,14 +20,28 @@ object CMake extends BuildTool with ConfigureMakeInstall {
     override def baseDirectory = baseDir
     override def buildDirectory = buildDir
 
-    override def configure(target: File) = Process(
+    def cmakeProcess(args: String*): ProcessBuilder = Process("cmake" +: args, buildDirectory)
+
+    override def configure(target: File) = cmakeProcess(
       // disable producing versioned library files, not needed for fat jars
-      "cmake " +
-        s"-DCMAKE_INSTALL_PREFIX:PATH=${target.getAbsolutePath} " +
-        "-DCMAKE_BUILD_TYPE=Release " +
-        "-DSBT:BOOLEAN=true " +
-        baseDirectory.getAbsolutePath,
-      buildDirectory
+      s"-DCMAKE_INSTALL_PREFIX:PATH=${target.getAbsolutePath}",
+      "-DCMAKE_BUILD_TYPE=Release",
+      "-DSBT:BOOLEAN=true",
+      baseDirectory.getAbsolutePath
+    )
+
+    override def clean(): Unit = cmakeProcess(
+      "--build", buildDirectory.getAbsolutePath,
+      "--target", "clean"
+    ) ! log
+
+    override def make(): ProcessBuilder = cmakeProcess(
+      "--build", buildDirectory.getAbsolutePath,
+      "--parallel", parallelJobs.toString()
+    )
+
+    override def install(): ProcessBuilder = cmakeProcess(
+      "--install", buildDirectory.getAbsolutePath
     )
   }
 
