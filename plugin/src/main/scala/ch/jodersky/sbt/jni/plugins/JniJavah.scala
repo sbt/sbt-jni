@@ -1,6 +1,7 @@
 package ch.jodersky.sbt.jni
 package plugins
 
+import java.net.URI
 import java.nio.file.Paths
 
 import collection.JavaConverters._
@@ -8,6 +9,7 @@ import util.BytecodeUtil
 
 import sbt._
 import sbt.Keys._
+import xsbti.compile.CompileAnalysis
 
 /** Adds `javah` header-generation functionality to projects. */
 object JniJavah extends AutoPlugin {
@@ -34,7 +36,14 @@ object JniJavah extends AutoPlugin {
       import xsbti.compile._
       val compiled: CompileAnalysis = (compile in Compile).value
       val classFiles: Set[File] = compiled.readStamps().getAllProductStamps()
-        .asScala.keySet.toSet
+        .asScala.keySet.map{ vf =>
+          (vf.names() match {
+            case Array(prefix, first, more @_*) if prefix.startsWith("${") =>
+              Paths.get(first, more :_*)
+            case _ =>
+              Paths.get(URI.create("file:///" + vf.id().stripPrefix("/")))
+          }).toFile()
+        }.toSet
       val nativeClasses = classFiles flatMap { file =>
         BytecodeUtil.nativeClasses(file)
       }
@@ -46,12 +55,7 @@ object JniJavah extends AutoPlugin {
     javah := {
       val out = (target in javah).value
 
-      // fullClasspath can't be used here since it also generates resources. In
-      // a project combining JniJavah and JniPackage, we would have a chicken-and-egg
-      // problem.
-      val jcp: Seq[File] = (dependencyClasspath in Compile).value.map(_.data) ++ {
-        (compile in Compile).value; Seq((classDirectory in Compile).value)
-      }
+      val task = new ch.jodersky.sbt.jni.javah.JavahTask
 
       val log = streams.value.log
 
@@ -59,10 +63,14 @@ object JniJavah extends AutoPlugin {
       if (classes.nonEmpty) {
         log.info("Headers will be generated to " + out.getAbsolutePath)
       }
+      classes.foreach(task.addClass(_))
 
-      val task = new ch.jodersky.sbt.jni.javah.JavahTask
-      classes.foreach(task.addClass(_))  
-      jcp.map(_.toPath).foreach(task.addClassPath(_))
+      // fullClasspath can't be used here since it also generates resources. In
+      // a project combining JniJavah and JniPackage, we would have a chicken-and-egg
+      // problem.
+      val jcp: Seq[File] = (dependencyClasspath in Compile).value.map(_.data) :+ (classDirectory in Compile).value
+      jcp.foreach(cp => task.addClassPath(cp.toPath))
+
       task.addRuntimeSearchPath()
       task.setOutputDir(Paths.get(out.getAbsolutePath))
       task.run()
