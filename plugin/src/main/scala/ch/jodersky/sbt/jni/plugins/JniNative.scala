@@ -123,8 +123,7 @@ object JniNative extends AutoPlugin {
 
     // also clean native sources
     clean := {
-      (clean in nativeCompile).value
-      clean.value
+      clean.dependsOn(clean in nativeCompile).value
     },
 
     nativeInit := {
