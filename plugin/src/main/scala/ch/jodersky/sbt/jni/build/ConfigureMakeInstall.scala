@@ -16,13 +16,12 @@ trait ConfigureMakeInstall { self: BuildTool =>
     def baseDirectory: File
     def buildDirectory: File
 
-    def clean() = Process("make clean", buildDirectory) ! log
-
     def configure(targetDirectory: File): ProcessBuilder
+    def make(): ProcessBuilder
+    def install(): ProcessBuilder
+    def clean(): Unit
 
-    def make(): ProcessBuilder = Process("make VERBOSE=1", buildDirectory)
-
-    def install(): ProcessBuilder = Process("make install", buildDirectory)
+    def parallelJobs: Int = java.lang.Runtime.getRuntime().availableProcessors()
 
     def library(
       targetDirectory: File

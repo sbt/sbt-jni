@@ -20,14 +20,45 @@ object CMake extends BuildTool with ConfigureMakeInstall {
     override def baseDirectory = baseDir
     override def buildDirectory = buildDir
 
-    override def configure(target: File) = Process(
+    def cmakeProcess(args: String*): ProcessBuilder = Process("cmake" +: args, buildDirectory)
+
+    lazy val cmakeVersion = cmakeProcess("--version")
+            .lineStream
+            .head.split("\\s+")
+            .last
+            .split("\\.")
+            match {
+              case Array(maj, min, rev) =>
+                logger.info(s"Using CMake version $maj.$min.$rev")
+                maj.toInt * 100 + min.toInt
+              case _ => -1
+            }
+
+    def parallelOptions: Seq[String] =
+      if(cmakeVersion >= 312)
+        Seq("--parallel", parallelJobs.toString())
+      else Seq.empty
+
+    override def configure(target: File) = cmakeProcess(
       // disable producing versioned library files, not needed for fat jars
-      "cmake " +
-        s"-DCMAKE_INSTALL_PREFIX:PATH=${target.getAbsolutePath} " +
-        "-DCMAKE_BUILD_TYPE=Release " +
-        "-DSBT:BOOLEAN=true " +
-        baseDirectory.getAbsolutePath,
-      buildDirectory
+      s"-DCMAKE_INSTALL_PREFIX:PATH=${target.getAbsolutePath}",
+      "-DCMAKE_BUILD_TYPE=Release",
+      "-DSBT:BOOLEAN=true",
+      cmakeVersion.toString,
+      baseDirectory.getAbsolutePath
+    )
+
+    override def clean(): Unit = cmakeProcess(
+      "--build", buildDirectory.getAbsolutePath,
+      "--target", "clean"
+    ).run(log)
+
+    override def make(): ProcessBuilder = cmakeProcess(
+      Seq("--build", buildDirectory.getAbsolutePath) ++ parallelOptions:_ *
+    )
+
+    override def install(): ProcessBuilder = cmakeProcess(
+      "--install", buildDirectory.getAbsolutePath
     )
   }
 
