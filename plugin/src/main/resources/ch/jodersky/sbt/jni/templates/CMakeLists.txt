@@ -29,7 +29,11 @@ include_directories(include)
 include_directories(${JNI_INCLUDE_DIRS})
 
 # Sources
-file(GLOB LIB_SRC "src/*.cpp")
+file(GLOB LIB_SRC
+  "*.c"
+  "*.cc"
+  "*.cpp"
+)
 
 # Setup installation targets
 # (required by sbt-jni) major version should always be appended to library name
