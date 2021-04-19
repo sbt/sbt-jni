@@ -60,7 +60,6 @@ lazy val plugin = (project in file("plugin"))
   .enablePlugins(SbtPlugin)
   .settings(
     name := "sbt-jni",
-    publishMavenStyle := false,
     libraryDependencies += "org.ow2.asm" % "asm" % "6.2.1",
     // make project settings available to source
     sourceGenerators in Compile += Def.task {
