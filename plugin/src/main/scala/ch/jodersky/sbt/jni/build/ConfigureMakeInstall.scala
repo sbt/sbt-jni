@@ -29,13 +29,15 @@ trait ConfigureMakeInstall { self: BuildTool =>
 
       val ev: Int = {
         def noExitOk(process: ProcessBuilder): Int = {
-          try process ! log
+          val proc = process.run()
+          try proc.exitValue()
           catch {
             // Workaround weird behavior on Windows where the process succeeds
             // but it has no exit code?
             case e: RuntimeException if
               OsAndArch.IsWindows &&
               e.getMessage == "No exit code: process destroyed." =>
+                try { proc.destroy()} catch { case _: Throwable => }
                 0
           }
         }
