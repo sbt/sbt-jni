@@ -12,7 +12,7 @@ option(SBT "Set if invoked from sbt-jni" OFF)
 # Define project and related variables
 # (required by sbt-jni) please use semantic versioning
 #
-project ({{project}})
+project ({{project}} CXX)
 set(PROJECT_VERSION_MAJOR 0)
 set(PROJECT_VERSION_MINOR 0)
 set(PROJECT_VERSION_PATCH 0)
@@ -29,15 +29,17 @@ include_directories(include)
 include_directories(${JNI_INCLUDE_DIRS})
 
 # Sources
-file(GLOB LIB_SRC
-  "*.c"
-  "*.cc"
-  "*.cpp"
-)
+file(GLOB LIB_SRC "src/*.cpp")
 
 # Setup installation targets
 # (required by sbt-jni) major version should always be appended to library name
 #
 set (LIB_NAME ${PROJECT_NAME}${PROJECT_VERSION_MAJOR})
 add_library(${LIB_NAME} SHARED ${LIB_SRC})
-install(TARGETS ${LIB_NAME} LIBRARY DESTINATION .)
+if(WIN32)
+  install(TARGETS ${LIB_NAME} RUNTIME DESTINATION .)
+else()
+  install(TARGETS ${LIB_NAME} LIBRARY DESTINATION .)
+endif()  
+
+set_property(TARGET ${LIB_NAME} PROPERTY CXX_STANDARD 11)

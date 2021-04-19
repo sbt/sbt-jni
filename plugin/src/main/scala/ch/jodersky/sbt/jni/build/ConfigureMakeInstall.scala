@@ -23,18 +23,13 @@ trait ConfigureMakeInstall { self: BuildTool =>
 
     def parallelJobs: Int = java.lang.Runtime.getRuntime().availableProcessors()
 
-    def library(
-      targetDirectory: File
-    ): File = {
+    def library(targetDirectory: File): File = {
 
-      val ev: Int = (
-        configure(targetDirectory) #&& make() #&& install()
-      ) ! log
+      val ev: Int = (configure(targetDirectory) #&& make() #&& install()) ! log
 
       if (ev != 0) sys.error(s"Building native library failed. Exit code: ${ev}")
 
-      val products: List[File] =
-        (targetDirectory ** ("*.so" | "*.dylib")).get.filter(_.isFile).toList
+      val products: List[File] = (targetDirectory ** ("*.so" | "*.dylib" | "*.dll")).get.filter(_.isFile).toList
 
       // only one produced library is expected
       products match {

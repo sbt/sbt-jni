@@ -2,9 +2,9 @@ package ch.jodersky.sbt.jni
 package plugins
 
 import build._
+import ch.jodersky.sbt.jni.util.OsAndArch
 import sbt._
 import sbt.Keys._
-import sys.process._
 
 /** Wraps a native build system in sbt tasks. */
 object JniNative extends AutoPlugin {
@@ -37,26 +37,13 @@ object JniNative extends AutoPlugin {
 
     // the value retruned must match that of `ch.jodersky.jni.PlatformMacros#current()` of project `macros`
     nativePlatform := {
-      try {
-        val lines = Process("uname -sm").lineStream
-        if (lines.length == 0) {
-          sys.error("Error occured trying to run `uname`")
-        }
-        // uname -sm returns "<kernel> <hardware name>"
-        val parts = lines.head.split(" ")
-        if (parts.length != 2) {
-          sys.error("'uname -sm' returned unexpected string: " + lines.head)
-        } else {
-          val arch = parts(1).toLowerCase.replaceAll("\\s", "")
-          val kernel = parts(0).toLowerCase.replaceAll("\\s", "")
-          arch + "-" + kernel
-        }
-      } catch {
-        case ex: Exception =>
-          sLog.value.error("Error trying to determine platform.")
-          sLog.value.warn("Cannot determine platform! It will be set to 'unknown'.")
-          "unknown-unknown"
+      val osName = OsAndArch.OsName
+      if(osName == OsAndArch.UnknownName){
+          sLog.value.error("Error trying to determine operating system")
+          sLog.value.warn(s"Setting osName to ${OsAndArch.UnknownName}")
       }
+      val osArch = OsAndArch.OsArch
+      s"$osName-$osArch"
     },
 
     sourceDirectory in nativeCompile := sourceDirectory.value / "native",

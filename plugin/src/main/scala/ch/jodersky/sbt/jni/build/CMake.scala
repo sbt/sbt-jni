@@ -1,6 +1,8 @@
 package ch.jodersky.sbt.jni
 package build
 
+import ch.jodersky.sbt.jni.util.OsAndArch
+
 import sbt._
 import sys.process._
 
@@ -18,9 +20,15 @@ object CMake extends BuildTool with ConfigureMakeInstall {
 
     override def log = logger
     override def baseDirectory = baseDir
-    override def buildDirectory = buildDir
+    override def buildDirectory = buildDir 
 
-    def cmakeProcess(args: String*): ProcessBuilder = Process("cmake" +: args, buildDirectory)
+    private val cmakeCmd = if(OsAndArch.IsWindows && (System.getProperty("os.arch").toUpperCase == "AMD64")) {
+         """cmake -G"Visual Studio 15 2017 Win64""""
+      } else {
+        "cmake"
+      }
+
+    def cmakeProcess(args: String*): ProcessBuilder = Process(cmakeCmd +: args, buildDirectory)
 
     lazy val cmakeVersion = cmakeProcess("--version")
             .lineStream
@@ -53,13 +61,23 @@ object CMake extends BuildTool with ConfigureMakeInstall {
       "--target", "clean"
     ).run(log)
 
-    override def make(): ProcessBuilder = cmakeProcess(
-      Seq("--build", buildDirectory.getAbsolutePath) ++ parallelOptions:_ *
-    )
+    override def make(): ProcessBuilder = {
+      if (OsAndArch.IsWindows) {
+        Process("msbuild /m INSTALL.vcxproj", buildDirectory)
+      } else {
+        cmakeProcess(
+          Seq("--build", buildDirectory.getAbsolutePath) ++ parallelOptions:_ *
+        )
+      }
+    }
 
-    override def install(): ProcessBuilder = cmakeProcess(
-      "--install", buildDirectory.getAbsolutePath
-    )
+    override def install(): ProcessBuilder = {
+      if (OsAndArch.IsWindows) {
+        Process("msbuild /m INSTALL.vcxproj", buildDirectory)
+      } else {
+        cmakeProcess("--install", buildDirectory.getAbsolutePath)
+      }
+    }
   }
 
 }
