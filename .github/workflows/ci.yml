@@ -13,5 +13,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: olafurpg/setup-scala@v10
+      - name: Add msbuild to PATH
+        if: matrix.os == 'windows-latest'
+        uses: microsoft/setup-msbuild@v1.0.2
       - run: sbt test-plugin
         shell: bash
