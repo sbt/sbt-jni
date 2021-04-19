@@ -5,6 +5,8 @@ import java.io.File
 import sbt._
 import sys.process._
 
+import ch.jodersky.sbt.jni.util.OsAndArch
+
 trait ConfigureMakeInstall { self: BuildTool =>
 
   /* API for native build tools that use a standard 'configure && make && make install' process,
@@ -25,7 +27,26 @@ trait ConfigureMakeInstall { self: BuildTool =>
 
     def library(targetDirectory: File): File = {
 
-      val ev: Int = (configure(targetDirectory) #&& make() #&& install()) ! log
+      val ev: Int = {
+        def noExitOk(process: ProcessBuilder): Int = {
+          try process ! log
+          catch {
+            // Workaround weird behavior on Windows where the process succeeds
+            // but it has no exit code?
+            case e: RuntimeException if
+              OsAndArch.IsWindows &&
+              e.getMessage == "No exit code: process destroyed." =>
+                0
+          }
+        }
+        val configureExit = noExitOk(configure(targetDirectory))
+        if (configureExit != 0) configureExit
+        else {
+          val makeExit = noExitOk(make())
+          if (makeExit != 0) makeExit
+          else noExitOk(install())
+        }
+      }
 
       if (ev != 0) sys.error(s"Building native library failed. Exit code: ${ev}")
 
