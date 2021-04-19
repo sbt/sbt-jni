@@ -4,7 +4,7 @@ val scalaVersions = Seq("2.13.5", "2.12.13", "2.11.12")
 val macrosParadiseVersion = "2.1.1"
 
 // version is derived from latest git tag
-organization in ThisBuild := "ch.jodersky"
+organization in ThisBuild := "com.github.duhemm"
 scalacOptions in ThisBuild ++= Seq(
   "-deprecation",
   "-feature",
@@ -68,6 +68,7 @@ lazy val plugin = (project in file("plugin"))
                     |package ch.jodersky.sbt.jni
                     |
                     |private[jni] object ProjectVersion {
+                    |  final val Organization = "${organization.value}"
                     |  final val MacrosParadise = "${macrosParadiseVersion}"
                     |  final val Macros = "${version.value}"
                     |}
@@ -77,6 +78,7 @@ lazy val plugin = (project in file("plugin"))
       Seq(file)
     }.taskValue,
     scriptedLaunchOpts := Seq(
+      "-Dplugin.organization=" + organization.value,
       "-Dplugin.version=" + version.value,
       "-Xmx2g", "-Xss2m"
     )

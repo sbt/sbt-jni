@@ -29,7 +29,7 @@ object JniLoad extends AutoPlugin {
     },
     resolvers += Resolver.jcenterRepo,
     libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value % Provided,
-    libraryDependencies += "ch.jodersky" %% "sbt-jni-macros" % ProjectVersion.Macros % Provided
+    libraryDependencies += ProjectVersion.Organization %% "sbt-jni-macros" % ProjectVersion.Macros % Provided
   )
 
   override def projectSettings = settings
