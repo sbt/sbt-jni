@@ -43,19 +43,31 @@ class nativeLoaderMacro(val c: Context) {
 
               val tmp: Path = Files.createTempDirectory("jni-")
               val plat: String = {
-                val line = try {
-                  scala.sys.process.Process("uname -sm").lineStream.head
-                } catch {
-                  case ex: Exception => sys.error("Error running `uname` command")
+                val osName = {
+                  val raw = _root_.java.lang.System.getProperty("os.name").toLowerCase
+                  if(raw.indexOf("win") >= 0) "windows"
+                  else if(raw.indexOf("mac") >= 0) "mac"
+                  else if(raw.indexOf("nux") >= 0) "linux"
+                  else "unknown"
                 }
-                val parts = line.split(" ")
-                if (parts.length != 2) {
-                  sys.error("Could not determine platform: 'uname -sm' returned unexpected string: " + line)
-                } else {
-                  val arch = parts(1).toLowerCase.replaceAll("\\s", "")
-                  val kernel = parts(0).toLowerCase.replaceAll("\\s", "")
-                  arch + "-" + kernel
+                val osArch = {
+                  if (osName == "windows") {
+                    _root_.java.lang.System.getProperty("os.arch")
+                  } else {
+                    val line = try {
+                      _root_.scala.sys.process.Process("uname -sm").lineStream.head
+                    } catch {
+                      case _root_.scala.util.control.NonFatal(ex) => _root_.scala.sys.error("Error running `uname` command")
+                    }
+                    val parts = line.split(" ")
+                    if (parts.length != 2) {
+                      _root_.scala.sys.error("Could not determine platform: 'uname -sm' returned unexpected string: " + line)
+                    } else {
+                      parts(1).toLowerCase.replaceAll("\\s", "")
+                    }
+                  }
                 }
+                osName + "-" + osArch
               }
 
               val resourcePath: String = "/native/" + plat + "/" + lib

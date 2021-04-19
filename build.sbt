@@ -8,7 +8,7 @@ organization in ThisBuild := "com.github.duhemm"
 scalacOptions in ThisBuild ++= Seq(
   "-deprecation",
   "-feature",
-  "-Xfatal-warnings",
+  // "-Xfatal-warnings",
   "-Xlint"
 )
 licenses in ThisBuild := Seq(("BSD New", url("http://opensource.org/licenses/BSD-3-Clause")))
