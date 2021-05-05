@@ -1,8 +1,10 @@
-package ch.jodersky.sbt.jni.javah;
+package ch.jodersky.sbt.jni.javah.util;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+
+import static ch.jodersky.sbt.jni.javah.util.Utils.*;
 
 public final class Constant {
     private static final List<Class<?>> TYPES = Arrays.asList(
@@ -20,7 +22,7 @@ public final class Constant {
         if (!TYPES.contains(value.getClass())) {
             throw new IllegalArgumentException();
         }
-        if (!Utils.SIMPLE_NAME_PATTERN.matcher(name).matches()) {
+        if (!SIMPLE_NAME_PATTERN.matcher(name).matches()) {
             throw new IllegalArgumentException(String.format("\"%s\" is not a qualified constant name", name));
         }
 
@@ -30,7 +32,7 @@ public final class Constant {
     private Constant(String name, Object value) {
         this.name = name;
         this.value = value;
-        this.mangledName = Utils.mangleName(name);
+        this.mangledName = mangleName(name);
     }
 
     @Override

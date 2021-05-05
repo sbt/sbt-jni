@@ -1,5 +1,6 @@
-package ch.jodersky.sbt.jni.javah;
+package ch.jodersky.sbt.jni.javah.util;
 
+import ch.jodersky.sbt.jni.javah.ClassName;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Opcodes;
@@ -17,7 +18,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-class Utils {
+public final class Utils {
     public static final int MAX_SUPPORTED_VERSION = 13;
 
     public static final List<String> MULTI_RELEASE_VERSIONS =
@@ -112,23 +113,24 @@ class Utils {
         return null;
     }
 
-    public static ClassName superClassOf(ClassReader reader) {
-        Objects.requireNonNull(reader);
-        class V extends ClassVisitor {
-            V() {
-                super(Opcodes.ASM6);
-            }
+    static final class SuperNameVisitor extends ClassVisitor {
+        SuperNameVisitor() {
+            super(Opcodes.ASM7);
+        }
 
-            ClassName superName = null;
+        ClassName superName = null;
 
-            @Override
-            public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
-                if (superName != null) {
-                    this.superName = ClassName.of(superName.replace('/', '.'));
-                }
+        @Override
+        public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
+            if (superName != null) {
+                this.superName = ClassName.ofInternalName(superName);
             }
         }
-        V v = new V();
+    }
+
+    public static ClassName superClassOf(ClassReader reader) {
+        Objects.requireNonNull(reader);
+        SuperNameVisitor v = new SuperNameVisitor();
         reader.accept(v, ClassReader.SKIP_CODE | ClassReader.SKIP_FRAMES | ClassReader.SKIP_DEBUG);
         return v.superName;
     }
