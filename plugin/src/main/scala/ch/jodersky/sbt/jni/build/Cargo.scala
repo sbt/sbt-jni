@@ -17,7 +17,7 @@ class Cargo(protected val release: Boolean = true) extends BuildTool {
     "/ch/jodersky/sbt/jni/templates/src/lib.rs" -> "src/lib.rs",
   )
 
-  def getInstance(baseDirectory: File, buildDirectory: File, logger: sbt.Logger): super.Instance =
+  def getInstance(baseDirectory: File, buildDirectory: File, logger: sbt.Logger): Instance =
     new Instance(baseDirectory, logger)
 
   class Instance(protected val baseDirectory: File, protected val logger: sbt.Logger) extends super.Instance {
