@@ -1,4 +1,6 @@
-package ch.jodersky.sbt.jni.javah;
+package ch.jodersky.sbt.jni.javah.search;
+
+import ch.jodersky.sbt.jni.javah.ClassName;
 
 import java.io.IOException;
 import java.net.URI;
