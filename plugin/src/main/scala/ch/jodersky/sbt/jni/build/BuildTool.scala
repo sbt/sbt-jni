@@ -37,6 +37,7 @@ trait BuildTool {
 
       baseDirectory.mkdir()
       val out = baseDirectory.toPath().resolve(name)
+      Files.createDirectories(out.getParent)
       Files.write(out, replaced.getBytes)
       out.toFile()
     }
