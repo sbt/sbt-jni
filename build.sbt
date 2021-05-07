@@ -76,8 +76,8 @@ lazy val plugin = (project in file("plugin"))
       IO.write(file, src)
       Seq(file)
     }.taskValue,
-    // scriptedLaunchOpts := Seq(
-    //   "-Dplugin.version=" + version.value,
-    //   "-Xmx2g", "-Xss2m"
-    // )
+    scriptedLaunchOpts := Seq(
+      "-Dplugin.version=" + version.value,
+      "-Xmx2g", "-Xss2m"
+    )
   )
