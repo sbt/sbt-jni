@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/jodersky/sbt-jni.svg?branch=master)](https://travis-ci.org/jodersky/sbt-jni)
+[![Release](https://github.com/kammoh/sbt-jni/actions/workflows/release.yml/badge.svg)](https://github.com/kammoh/sbt-jni/actions/workflows/release.yml)
 
 | sbt version | plugin version |
 |-------------|----------------|
