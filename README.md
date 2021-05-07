@@ -2,8 +2,7 @@
 
 | sbt version | plugin version |
 |-------------|----------------|
-| 0.13.x      | [![Download](https://api.bintray.com/packages/jodersky/sbt-plugins/sbt-jni/images/download.svg?version=1.2.6)](https://bintray.com/jodersky/sbt-plugins/sbt-jni/1.2.6/link) |
-| 1.x       | [![Download](https://api.bintray.com/packages/jodersky/sbt-plugins/sbt-jni/images/download.svg)](https://bintray.com/jodersky/sbt-plugins/sbt-jni/_latestVersion) |
+| 1.x       | ![GitHub release (latest by date)](https://img.shields.io/github/v/release/kammoh/sbt-jni?style=plastic) |
 
 # sbt-jni
 
