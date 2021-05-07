@@ -1,7 +1,5 @@
 import scala.sys.process._
 
-
-
 val scalaVersions = Seq("2.13.5", "2.12.13")
 val macrosParadiseVersion = "2.1.1"
 
@@ -15,15 +13,21 @@ val macrosParadiseVersion = "2.1.1"
   "-Xlint"
 )
 (ThisBuild / licenses) := Seq(("BSD New", url("http://opensource.org/licenses/BSD-3-Clause")))
+homepage in ThisBuild := Some(url("https://github.com/jodersky/sbt-jni"))
+developers in ThisBuild := List(
+  Developer(
+    "jodersky",
+    "Jakob Odersky",
+    "jakob@odersky.com",
+    url("https://jakob.odersky.com")
+  )
+)
 
 lazy val root = (project in file("."))
   .aggregate(macros, plugin)
   .settings(
     publish := {},
     publishLocal := {},
-    semanticdbEnabled := true, // enable SemanticDB
-    semanticdbVersion := scalafixSemanticdb.revision, // use Scalafix compatible version
-    scalacOptions += "-Ywarn-unused-import", // required by `RemoveUnused` rule
     // make sbt-pgp happy
     publishTo := Some(Resolver.file("Unused transient repository", target.value / "unusedrepo")),
     addCommandAlias("test-plugin", ";+macros/publishLocal;scripted")
@@ -57,11 +61,6 @@ lazy val plugin = (project in file("plugin"))
   .enablePlugins(SbtPlugin)
   .settings(
     name := "sbt-jni",
-    scriptedLaunchOpts := { scriptedLaunchOpts.value ++
-      Seq("-Xmx1024M", "-Dplugin.version=" + version.value)
-    },
-    scriptedBufferLog := false,
-    publishMavenStyle := false,
     libraryDependencies += "org.ow2.asm" % "asm" % "9.1",
     // make project settings available to source
     (Compile / sourceGenerators) += Def.task {
