@@ -1,5 +1,8 @@
-package ch.jodersky.sbt.jni.javah;
+package ch.jodersky.sbt.jni.javah.util;
 
+import ch.jodersky.sbt.jni.javah.ClassName;
+import ch.jodersky.sbt.jni.javah.search.RuntimeSearchPath;
+import ch.jodersky.sbt.jni.javah.search.SearchPath;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Type;
 
@@ -7,6 +10,8 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+
+import static ch.jodersky.sbt.jni.javah.util.Utils.*;
 
 public class JNIGenerator {
 
@@ -29,7 +34,7 @@ public class JNIGenerator {
             searchPaths = Collections.singleton(RuntimeSearchPath.INSTANCE);
         }
         if (errorHandle == null) {
-            errorHandle = Utils.NOOP_WRITER;
+            errorHandle = NOOP_WRITER;
         }
 
         this.errorHandle = errorHandle;
@@ -117,7 +122,7 @@ public class JNIGenerator {
             out.println("/*");
             out.println(" * Class:      " + name.mangledName());
             out.println(" * Method:     " + method.mangledName());
-            out.println(" * Signature:  " + Utils.escape(method.type().toString()));
+            out.println(" * Signature:  " + escape(method.type().toString()));
             out.println(" */");
             out.println("JNIEXPORT " + ret + " JNICALL " + methodName);
             out.println("  (" + String.join(", ", args) + ");");
@@ -190,7 +195,7 @@ public class JNIGenerator {
         }
 
         if (tpe.startsWith("L") && tpe.endsWith(";")) {
-            ClassName n = ClassName.of(tpe.substring(1, tpe.length() - 1).replace('/', '.'));
+            ClassName n = ClassName.ofInternalName(tpe.substring(1, tpe.length() - 1));
             if (isThrowable(n)) {
                 return "jthrowable";
             } else {
@@ -202,7 +207,7 @@ public class JNIGenerator {
 
     private String[] mapArgsTypeToNative(Type methodType) {
         Objects.requireNonNull(methodType);
-        if (!Utils.METHOD_TYPE_PATTERN.matcher(methodType.toString()).matches()) {
+        if (!METHOD_TYPE_PATTERN.matcher(methodType.toString()).matches()) {
             throw new IllegalArgumentException(methodType + " is not a method type");
         }
         Type[] args = methodType.getArgumentTypes();
@@ -227,7 +232,7 @@ public class JNIGenerator {
         }
 
         try (InputStream in = Files.newInputStream(search(name))) {
-            return isThrowable(Utils.superClassOf(new ClassReader(in)));
+            return isThrowable(superClassOf(new ClassReader(in)));
         } catch (Exception ignored) {
             errorHandle.println("warning: class " + name + " not found");
             return false;

@@ -1,9 +1,13 @@
-package ch.jodersky.sbt.jni.javah;
+package ch.jodersky.sbt.jni.javah.search;
+
+import ch.jodersky.sbt.jni.javah.ClassName;
 
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+
+import static ch.jodersky.sbt.jni.javah.util.Utils.*;
 
 public class ClassPath implements SearchPath {
     private final Path path;
@@ -13,7 +17,7 @@ public class ClassPath implements SearchPath {
         Objects.requireNonNull(path);
         this.path = path.toAbsolutePath();
 
-        Path root = Utils.classPathRoot(path);
+        Path root = classPathRoot(path);
         roots = root == null ? Collections.emptyList() : SearchPath.multiReleaseRoots(root);
     }
 

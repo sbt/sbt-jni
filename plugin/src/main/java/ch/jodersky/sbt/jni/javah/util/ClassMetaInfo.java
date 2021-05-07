@@ -1,25 +1,26 @@
-package ch.jodersky.sbt.jni.javah;
+package ch.jodersky.sbt.jni.javah.util;
 
+import ch.jodersky.sbt.jni.javah.ClassName;
 import org.objectweb.asm.*;
 
 import java.util.*;
 
-class ClassMetaInfo extends ClassVisitor {
-    final List<Constant> constants = new LinkedList<>();
-    final List<NativeMethod> methods = new LinkedList<>();
-    final Map<String, Integer> counts = new HashMap<>();
+public class ClassMetaInfo extends ClassVisitor {
+    public final List<Constant> constants = new LinkedList<>();
+    public final List<NativeMethod> methods = new LinkedList<>();
+    public final Map<String, Integer> counts = new HashMap<>();
 
     ClassName superClassName;
     ClassName name;
 
     public ClassMetaInfo() {
-        super(Opcodes.ASM6);
+        super(Opcodes.ASM7);
     }
 
     @Override
     public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
-        this.superClassName = superName == null ? null : ClassName.of(superName.replace('/', '.'));
-        this.name = ClassName.of(name.replace('/', '.'));
+        this.superClassName = superName == null ? null : ClassName.ofInternalName(superName);
+        this.name = ClassName.ofInternalName(name);
     }
 
     @Override
@@ -39,7 +40,7 @@ class ClassMetaInfo extends ClassVisitor {
         return null;
     }
 
-    boolean isOverloadMethod(NativeMethod method) {
+    public boolean isOverloadMethod(NativeMethod method) {
         Objects.requireNonNull(method);
         return counts.getOrDefault(method.name(), 1) > 1;
     }

@@ -1,4 +1,7 @@
-package ch.jodersky.sbt.jni.javah;
+package ch.jodersky.sbt.jni.javah.search;
+
+import ch.jodersky.sbt.jni.javah.ClassName;
+import ch.jodersky.sbt.jni.javah.util.Utils;
 
 import java.io.IOException;
 import java.nio.file.Files;

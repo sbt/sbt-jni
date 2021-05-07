@@ -1,5 +1,11 @@
 package ch.jodersky.sbt.jni.javah;
 
+import ch.jodersky.sbt.jni.javah.search.ClassPath;
+import ch.jodersky.sbt.jni.javah.search.ModulePath;
+import ch.jodersky.sbt.jni.javah.search.RuntimeSearchPath;
+import ch.jodersky.sbt.jni.javah.search.SearchPath;
+import ch.jodersky.sbt.jni.javah.util.JNIGenerator;
+
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.nio.file.Path;
@@ -10,11 +16,14 @@ import java.util.Objects;
 public final class JavahTask {
     private final List<SearchPath> searchPaths = new LinkedList<>();
     private Path outputDir;
+    private Path outputFile;
     private PrintWriter errorHandle = new PrintWriter(System.err, true);
     private final List<ClassName> classes = new LinkedList<>();
 
     public void run() {
-        Objects.requireNonNull(outputDir, "outputDir");
+        if (outputDir == null && outputFile == null) {
+            throw new AssertionError();
+        }
         JNIGenerator generator = new JNIGenerator(outputDir, searchPaths, errorHandle);
         for (ClassName cls : classes) {
             try {
@@ -25,6 +34,10 @@ public final class JavahTask {
         }
     }
 
+    public boolean hasClasses() {
+        return !classes.isEmpty();
+    }
+
     public void addClass(ClassName name) {
         Objects.requireNonNull(name);
         classes.add(name);
@@ -32,12 +45,12 @@ public final class JavahTask {
 
     public void addClass(String name) {
         Objects.requireNonNull(name);
-        classes.add(ClassName.of(name));
+        classes.add(ClassName.ofFullName(name));
     }
 
     public void addClasses(Iterable<String> i) {
         Objects.requireNonNull(i);
-        i.forEach(c -> classes.add(ClassName.of(c)));
+        i.forEach(c -> classes.add(ClassName.ofFullName(c)));
     }
 
     public void addRuntimeSearchPath() {
@@ -65,6 +78,14 @@ public final class JavahTask {
 
     public void setOutputDir(Path outputDir) {
         this.outputDir = outputDir;
+    }
+
+    public Path getOutputFile() {
+        return outputFile;
+    }
+
+    public void setOutputFile(Path outputFile) {
+        this.outputFile = outputFile;
     }
 
     public PrintWriter getErrorHandle() {
