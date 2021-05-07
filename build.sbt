@@ -13,8 +13,8 @@ val macrosParadiseVersion = "2.1.1"
   "-Xlint"
 )
 (ThisBuild / licenses) := Seq(("BSD New", url("http://opensource.org/licenses/BSD-3-Clause")))
-homepage in ThisBuild := Some(url("https://github.com/jodersky/sbt-jni"))
-developers in ThisBuild := List(
+ThisBuild / homepage := Some(url("https://github.com/jodersky/sbt-jni"))
+ThisBuild / developers := List(
   Developer(
     "jodersky",
     "Jakob Odersky",
