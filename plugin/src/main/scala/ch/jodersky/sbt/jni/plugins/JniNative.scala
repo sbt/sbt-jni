@@ -59,14 +59,14 @@ object JniNative extends AutoPlugin {
       }
     },
 
-    sourceDirectory in nativeCompile := sourceDirectory.value / "native",
+    (nativeCompile / sourceDirectory) := sourceDirectory.value / "native",
 
-    target in nativeCompile := target.value / "native" / (nativePlatform).value,
+    (nativeCompile / target) := target.value / "native" / (nativePlatform).value,
 
     nativeBuildTool := {
       val tools = Seq(CMake)
 
-      val src = (sourceDirectory in nativeCompile).value
+      val src = (nativeCompile / sourceDirectory).value
 
       val tool = if (src.exists && src.isDirectory) {
         tools.find(t => t detect src)
@@ -83,8 +83,8 @@ object JniNative extends AutoPlugin {
 
     nativeBuildToolInstance := {
       val tool = nativeBuildTool.value
-      val srcDir = (sourceDirectory in nativeCompile).value
-      val buildDir = (target in nativeCompile).value / "build"
+      val srcDir = (nativeCompile / sourceDirectory).value
+      val buildDir = (nativeCompile / target).value / "build"
       IO.createDirectory(buildDir)
       tool.getInstance(
         baseDirectory = srcDir,
@@ -93,7 +93,7 @@ object JniNative extends AutoPlugin {
       )
     },
 
-    clean in nativeCompile := {
+    (nativeCompile / clean) := {
       val log = streams.value.log
 
       log.debug("Cleaning native build")
@@ -110,7 +110,7 @@ object JniNative extends AutoPlugin {
     nativeCompile := {
       val tool = nativeBuildTool.value
       val toolInstance = nativeBuildToolInstance.value
-      val targetDir = (target in nativeCompile).value / "bin"
+      val targetDir = (nativeCompile / target).value / "bin"
       val log = streams.value.log
 
       IO.createDirectory(targetDir)
@@ -123,7 +123,7 @@ object JniNative extends AutoPlugin {
 
     // also clean native sources
     clean := {
-      clean.dependsOn(clean in nativeCompile).value
+      clean.dependsOn((nativeCompile / clean)).value
     },
 
     nativeInit := {
@@ -145,7 +145,7 @@ object JniNative extends AutoPlugin {
       }
 
       log.info(s"Initializing native build with ${tool.name} configuration")
-      val files = tool.initTemplate((sourceDirectory in nativeCompile).value, lib)
+      val files = tool.initTemplate((nativeCompile / sourceDirectory).value, lib)
       files foreach { file =>
         log.info("Wrote to " + file.getAbsolutePath)
       }

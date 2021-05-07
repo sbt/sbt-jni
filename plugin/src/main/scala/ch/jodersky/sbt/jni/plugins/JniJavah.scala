@@ -32,9 +32,9 @@ object JniJavah extends AutoPlugin {
 
   lazy val mainSettings: Seq[Setting[_]] = Seq(
 
-    javahClasses in javah := {
+    (javah / javahClasses) := {
       import xsbti.compile._
-      val compiled: CompileAnalysis = (compile in Compile).value
+      val compiled: CompileAnalysis = (Compile / compile).value
       val classFiles: Set[File] = compiled.readStamps().getAllProductStamps()
         .asScala.keySet.map{ vf =>
           (vf.names() match {
@@ -50,16 +50,16 @@ object JniJavah extends AutoPlugin {
       nativeClasses
     },
 
-    target in javah := target.value / "native" / "include",
+    (javah / target) := target.value / "native" / "include",
 
     javah := {
-      val out = (target in javah).value
+      val out = (javah / target).value
 
       val task = new ch.jodersky.sbt.jni.javah.JavahTask
 
       val log = streams.value.log
 
-      val classes = (javahClasses in javah).value
+      val classes = (javah / javahClasses).value
       if (classes.nonEmpty) {
         log.info("Headers will be generated to " + out.getAbsolutePath)
       }
@@ -68,7 +68,7 @@ object JniJavah extends AutoPlugin {
       // fullClasspath can't be used here since it also generates resources. In
       // a project combining JniJavah and JniPackage, we would have a chicken-and-egg
       // problem.
-      val jcp: Seq[File] = (dependencyClasspath in Compile).value.map(_.data) :+ (classDirectory in Compile).value
+      val jcp: Seq[File] = (Compile / dependencyClasspath).value.map(_.data) :+ (Compile / classDirectory).value
       jcp.foreach(cp => task.addClassPath(cp.toPath))
 
       task.addRuntimeSearchPath()

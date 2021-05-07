@@ -1,5 +1,2 @@
-// testing for sbt plugins
-libraryDependencies += "org.scala-sbt" %% "scripted-plugin" % sbtVersion.value
-
-addSbtPlugin("io.crashbox" % "sbt-gpg" % "0.2.0")
-addSbtPlugin("org.foundweekends" % "sbt-bintray" % "0.5.4")
+addSbtPlugin("com.geirsson" % "sbt-ci-release" % "1.5.7")
+addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.9.27")
