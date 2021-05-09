@@ -57,9 +57,10 @@ object CMake extends BuildTool with ConfigureMakeInstall {
       Seq("--build", buildDirectory.getAbsolutePath) ++ parallelOptions:_ *
     )
 
-    override def install(): ProcessBuilder = cmakeProcess(
+    override def install(): ProcessBuilder = 
+    if(cmakeVersion >= 314) cmakeProcess( // FIXME not sure since what version --install works. It does NOT work on cmake version 3.10.2 on Ubuntu 18.04.5. It does work on 3.19 and 3.20.x on Fedora and macOS.
       "--install", buildDirectory.getAbsolutePath
-    )
+    ) else Process("make install", buildDirectory)
   }
 
 }
