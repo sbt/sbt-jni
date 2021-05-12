@@ -2,7 +2,7 @@
 
 | sbt version | plugin version |
 |-------------|----------------|
-| 1.x       | ![GitHub release (latest by date)](https://img.shields.io/github/v/release/kammoh/sbt-jni?style=plastic) |
+| 1.x       | ![latest release](https://img.shields.io/github/v/release/kammoh/sbt-jni?style=plastic) |
 
 # sbt-jni
 
@@ -31,9 +31,9 @@ The second point, portability, is inherent to JNI and thus unavoidable. However 
 All plugins are made available by adding the following to `project/plugins.sbt`:
 ```scala
 
-addSbtPlugin("ch.jodersky" % "sbt-jni" % "<latest version>")
+addSbtPlugin("xyz.kamyar" % "sbt-jni" % "<latest version>")
 ```
-where `<latest version>` refers to the version indicated by the download badge above, or, equivalently, to the [latest version available on bintray](https://bintray.com/jodersky/sbt-plugins/sbt-jni/_latestVersion).
+where `<latest version>` refers to the version indicated by the download badge above.
 
 Note that most plugins are enabled in projects by default. Disabling their functionality can be achieved by adding `disablePlugins(<plugin>)` to the corresponding project definition (for example, should you wish to disable packaging of native libraries).
 
