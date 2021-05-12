@@ -13,14 +13,20 @@ val macrosParadiseVersion = "2.1.1"
   "-Xlint"
 )
 (ThisBuild / licenses) := Seq(("BSD New", url("http://opensource.org/licenses/BSD-3-Clause")))
-ThisBuild / homepage := Some(url("https://github.com/jodersky/sbt-jni"))
+ThisBuild / homepage := Some(url("https://github.com/kammoh/sbt-jni"))
 ThisBuild / developers := List(
+  Developer(
+    "kammoh",
+    "Kamyar Mohajerani",
+    "kammoh@gmail.com",
+    url("https://kamyar.xyz")
+  ),
   Developer(
     "jodersky",
     "Jakob Odersky",
     "jakob@odersky.com",
     url("https://jakob.odersky.com")
-  )
+  ),
 )
 
 lazy val root = (project in file("."))
