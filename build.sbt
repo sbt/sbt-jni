@@ -5,7 +5,7 @@ val macrosParadiseVersion = "2.1.1"
 
 // version is derived from latest git tag
 (ThisBuild / version) := "1.4.2"
-(ThisBuild / organization) := "ch.jodersky"
+(ThisBuild / organization) := "xyz.kamyar"
 (ThisBuild / scalacOptions) ++= Seq(
   "-deprecation",
   "-feature",
