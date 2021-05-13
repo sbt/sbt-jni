@@ -3,8 +3,9 @@ import scala.sys.process._
 val scalaVersions = Seq("2.13.5", "2.12.13")
 val macrosParadiseVersion = "2.1.1"
 
-// version is derived from latest git tag
-(ThisBuild / version) := "1.4.3"
+enablePlugins(GitVersioning, GitBranchPrompt)
+git.useGitDescribe := true
+
 (ThisBuild / organization) := "xyz.kamyar"
 (ThisBuild / scalacOptions) ++= Seq(
   "-deprecation",
@@ -31,9 +32,11 @@ ThisBuild / developers := List(
 
 lazy val root = (project in file("."))
   .aggregate(macros, plugin)
+  .enablePlugins(GitVersioning, GitBranchPrompt)
   .settings(
     publish := {},
     publishLocal := {},
+    git.useGitDescribe := true,
     // make sbt-pgp happy
     publishTo := Some(Resolver.file("Unused transient repository", target.value / "unusedrepo")),
     addCommandAlias("test-plugin", ";+macros/publishLocal;scripted")
