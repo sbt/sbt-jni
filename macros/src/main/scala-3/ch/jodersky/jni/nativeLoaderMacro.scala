@@ -3,9 +3,10 @@ package ch.jodersky.jni
 import quoted.*
 
 object nativeLoaderMacro:
-  def impl(nativeLibrary: Expr[String], clz: Expr[Class[_]])(using qctx: Quotes): Expr[Unit] =
+  def impl(nativeLibrary: Expr[String])(using qctx: Quotes): Expr[Unit] =
     '{
       def loadPackaged(): Unit = {
+        import ch.jodersky.jni.nativeLoaderMacro
         import java.nio.file.{Files, Path}
 
         val lib: String = System.mapLibraryName($nativeLibrary)
@@ -28,7 +29,7 @@ object nativeLoaderMacro:
           }
         }
         val resourcePath: String = "/native/" + plat + "/" + lib
-        val resourceStream = Option($clz.getResourceAsStream(resourcePath)) match {
+        val resourceStream = Option(nativeLoaderMacro.getClass.getResourceAsStream(resourcePath)) match {
           case Some(s) => s
           case None =>
             throw new UnsatisfiedLinkError(

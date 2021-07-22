@@ -3,11 +3,12 @@ package ch.jodersky.jni
 import scala.reflect.macros.whitebox.Context
 
 object nativeLoaderMacro {
-  def impl(c: Context)(nativeLibrary: c.Expr[String], clz: c.Expr[Class[_]]): c.Expr[Unit] = {
+  def impl(c: Context)(nativeLibrary: c.Expr[String]): c.Expr[Unit] = {
     import c.universe._
     c.Expr(q"""
       {
         def loadPackaged(): Unit = {
+          import ch.jodersky.jni.nativeLoaderMacro
           import java.nio.file.{Files, Path}
 
           val lib: String = System.mapLibraryName($nativeLibrary)
@@ -30,7 +31,7 @@ object nativeLoaderMacro {
           }
 
           val resourcePath: String = "/native/" + plat + "/" + lib
-          val resourceStream = Option($clz.getResourceAsStream(resourcePath)) match {
+          val resourceStream = Option(nativeLoaderMacro.getClass.getResourceAsStream(resourcePath)) match {
             case Some(s) => s
             case None => throw new UnsatisfiedLinkError("Native library " + lib + " (" + resourcePath + ") cannot be found on the classpath.")
           }
