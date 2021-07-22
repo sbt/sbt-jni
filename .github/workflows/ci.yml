@@ -1,9 +1,8 @@
 name: CI
-on:
-  push:
-  pull_request:
+on: [push, pull_request]
 jobs:
   test:
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != 'sbt/sbt-jni'
     name: ${{ matrix.os }} tests
     runs-on: ${{ matrix.os }}
     strategy:
