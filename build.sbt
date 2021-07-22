@@ -8,9 +8,9 @@ ThisBuild / version := ("git describe --always --dirty=-SNAPSHOT --match v[0-9].
 ThisBuild / organization := "ch.jodersky"
 ThisBuild / scalacOptions ++= Seq(
   "-deprecation",
-  "-feature",
-  "-Xfatal-warnings",
-  "-Xlint"
+  "-feature" //,
+  // "-Xfatal-warnings",
+  // "-Xlint"
 )
 ThisBuild / licenses := Seq(("BSD New", url("http://opensource.org/licenses/BSD-3-Clause")))
 ThisBuild / homepage := Some(url("https://github.com/jodersky/sbt-jni"))
