@@ -5,11 +5,21 @@ jobs:
     if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != 'sbt/sbt-jni'
     name: ${{ matrix.os }} tests
     runs-on: ${{ matrix.os }}
+    env:
+      JAVA_VERSION: adopt@1.8
     strategy:
       fail-fast: false
       matrix:
         os: [macOS-latest, ubuntu-latest]
     steps:
       - uses: actions/checkout@v2
-      - uses: olafurpg/setup-scala@v10
-      - run: sbt test-plugin
+      - uses: coursier/cache-action@v6
+      - uses: olafurpg/setup-scala@v11
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Run scalafmtCheck
+        run: sbt scalafmtCheckAll
+
+      - name: Run tests 
+        run: sbt test-plugin

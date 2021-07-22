@@ -16,15 +16,16 @@ object JniLoad extends AutoPlugin {
     libraryDependencies ++= {
       CrossVersion.partialVersion(scalaVersion.value) match {
         case Some((2, n)) if n >= 13 => Seq()
-        case _ => Seq(
-          compilerPlugin("org.scalamacros" % "paradise" % ProjectVersion.MacrosParadise cross CrossVersion.full)
-        )
+        case _ =>
+          Seq(
+            compilerPlugin(("org.scalamacros" % "paradise" % ProjectVersion.MacrosParadise).cross(CrossVersion.full))
+          )
       }
     },
     Compile / scalacOptions ++= {
       CrossVersion.partialVersion(scalaVersion.value) match {
         case Some((2, n)) if n >= 13 => Seq("-Ymacro-annotations")
-        case _ => Seq()
+        case _                       => Seq()
       }
     },
     resolvers += Resolver.jcenterRepo,
