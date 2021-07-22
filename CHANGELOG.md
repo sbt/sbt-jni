@@ -8,5 +8,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.4.1] - 2019-12-13
 
-[Unreleased]: https://github.com/PDAL/java/compare/1.4.1...HEAD
+[Unreleased]: https://github.com/sbt/sbt-jni/compare/1.4.1...HEAD
 [1.4.1]: https://github.com/sbt/sbt-jni/compare/1.4.0...1.4.1
