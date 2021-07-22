@@ -39,17 +39,20 @@ trait ConfigureMakeInstall { self: BuildTool =>
       // only one produced library is expected
       products match {
         case Nil =>
-          sys.error(s"No files were created during compilation, " +
-            s"something went wrong with the ${name} configuration.")
+          sys.error(
+            s"No files were created during compilation, " +
+              s"something went wrong with the ${name} configuration."
+          )
         case head :: Nil =>
           head
         case head :: tail =>
-          log.warn("More than one file was created during compilation, " +
-            s"only the first one (${head.getAbsolutePath}) will be used.")
+          log.warn(
+            "More than one file was created during compilation, " +
+              s"only the first one (${head.getAbsolutePath}) will be used."
+          )
           head
       }
     }
   }
 
 }
-

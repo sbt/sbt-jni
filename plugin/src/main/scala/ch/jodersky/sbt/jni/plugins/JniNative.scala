@@ -6,7 +6,9 @@ import sbt._
 import sbt.Keys._
 import sys.process._
 
-/** Wraps a native build system in sbt tasks. */
+/**
+ * Wraps a native build system in sbt tasks.
+ */
 object JniNative extends AutoPlugin {
 
   object autoImport {
@@ -34,7 +36,6 @@ object JniNative extends AutoPlugin {
   val nativeBuildToolInstance = taskKey[BuildTool#Instance]("Get an instance of the current native build tool.")
 
   lazy val settings: Seq[Setting[_]] = Seq(
-
     // the value retruned must match that of `ch.jodersky.jni.PlatformMacros#current()` of project `macros`
     nativePlatform := {
       try {
@@ -58,33 +59,30 @@ object JniNative extends AutoPlugin {
           "unknown-unknown"
       }
     },
-
-    sourceDirectory in nativeCompile := sourceDirectory.value / "native",
-
-    target in nativeCompile := target.value / "native" / (nativePlatform).value,
-
+    nativeCompile / sourceDirectory := sourceDirectory.value / "native",
+    nativeCompile / target := target.value / "native" / nativePlatform.value,
     nativeBuildTool := {
       val tools = Seq(CMake)
 
-      val src = (sourceDirectory in nativeCompile).value
+      val src = (nativeCompile / sourceDirectory).value
 
       val tool = if (src.exists && src.isDirectory) {
-        tools.find(t => t detect src)
+        tools.find(t => t.detect(src))
       } else {
         None
       }
-      tool getOrElse sys.error("No supported native build tool detected. " +
-        s"Check that the setting 'sourceDirectory in nativeCompile' (currently set to $src) " +
-        "points to a directory containing a supported build script. Supported build tools are: " +
-        tools.map(_.name).mkString(",")
+      tool getOrElse sys.error(
+        "No supported native build tool detected. " +
+          s"Check that the setting 'nativeCompile / sourceDirectory' (currently set to $src) " +
+          "points to a directory containing a supported build script. Supported build tools are: " +
+          tools.map(_.name).mkString(",")
       )
 
     },
-
     nativeBuildToolInstance := {
       val tool = nativeBuildTool.value
-      val srcDir = (sourceDirectory in nativeCompile).value
-      val buildDir = (target in nativeCompile).value / "build"
+      val srcDir = (nativeCompile / sourceDirectory).value
+      val buildDir = (nativeCompile / target).value / "build"
       IO.createDirectory(buildDir)
       tool.getInstance(
         baseDirectory = srcDir,
@@ -92,8 +90,7 @@ object JniNative extends AutoPlugin {
         logger = streams.value.log
       )
     },
-
-    clean in nativeCompile := {
+    nativeCompile / clean := {
       val log = streams.value.log
 
       log.debug("Cleaning native build")
@@ -106,11 +103,10 @@ object JniNative extends AutoPlugin {
       }
 
     },
-
     nativeCompile := {
       val tool = nativeBuildTool.value
       val toolInstance = nativeBuildToolInstance.value
-      val targetDir = (target in nativeCompile).value / "bin"
+      val targetDir = (nativeCompile / target).value / "bin"
       val log = streams.value.log
 
       IO.createDirectory(targetDir)
@@ -123,9 +119,8 @@ object JniNative extends AutoPlugin {
 
     // also clean native sources
     clean := {
-      clean.dependsOn(clean in nativeCompile).value
+      clean.dependsOn(nativeCompile / clean).value
     },
-
     nativeInit := {
       import complete.DefaultParsers._
 
@@ -133,25 +128,24 @@ object JniNative extends AutoPlugin {
 
       def getTool(toolName: String): BuildTool = toolName.toLowerCase match {
         case "cmake" => CMake
-        case _ => sys.error("Unsupported build tool: " + toolName)
+        case _       => sys.error("Unsupported build tool: " + toolName)
       }
 
       val args = spaceDelimited("<tool> [<libname>]").parsed.toList
 
       val (tool: BuildTool, lib: String) = args match {
-        case Nil => sys.error("Invalid arguments.")
-        case tool :: Nil => (getTool(tool), name.value)
+        case Nil                  => sys.error("Invalid arguments.")
+        case tool :: Nil          => (getTool(tool), name.value)
         case tool :: lib :: other => (getTool(tool), lib)
       }
 
       log.info(s"Initializing native build with ${tool.name} configuration")
-      val files = tool.initTemplate((sourceDirectory in nativeCompile).value, lib)
-      files foreach { file =>
+      val files = tool.initTemplate((nativeCompile / sourceDirectory).value, lib)
+      files.foreach { file =>
         log.info("Wrote to " + file.getAbsolutePath)
       }
       files
     }
-
   )
 
   override lazy val projectSettings = settings

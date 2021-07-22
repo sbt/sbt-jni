@@ -1,10 +1,10 @@
 package ch.jodersky.sbt.jni
 package util
 
-import java.io.{ File, FileInputStream, Closeable }
-import scala.collection.mutable.{ HashSet }
+import java.io.{Closeable, File, FileInputStream}
+import scala.collection.mutable.{HashSet}
 
-import org.objectweb.asm.{ ClassReader, ClassVisitor, MethodVisitor, Opcodes }
+import org.objectweb.asm.{ClassReader, ClassVisitor, MethodVisitor, Opcodes}
 
 object BytecodeUtil {
 
@@ -16,13 +16,22 @@ object BytecodeUtil {
 
     private var fullyQualifiedName: String = ""
 
-    override def visit(version: Int, access: Int, name: String, signature: String,
-      superName: String, interfaces: Array[String]): Unit = {
+    override def visit(version: Int,
+                       access: Int,
+                       name: String,
+                       signature: String,
+                       superName: String,
+                       interfaces: Array[String]
+    ): Unit = {
       fullyQualifiedName = name.replaceAll("/", ".")
     }
 
-    override def visitMethod(access: Int, name: String, desc: String,
-      signature: String, exceptions: Array[String]): MethodVisitor = {
+    override def visitMethod(access: Int,
+                             name: String,
+                             desc: String,
+                             signature: String,
+                             exceptions: Array[String]
+    ): MethodVisitor = {
 
       val isNative = (access & Opcodes.ACC_NATIVE) != 0
 
@@ -47,11 +56,13 @@ object BytecodeUtil {
     }
   }
 
-  /** Finds classes containing native implementations.
-    * @param classFile java class file from which classes are read
-    * @return all fully qualified names of classes that contain at least one member annotated
-    * with @native
-    */
+  /**
+   * Finds classes containing native implementations.
+   * @param classFile
+   *   java class file from which classes are read
+   * @return
+   *   all fully qualified names of classes that contain at least one member annotated with @native
+   */
   def nativeClasses(classFile: File): Set[String] = using(new FileInputStream(classFile)) { in =>
     val reader = new ClassReader(in)
     val finder = new NativeFinder
