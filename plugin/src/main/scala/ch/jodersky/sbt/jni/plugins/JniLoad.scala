@@ -16,10 +16,9 @@ object JniLoad extends AutoPlugin {
     libraryDependencies ++= {
       CrossVersion.partialVersion(scalaVersion.value) match {
         case Some((2, n)) if n >= 13 => Seq()
-        case _ =>
-          Seq(
-            compilerPlugin(("org.scalamacros" % "paradise" % ProjectVersion.MacrosParadise).cross(CrossVersion.full))
-          )
+        case Some((2, n)) =>
+          Seq(compilerPlugin(("org.scalamacros" % "paradise" % ProjectVersion.MacrosParadise).cross(CrossVersion.full)))
+        case _ => Seq()
       }
     },
     Compile / scalacOptions ++= {
@@ -28,9 +27,14 @@ object JniLoad extends AutoPlugin {
         case _                       => Seq()
       }
     },
-    resolvers += Resolver.jcenterRepo,
-    libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value % Provided,
-    libraryDependencies += "ch.jodersky" %% "sbt-jni-macros" % ProjectVersion.Macros % Provided
+    libraryDependencies ++= {
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, n)) => Seq("org.scala-lang" % "scala-reflect" % scalaVersion.value % Provided)
+        case _            => Seq()
+      }
+    },
+    libraryDependencies += "ch.jodersky" %% "sbt-jni-macros" % ProjectVersion.Macros % Provided,
+    resolvers += Resolver.jcenterRepo
   )
 
   override def projectSettings = settings

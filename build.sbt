@@ -1,6 +1,6 @@
 import scala.sys.process._
 
-val scalaVersions = Seq("2.13.6", "2.12.14", "2.11.12")
+val scalaVersions = Seq("3.0.0", "2.13.6", "2.12.14")
 val macrosParadiseVersion = "2.1.1"
 
 // version is derived from latest git tag
@@ -38,15 +38,21 @@ lazy val macros = project
   .settings(
     name := "sbt-jni-macros",
     crossScalaVersions := scalaVersions,
-    libraryDependencies += "org.scala-lang" % "scala-compiler" % scalaVersion.value % Provided,
-    libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value,
+    libraryDependencies ++= {
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, n)) => Seq(
+          "org.scala-lang" % "scala-compiler" % scalaVersion.value % Provided,
+          "org.scala-lang" % "scala-reflect" % scalaVersion.value
+        )
+        case _            => Seq("org.scala-lang" %% "scala3-compiler" % scalaVersion.value)
+      }
+    },
     libraryDependencies ++= {
       CrossVersion.partialVersion(scalaVersion.value) match {
         case Some((2, n)) if n >= 13 => Seq()
-        case _ =>
-          Seq(
-            compilerPlugin(("org.scalamacros" % "paradise" % macrosParadiseVersion).cross(CrossVersion.full))
-          )
+        case Some((2, n)) =>
+          Seq(compilerPlugin(("org.scalamacros" % "paradise" % macrosParadiseVersion).cross(CrossVersion.full)))
+        case _            => Seq()
       }
     },
     Compile / scalacOptions ++= {
