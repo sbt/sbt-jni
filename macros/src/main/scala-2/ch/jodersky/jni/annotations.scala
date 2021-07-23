@@ -5,7 +5,7 @@ import scala.reflect.macros.whitebox.Context
 import scala.annotation.StaticAnnotation
 import scala.annotation.compileTimeOnly
 
-class nativeLoaderMacro(val c: Context) {
+class nativeLoaderAnnotationMacro(val c: Context) {
 
   def impl(annottees: c.Expr[Any]*): c.Expr[Any] = {
     import c.universe._
@@ -105,5 +105,5 @@ class nativeLoaderMacro(val c: Context) {
 
 @compileTimeOnly("Macro Paradise must be enabled to apply annotation.")
 class nativeLoader(nativeLibrary: String) extends StaticAnnotation {
-  def macroTransform(annottees: Any*): Any = macro nativeLoaderMacro.impl
+  def macroTransform(annottees: Any*): Any = macro nativeLoaderAnnotationMacro.impl
 }

@@ -4,10 +4,7 @@ package plugins
 import sbt._
 import sbt.Keys._
 
-object JniLoad extends AutoPlugin {
-
-  override def requires = empty
-  override def trigger = allRequirements
+object JniSyntax extends AutoPlugin {
 
   lazy val settings: Seq[Setting[_]] = Seq(
     // Macro Paradise plugin and dependencies are needed to expand annotation macros.
@@ -29,11 +26,11 @@ object JniLoad extends AutoPlugin {
     },
     libraryDependencies ++= {
       CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, n)) => Seq("org.scala-lang" % "scala-reflect" % scalaVersion.value % Provided)
+        case Some((2, n)) => Seq("org.scala-lang" % "scala-reflect" % scalaVersion.value)
         case _            => Seq()
       }
     },
-    libraryDependencies += "ch.jodersky" %% "sbt-jni-macros" % ProjectVersion.Macros % Provided,
+    libraryDependencies += "ch.jodersky" %% "sbt-jni-core" % ProjectVersion.Macros,
     resolvers += Resolver.jcenterRepo
   )
 

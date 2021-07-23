@@ -2,10 +2,10 @@
 
 | sbt version | plugin version |
 |-------------|----------------|
-| 0.13.x      | [Download](https://scala.jfrog.io/artifactory/sbt-plugin-releases/ch.jodersky/sbt-jni/scala_2.10/sbt_0.13/) |
-| 1.x         | [Download](https://scala.jfrog.io/artifactory/sbt-plugin-releases/ch.jodersky/sbt-jni/scala_2.12/sbt_1.0/) |
+| 0.13.x      | [1.2.6](https://scala.jfrog.io/artifactory/sbt-plugin-releases/ch.jodersky/sbt-jni/scala_2.10/sbt_0.13/1.2.6/) |
+| 1.x         | [1.4.1](https://scala.jfrog.io/artifactory/sbt-plugin-releases/ch.jodersky/sbt-jni/scala_2.12/sbt_1.0/1.4.1/) |
 
-# sbt-jni
+# SBT-JNI
 
 A suite of sbt plugins for simplifying creation and distribution of JNI programs.
 
@@ -28,13 +28,14 @@ The second point, portability, is inherent to JNI and thus unavoidable. However 
 | JniLoad    | Makes `@nativeLoader` annotation available, that injects code to transparently load native libraries.  |
 | JniNative  | Adds sbt wrapper tasks around native build tools to ease building and integrating native libraries.    |
 | JniPackage | Packages native libraries into multi-platform fat jars. No more manual library installation!     |
+| JniSyntax | Adds an alternative to `@nativeLoader` annotation syntax, that requires this plugin to be a run time dependency     |
 
 All plugins are made available by adding the following to `project/plugins.sbt`:
 ```scala
 
 addSbtPlugin("ch.jodersky" % "sbt-jni" % "<latest version>")
 ```
-where `<latest version>` refers to the version indicated by the download badge above, or, equivalently, to the [latest version available on bintray](https://bintray.com/jodersky/sbt-plugins/sbt-jni/_latestVersion).
+where `<latest version>` refers to the version indicated by the download badge above, or, equivalently, to the [latest version available on jFrog](https://scala.jfrog.io/artifactory/sbt-plugin-releases/ch.jodersky/sbt-jni/scala_2.12/sbt_1.0/).
 
 Note that most plugins are enabled in projects by default. Disabling their functionality can be achieved by adding `disablePlugins(<plugin>)` to the corresponding project definition (for example, should you wish to disable packaging of native libraries).
 
@@ -84,9 +85,11 @@ Note that native methods declared both in Scala and Java are supported. Whereas 
 |--------------------------------|---------------|
 | automatic, for all projects    | [JniLoad.scala](plugin/src/main/scala/ch/jodersky/sbt/jni/plugins/JniLoad.scala) |
 
+! Important: `@nativeLoader` annotation works only with Scala 2.x. You may want to consider usage of the [JniSyntax](#jnisyntax)
+
 This plugin enables loading native libraries in a safe and transparent manner to the developer (no more explicit, static `System.load("library")` calls required). It does so by providing a class annotation which injects native loading code to all its annottees. Furthermore, in case a native library is not available on the current `java.library.path`, the code injected by the annotation will fall back to loading native libraries packaged according to the rules of `JniPackage`.
 
-Example use:
+#### Example use (Scala 2.x):
 ```scala
 import ch.jodersky.jni.nativeLoader
 
@@ -106,6 +109,22 @@ object Main extends App {
 Note: this plugin is just a shorthand for adding `sbt-jni-macros` (the project in `macros/`) and the scala-macros-paradise (on Scala <= 2.13) projects as provided dependencies.
 
 See the [annotation's implementation](macros/src/main/scala/ch/jodersky/jni/annotations.scala) for details about the injected code.
+
+#### Example use (Scala 3.x):
+
+```scala
+import ch.jodersky.jni.syntax.NativeLoader
+
+// By adding this annotation, there is no need to call
+// System.load("adder0") before accessing native methods.
+class Adder(val base: Int) extends NativeLoader("adder0"):
+  @native def plus(term: Int): Int // implemented in libadder0.so
+
+// The application feels like a pure Scala app.
+@main def main: Unit = (new Adder(0)).plus(1)
+```
+
+Requires [JniSyntax](#JniSyntax) plugin usage.
 
 ### JniNative
 | Enabled                        | Source        |
@@ -132,6 +151,30 @@ target in nativeCompile := target.value / "native" / (nativePlatform).value,
 | automatic, when JniNative enabled | [JniPackage.scala](plugin/src/main/scala/ch/jodersky/sbt/jni/plugins/JniPackage.scala) |
 
 This plugin packages native libraries produced by JniNative in a way that they can be transparently loaded with JniLoad. It uses the notion of a native "platform", defined as the architecture-kernel values returned by `uname -sm`. A native binary of a given platform is assumed to be executable on any machines of the same platform.
+
+### JniSyntax
+| Enabled                        | Source        |
+|--------------------------------|---------------|
+| manual                         | [JniSyntax.scala](plugin/src/main/scala/ch/jodersky/sbt/jni/plugins/JniSyntax.scala) |
+
+Scala 3 has no macro annotations support. JniSyntax contains syntax to ease usage of the `ch.jodersky.jni.nativeLoaderMacro` in the project (see [JniLoad](#JniLoad) section for more details). This option requires to have runtime dependencies on [macros](./macros) and [core](./core) sub projects.
+
+#### Example use (Scala 2.x / 3.x):
+
+```scala
+import ch.jodersky.jni.syntax.NativeLoader
+
+// By adding this annotation, there is no need to call
+// System.load("adder0") before accessing native methods.
+class Adder(val base: Int) extends NativeLoader("adder0") {
+  @native def plus(term: Int): Int // implemented in libadder0.so
+}
+
+// The application feels like a pure Scala app.
+object Main extends App {
+  (new Adder(0)).plus(1)
+}
+```
 
 ## Canonical Use
 
