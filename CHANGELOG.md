@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Scala 3 support [#45](https://github.com/sbt/sbt-jni/issues/45)
+- Add CMake support of versions < 3.15 [#51](https://github.com/sbt/sbt-jni/pull/51)
 
 ### Changed
 - Upgrade gjavah [#43](https://github.com/sbt/sbt-jni/pull/43)
