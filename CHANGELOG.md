@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - javah failed with ClassCastException [#38](https://github.com/sbt/sbt-jni/issues/38)
-- Use cmake platform build tool [#40](https://github.com/sbt/sbt-jni/issues/38)
+- Use cmake platform build tool [#40](https://github.com/sbt/sbt-jni/issues/40)
 
 ## [1.4.1] - 2019-12-13
 
