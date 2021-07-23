@@ -1,17 +1,13 @@
 import scala.sys.process._
 
-val scalaVersions = Seq("3.0.0", "2.13.6", "2.12.14")
+val scalaVersions = Seq("3.0.1", "2.13.6", "2.12.14")
 val macrosParadiseVersion = "2.1.1"
 
 // version is derived from latest git tag
 ThisBuild / version := ("git describe --always --dirty=-SNAPSHOT --match v[0-9].*" !!).tail.trim
 ThisBuild / organization := "ch.jodersky"
-ThisBuild / scalacOptions ++= Seq(
-  "-deprecation",
-  "-feature" //,
-  // "-Xfatal-warnings",
-  // "-Xlint"
-)
+ThisBuild / scalaVersion := scalaVersions.head
+ThisBuild / scalacOptions ++= Seq("-deprecation", "-feature")
 ThisBuild / licenses := Seq(("BSD New", url("http://opensource.org/licenses/BSD-3-Clause")))
 ThisBuild / homepage := Some(url("https://github.com/jodersky/sbt-jni"))
 ThisBuild / developers := List(
