@@ -114,12 +114,13 @@ Scala 3 has no macro annotations support. As a solution we don't need this to be
 This plugin behavior is configurable via:
 
 ```scala
-sbtJniCoreProvided := <boolean> // set to true by default, and is enough make @nativeLoader annotation work
+// set to Provided by default
+sbtJniCoreScope := <Configuration>
 ```
 
 ```scala
 // to make the code below work the core project should be included as a dependency via
-// sbtJniCoreProvided := false
+// sbtJniCoreScope := Compile
 import ch.jodersky.jni.syntax.NativeLoader
 
 // By adding this annotation, there is no need to call

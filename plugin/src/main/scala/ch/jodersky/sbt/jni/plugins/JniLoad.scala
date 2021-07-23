@@ -11,9 +11,12 @@ object JniLoad extends AutoPlugin {
 
   object autoImport {
 
-    val sbtJniCoreProvided = settingKey[Boolean](
-      "Determines if sbt-jni-core dependecy is Provided or not. The default value is set to true." +
-        "If set to false, the sbt-jni-core would be a runtime dependency (required for Scala 3.x compatible syntax)."
+    val sbtJniCoreScope = settingKey[sbt.librarymanagement.Configuration](
+      """
+        |Defines the sbt-jni-core dependency scope. The default value is set to Provided.
+        |If set to Copmile, the sbt-jni-core would be a compile dependency (required for
+        |the Scala 3.x compatible syntax).
+      """.stripMargin
     )
 
   }
@@ -21,7 +24,7 @@ object JniLoad extends AutoPlugin {
   import autoImport._
 
   lazy val settings: Seq[Setting[_]] = Seq(
-    sbtJniCoreProvided := true,
+    sbtJniCoreScope := Provided,
     // Macro Paradise plugin and dependencies are needed to expand annotation macros.
     // Once expanded however, downstream projects don't need these dependencies anymore
     // (hence the "Provided" configuration).
@@ -40,17 +43,12 @@ object JniLoad extends AutoPlugin {
       }
     },
     libraryDependencies ++= {
-      val scope = if (sbtJniCoreProvided.value) Provided else Compile
       CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, n)) => Seq("org.scala-lang" % "scala-reflect" % scalaVersion.value % scope)
+        case Some((2, n)) => Seq("org.scala-lang" % "scala-reflect" % scalaVersion.value % Provided)
         case _            => Seq()
       }
     },
-    libraryDependencies += {
-      val scope = if (sbtJniCoreProvided.value) Provided else Compile
-      "ch.jodersky" %% "sbt-jni-core" % ProjectVersion.Core % scope
-    },
-    resolvers += Resolver.jcenterRepo
+    libraryDependencies += "ch.jodersky" %% "sbt-jni-core" % ProjectVersion.Core % sbtJniCoreScope.value
   )
 
   override def projectSettings = settings
