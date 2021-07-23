@@ -14,8 +14,7 @@ object JniLoad extends AutoPlugin {
     val sbtJniCoreScope = settingKey[sbt.librarymanagement.Configuration](
       """
         |Defines the sbt-jni-core dependency scope. The default value is set to Provided.
-        |If set to Copmile, the sbt-jni-core would be a compile dependency (required for
-        |the Scala 3.x compatible syntax).
+        |Should be set to Compile to enable Scala 3.x compatible syntax).
       """.stripMargin
     )
 
