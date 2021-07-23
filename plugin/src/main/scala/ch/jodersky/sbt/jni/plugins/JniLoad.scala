@@ -9,7 +9,19 @@ object JniLoad extends AutoPlugin {
   override def requires = empty
   override def trigger = allRequirements
 
+  object autoImport {
+
+    val macroProvided = settingKey[Boolean](
+      "Determines if macro dependecy is Provided. The default value is true." +
+        "if set to false the macro would be a runtime dependency (required for Scala 3.x)."
+    )
+
+  }
+
+  import autoImport._
+
   lazy val settings: Seq[Setting[_]] = Seq(
+    macroProvided := true,
     // Macro Paradise plugin and dependencies are needed to expand annotation macros.
     // Once expanded however, downstream projects don't need these dependencies anymore
     // (hence the "Provided" configuration).
@@ -28,12 +40,16 @@ object JniLoad extends AutoPlugin {
       }
     },
     libraryDependencies ++= {
+      val scope = if (macroProvided.value) Provided else Compile
       CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, n)) => Seq("org.scala-lang" % "scala-reflect" % scalaVersion.value % Provided)
+        case Some((2, n)) => Seq("org.scala-lang" % "scala-reflect" % scalaVersion.value % scope)
         case _            => Seq()
       }
     },
-    libraryDependencies += "ch.jodersky" %% "sbt-jni-macros" % ProjectVersion.Macros % Provided,
+    libraryDependencies += {
+      val scope = if (macroProvided.value) Provided else Compile
+      "ch.jodersky" %% "sbt-jni-macros" % ProjectVersion.Macros % scope
+    },
     resolvers += Resolver.jcenterRepo
   )
 

@@ -28,7 +28,6 @@ The second point, portability, is inherent to JNI and thus unavoidable. However 
 | JniLoad    | Makes `@nativeLoader` annotation available, that injects code to transparently load native libraries.  |
 | JniNative  | Adds sbt wrapper tasks around native build tools to ease building and integrating native libraries.    |
 | JniPackage | Packages native libraries into multi-platform fat jars. No more manual library installation!     |
-| JniSyntax | Adds an alternative to `@nativeLoader` annotation syntax, that requires this plugin to be a run time dependency     |
 
 All plugins are made available by adding the following to `project/plugins.sbt`:
 ```scala
@@ -74,7 +73,7 @@ JNIEXPORT jint JNICALL Java_org_example_Adder_plus
 
 The header output directory can be configured
 ```
-target in javah := <dir> // defaults to target/native/include
+javah / target := <dir> // defaults to target/native/include
 ```
 
 Note that native methods declared both in Scala and Java are supported. Whereas Scala uses the `@native` annotation, Java uses the
@@ -84,8 +83,6 @@ Note that native methods declared both in Scala and Java are supported. Whereas 
 | Enabled                        | Source        |
 |--------------------------------|---------------|
 | automatic, for all projects    | [JniLoad.scala](plugin/src/main/scala/ch/jodersky/sbt/jni/plugins/JniLoad.scala) |
-
-**! Important**: *`@nativeLoader` annotation works with Scala 2.x only. You may want to consider the [JniSyntax](#jnisyntax) plugin usage for the Scala 3.x projects.*
 
 This plugin enables loading native libraries in a safe and transparent manner to the developer (no more explicit, static `System.load("library")` calls required). It does so by providing a class annotation which injects native loading code to all its annottees. Furthermore, in case a native library is not available on the current `java.library.path`, the code injected by the annotation will fall back to loading native libraries packaged according to the rules of `JniPackage`.
 
@@ -110,21 +107,32 @@ Note: this plugin is just a shorthand for adding `sbt-jni-macros` (the project i
 
 See the [annotation's implementation](macros/src/main/scala/ch/jodersky/jni/annotations.scala) for details about the injected code.
 
-#### Example use (Scala 3.x):
+#### Example use (Scala 3.x / Scala 2.x):
+
+Scala 3 has no macro annotations support. As a solution we don't need this to be a macro function anymore. As the result, this option requires to have an explicit dependency on the [macros](./macros) sub project.
+
+This plugin behavior is configurable via:
 
 ```scala
+macroProvided := <boolean> // set to true by default, and is enough make @nativeLoader annotation work
+```
+
+```scala
+// to make the code below work the macro project should be included as a dependency via
+// macroProvided := false
 import ch.jodersky.jni.syntax.NativeLoader
 
 // By adding this annotation, there is no need to call
 // System.load("adder0") before accessing native methods.
-class Adder(val base: Int) extends NativeLoader("adder0"):
+class Adder(val base: Int) extends NativeLoader("adder0") {
   @native def plus(term: Int): Int // implemented in libadder0.so
+}
 
 // The application feels like a pure Scala app.
-@main def main: Unit = (new Adder(0)).plus(1)
+object Main extends App {
+  (new Adder(0)).plus(1)
+}
 ```
-
-Requires [JniSyntax](#JniSyntax) plugin usage.
 
 ### JniNative
 | Enabled                        | Source        |
@@ -141,8 +149,8 @@ An initial, compatible build template can be obtained by running `sbt nativeInit
 
 Source and output directories are configurable
 ```scala
-sourceDirectory in nativeCompile := sourceDirectory.value / "native",
-target in nativeCompile := target.value / "native" / (nativePlatform).value,
+nativeCompile / sourceDirectory := sourceDirectory.value / "native",
+nativeCompile / target := target.value / "native" / (nativePlatform).value,
 ```
 
 ### JniPackage
@@ -152,30 +160,6 @@ target in nativeCompile := target.value / "native" / (nativePlatform).value,
 
 This plugin packages native libraries produced by JniNative in a way that they can be transparently loaded with JniLoad. It uses the notion of a native "platform", defined as the architecture-kernel values returned by `uname -sm`. A native binary of a given platform is assumed to be executable on any machines of the same platform.
 
-### JniSyntax
-| Enabled                        | Source        |
-|--------------------------------|---------------|
-| manual                         | [JniSyntax.scala](plugin/src/main/scala/ch/jodersky/sbt/jni/plugins/JniSyntax.scala) |
-
-Scala 3 has no macro annotations support. JniSyntax contains syntax to ease usage of the `ch.jodersky.jni.nativeLoaderMacro` in the project (see [JniLoad](#JniLoad) section for more details). This option requires to have runtime dependencies on [macros](./macros) and [core](./core) sub projects.
-
-#### Example use (Scala 2.x / 3.x):
-
-```scala
-import ch.jodersky.jni.syntax.NativeLoader
-
-// By adding this annotation, there is no need to call
-// System.load("adder0") before accessing native methods.
-class Adder(val base: Int) extends NativeLoader("adder0") {
-  @native def plus(term: Int): Int // implemented in libadder0.so
-}
-
-// The application feels like a pure Scala app.
-object Main extends App {
-  (new Adder(0)).plus(1)
-}
-```
-
 ## Canonical Use
 
 *Keep in mind that sbt-jni is a __suite__ of plugins, there are many other use cases. This is a just a description of the most common one.*
@@ -183,11 +167,11 @@ object Main extends App {
 1. Define separate sub-projects for JVM and native sources. In `myproject/build.sbt`:
 
    ```scala
-   lazy val core = project in file("myproject-core"). // regular scala code with @native methods
-     dependsOn(native % Runtime) // remove this if `core` is a library, leave choice to end-user
+   lazy val core = project in file("myproject-core") // regular scala code with @native methods
+     .dependsOn(native % Runtime) // remove this if `core` is a library, leave choice to end-user
 
-   lazy val native = project in file("myproject-native"). // native code and build script
-     enablePlugin(JniNative) // JniNative needs to be explicitly enabled
+   lazy val native = project in file("myproject-native") // native code and build script
+     .enablePlugin(JniNative) // JniNative needs to be explicitly enabled
    ```
    Note that separate projects are not strictly required. They are strongly recommended nevertheless, as a portability-convenience tradeoff: programs written in a JVM language are expected to run anywhere without recompilation, but including native libraries in jars limits this portability to only platforms of the packaged libraries. Having a separate native project enables the users to easily swap out the native library with their own implementation.
 
@@ -229,6 +213,7 @@ Real-world use-cases of sbt-jni include:
 ## Requirements and Dependencies
 
 - projects using `JniLoad` must use Scala versions 2.11, 2.12 or 2.13
+- projects using `JniLoad` with Scala 3 should use it with 
 - only POSIX platforms are supported (actually, any platform that has the `uname` command available)
 
 The goal of sbt-jni is to be the least intrusive possible. No transitive dependencies are added to projects using any plugin (some dependencies are added to the `provided` configuration, however these do not affect any downstream projects).

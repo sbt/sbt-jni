@@ -19,13 +19,13 @@ ThisBuild / developers := List(
 )
 
 lazy val root = (project in file("."))
-  .aggregate(macros, core, plugin)
+  .aggregate(macros, plugin)
   .settings(
     publish := {},
     publishLocal := {},
     // make sbt-pgp happy
     publishTo := Some(Resolver.file("Unused transient repository", target.value / "unusedrepo")),
-    addCommandAlias("test-plugin", ";+macros/publishLocal;+core/publishLocal;scripted")
+    addCommandAlias("test-plugin", ";+macros/publishLocal;scripted")
   )
 
 lazy val macros = project
@@ -40,13 +40,12 @@ lazy val macros = project
             "org.scala-lang" % "scala-compiler" % scalaVersion.value % Provided,
             "org.scala-lang" % "scala-reflect" % scalaVersion.value
           )
-        case _ => Seq("org.scala-lang" %% "scala3-compiler" % scalaVersion.value)
+        case _ => Seq("org.scala-lang" %% "scala3-compiler" % scalaVersion.value % Provided)
       }
     },
     libraryDependencies ++= {
       CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, n)) if n >= 13 => Seq()
-        case Some((2, n)) =>
+        case Some((2, n)) if n < 13 =>
           Seq(compilerPlugin(("org.scalamacros" % "paradise" % macrosParadiseVersion).cross(CrossVersion.full)))
         case _ => Seq()
       }
@@ -57,14 +56,6 @@ lazy val macros = project
         case _                       => Seq()
       }
     }
-  )
-
-lazy val core = project
-  .dependsOn(macros)
-  .settings(
-    name := "sbt-jni-core",
-    scalaVersion := scalaVersions.head,
-    crossScalaVersions := scalaVersions
   )
 
 lazy val plugin = project
