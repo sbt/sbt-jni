@@ -1,8 +1,11 @@
 package ch.jodersky.jni
 
 import scala.reflect.macros.whitebox.Context
+import scala.language.experimental.macros
 
 object nativeLoaderMacro {
+  def load(nativeLibrary: String): Unit = macro nativeLoaderMacro.impl
+
   def impl(c: Context)(nativeLibrary: c.Expr[String]): c.Expr[Unit] = {
     import c.universe._
     c.Expr(q"""

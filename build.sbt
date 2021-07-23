@@ -34,7 +34,6 @@ lazy val root = (project in file("."))
   )
 
 lazy val macros = project
-  .disablePlugins(ScriptedPlugin)
   .settings(
     name := "sbt-jni-macros",
     crossScalaVersions := scalaVersions,

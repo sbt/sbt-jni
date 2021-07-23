@@ -3,6 +3,8 @@ package ch.jodersky.jni
 import quoted.*
 
 object nativeLoaderMacro:
+  inline def load(nativeLibrary: String) = ${ nativeLoaderMacro.impl('nativeLibrary) }
+
   def impl(nativeLibrary: Expr[String])(using qctx: Quotes): Expr[Unit] =
     '{
       def loadPackaged(): Unit = {
