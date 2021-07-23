@@ -154,7 +154,7 @@ target in nativeCompile := target.value / "native" / (nativePlatform).value,
 
 This plugin packages native libraries produced by JniNative in a way that they can be transparently loaded with JniLoad. It uses the notion of a native "platform", defined as the architecture-kernel values returned by `uname -sm`. A native binary of a given platform is assumed to be executable on any machines of the same platform.
 
-### JniSyntax (adds a runtime dependency)
+### JniSyntax
 | Enabled                        | Source        |
 |--------------------------------|---------------|
 | manual                         | [JniSyntax.scala](plugin/src/main/scala/ch/jodersky/sbt/jni/plugins/JniSyntax.scala) |
