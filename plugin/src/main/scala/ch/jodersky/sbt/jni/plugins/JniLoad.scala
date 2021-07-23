@@ -12,8 +12,8 @@ object JniLoad extends AutoPlugin {
   object autoImport {
 
     val sbtJniCoreProvided = settingKey[Boolean](
-      "Determines if macro dependecy is Provided. The default value is true." +
-        "if set to false the macro would be a runtime dependency (required for Scala 3.x)."
+      "Determines if sbt-jni-core dependecy is Provided or not. The default value is set to true." +
+        "If set to false, the sbt-jni-core would be a runtime dependency (required for Scala 3.x compatible syntax)."
     )
 
   }
