@@ -85,7 +85,7 @@ Note that native methods declared both in Scala and Java are supported. Whereas 
 |--------------------------------|---------------|
 | automatic, for all projects    | [JniLoad.scala](plugin/src/main/scala/ch/jodersky/sbt/jni/plugins/JniLoad.scala) |
 
-! Important: `@nativeLoader` annotation works only with Scala 2.x. You may want to consider usage of the [JniSyntax](#jnisyntax)
+**! Important**: *`@nativeLoader` annotation works with Scala 2.x only. You may want to consider the [JniSyntax](#jnisyntax) plugin usage for the Scala 3.x projects.*
 
 This plugin enables loading native libraries in a safe and transparent manner to the developer (no more explicit, static `System.load("library")` calls required). It does so by providing a class annotation which injects native loading code to all its annottees. Furthermore, in case a native library is not available on the current `java.library.path`, the code injected by the annotation will fall back to loading native libraries packaged according to the rules of `JniPackage`.
 
