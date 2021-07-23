@@ -71,6 +71,7 @@ lazy val plugin = project
   .enablePlugins(SbtPlugin)
   .settings(
     name := "sbt-jni",
+    licenses += ("MIT", url("http://opensource.org/licenses/MIT")),
     libraryDependencies += "org.ow2.asm" % "asm" % "9.1",
     // make project settings available to source
     Compile / sourceGenerators += Def.task {
