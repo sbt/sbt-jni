@@ -1,4 +1,6 @@
-package ch.jodersky.sbt.jni.javah;
+package ch.jodersky.sbt.jni.javah.search;
+
+import ch.jodersky.sbt.jni.javah.ClassName;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,12 +10,14 @@ import java.util.*;
 import java.util.jar.Manifest;
 import java.util.stream.Collectors;
 
+import static ch.jodersky.sbt.jni.javah.util.Utils.*;
+
 public interface SearchPath {
     Path search(ClassName name);
 
     default Path search(String fullName) {
         Objects.requireNonNull(fullName);
-        return search(ClassName.of(fullName));
+        return search(ClassName.ofFullName(fullName));
     }
 
     static Path searchFrom(Iterable<SearchPath> searchPaths, ClassName name) {
@@ -76,7 +80,7 @@ public interface SearchPath {
                     List<Path> list = Files.list(base)
                             .map(Path::toAbsolutePath)
                             .filter(Files::isDirectory)
-                            .filter(p -> Utils.MULTI_RELEASE_VERSIONS.contains(p.getFileName().toString()))
+                            .filter(p -> MULTI_RELEASE_VERSIONS.contains(p.getFileName().toString()))
                             .sorted(Comparator.comparing((Path p) -> Integer.parseInt(p.getFileName().toString())).reversed())
                             .collect(Collectors.toCollection(LinkedList::new));
                     list.add(root);
