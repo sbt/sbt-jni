@@ -19,18 +19,18 @@ ThisBuild / developers := List(
 )
 
 lazy val root = (project in file("."))
-  .aggregate(macros, plugin)
+  .aggregate(core, plugin)
   .settings(
     publish := {},
     publishLocal := {},
     // make sbt-pgp happy
     publishTo := Some(Resolver.file("Unused transient repository", target.value / "unusedrepo")),
-    addCommandAlias("test-plugin", ";+macros/publishLocal;scripted")
+    addCommandAlias("test-plugin", ";+core/publishLocal;scripted")
   )
 
-lazy val macros = project
+lazy val core = project
   .settings(
-    name := "sbt-jni-macros",
+    name := "sbt-jni-core",
     scalaVersion := scalaVersions.head,
     crossScalaVersions := scalaVersions,
     libraryDependencies ++= {
@@ -71,7 +71,7 @@ lazy val plugin = project
                     |
                     |private[jni] object ProjectVersion {
                     |  final val MacrosParadise = "${macrosParadiseVersion}"
-                    |  final val Macros = "${version.value}"
+                    |  final val Core = "${version.value}"
                     |}
                     |""".stripMargin
       val file = sourceManaged.value / "ch" / "jodersky" / "sbt" / "jni" / "ProjectVersion.scala"

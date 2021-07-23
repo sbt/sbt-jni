@@ -103,35 +103,32 @@ object Main extends App {
 }
 ```
 
-Note: this plugin is just a shorthand for adding `sbt-jni-macros` (the project in `macros/`) and the scala-macros-paradise (on Scala <= 2.13) projects as provided dependencies.
+Note: this plugin is just a shorthand for adding `sbt-jni-core` (the project in `core/`) and the scala-macros-paradise (on Scala <= 2.13) projects as provided dependencies.
 
-See the [annotation's implementation](macros/src/main/scala/ch/jodersky/jni/annotations.scala) for details about the injected code.
+See the [annotation's implementation](core/src/main/scala/ch/jodersky/jni/annotations.scala) for details about the injected code.
 
 #### Example use (Scala 3.x / Scala 2.x):
 
-Scala 3 has no macro annotations support. As a solution we don't need this to be a macro function anymore. As the result, this option requires to have an explicit dependency on the [macros](./macros) sub project.
+Scala 3 has no macro annotations support. As a solution we don't need this to be a macro function anymore. As the result, this option requires to have an explicit dependency on the [core](./core) sub project.
 
 This plugin behavior is configurable via:
 
 ```scala
-macroProvided := <boolean> // set to true by default, and is enough make @nativeLoader annotation work
+sbtJniCoreProvided := <boolean> // set to true by default, and is enough make @nativeLoader annotation work
 ```
 
 ```scala
-// to make the code below work the macro project should be included as a dependency via
-// macroProvided := false
+// to make the code below work the core project should be included as a dependency via
+// sbtJniCoreProvided := false
 import ch.jodersky.jni.syntax.NativeLoader
 
 // By adding this annotation, there is no need to call
 // System.load("adder0") before accessing native methods.
-class Adder(val base: Int) extends NativeLoader("adder0") {
+class Adder(val base: Int) extends NativeLoader("adder0"):
   @native def plus(term: Int): Int // implemented in libadder0.so
-}
 
 // The application feels like a pure Scala app.
-object Main extends App {
-  (new Adder(0)).plus(1)
-}
+@main def main: Unit = (new Adder(0)).plus(1)
 ```
 
 ### JniNative
@@ -202,7 +199,7 @@ This plugin packages native libraries produced by JniNative in a way that they c
 ## Examples
 The [plugins' unit tests](plugin/src/sbt-test/sbt-jni) offer some simple examples. They can be run individually through these steps:
 
-1. Publish the macros library locally `sbt publishLocal`.
+1. Publish the core library locally `sbt publishLocal`.
 2. Change to the test's directory and run `sbt -Dplugin.version=<version>`.
 3. Follow the instructions in the `test` file (only enter the lines that start with ">" into sbt).
 
@@ -219,9 +216,9 @@ Real-world use-cases of sbt-jni include:
 The goal of sbt-jni is to be the least intrusive possible. No transitive dependencies are added to projects using any plugin (some dependencies are added to the `provided` configuration, however these do not affect any downstream projects).
 
 ## Building
-Both the macro library (`sbt-jni-macros`) and the sbt plugins (`sbt-jni`) are published. Cross-building happens on a per-project basis:
+Both the core (former macros) library (`sbt-jni-core`) and the sbt plugins (`sbt-jni`) are published. Cross-building happens on a per-project basis:
 
-- sbt-jni-macros is built against Scala 2.11, 2.12 and 2.13
+- sbt-jni-core is built against Scala 2.11, 2.12 and 2.13
 - sbt-jni is built against Scala 2.12 (the Scala version that sbt 1.x uses)
 
 The differing Scala versions make it necessary to always cross-compile and cross-publish this project, i.e. append a "+" before every task.
