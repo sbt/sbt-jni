@@ -22,19 +22,19 @@ object CMake extends BuildTool with ConfigureMakeInstall {
 
     def cmakeProcess(args: String*): ProcessBuilder = Process("cmake" +: args, buildDirectory)
 
-    lazy val cmakeVersion = cmakeProcess("--version").lineStream.head
-      .split("\\s+")
-      .last
-      .split("\\.") match {
-      case Array(maj, min, rev) =>
-        logger.info(s"Using CMake version $maj.$min.$rev")
-        maj.toInt * 100 + min.toInt
-      case _ => -1
-    }
+    lazy val cmakeVersion =
+      cmakeProcess("--version").lineStream.head
+        .split("\\s+")
+        .last
+        .split("\\.") match {
+        case Array(maj, min, rev) =>
+          logger.info(s"Using CMake version $maj.$min.$rev")
+          maj.toInt * 100 + min.toInt
+        case _ => -1
+      }
 
     def parallelOptions: Seq[String] =
-      if (cmakeVersion >= 312)
-        Seq("--parallel", parallelJobs.toString())
+      if (cmakeVersion >= 312) Seq("--parallel", parallelJobs.toString())
       else Seq.empty
 
     override def configure(target: File) = cmakeProcess(
@@ -57,10 +57,11 @@ object CMake extends BuildTool with ConfigureMakeInstall {
       Seq("--build", buildDirectory.getAbsolutePath) ++ parallelOptions: _*
     )
 
-    override def install(): ProcessBuilder = cmakeProcess(
-      "--install",
-      buildDirectory.getAbsolutePath
-    )
+    override def install(): ProcessBuilder =
+      // https://cmake.org/cmake/help/v3.15/release/3.15.html#id6
+      // Beginning with version 3.15, CMake introduced the install switch
+      if (cmakeVersion >= 315) cmakeProcess("--install", buildDirectory.getAbsolutePath)
+      else Process("make install", buildDirectory)
   }
 
 }
