@@ -111,14 +111,12 @@ Note: this plugin is just a shorthand for adding `sbt-jni-macros` (the project i
 See the [annotation's implementation](macros/src/main/scala/ch/jodersky/jni/annotations.scala) for details about the injected code.
 
 #### Example use (Scala 3.x):
+
 ```scala
-import quoted.*
+import ch.jodersky.jni.syntax.NativeLoader
 
-// Some syntax to make the load closer to the original syntax with macro annotations
-class NativeLoader(nativeLibrary: String):
-  inline def load = ${ nativeLoaderMacro.impl('nativeLibrary) }
-  load
-
+// By adding this annotation, there is no need to call
+// System.load("adder0") before accessing native methods.
 class Adder(val base: Int) extends NativeLoader("adder0"):
   @native def plus(term: Int): Int // implemented in libadder0.so
 
@@ -126,7 +124,7 @@ class Adder(val base: Int) extends NativeLoader("adder0"):
 @main def main: Unit = (new Adder(0)).plus(1)
 ```
 
-Instead of a manual `NativeLoader` class definition, you may want to consider usage of the [JniSyntax](#JniSyntax)
+Requires [JniSyntax](#JniSyntax) plugin usage.
 
 ### JniNative
 | Enabled                        | Source        |
