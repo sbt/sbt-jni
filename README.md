@@ -4,8 +4,7 @@
 |-------------|----------------|----------------|
 | 0.13.x      | ch.jodersky    | [1.2.6](https://scala.jfrog.io/artifactory/sbt-plugin-releases/ch.jodersky/sbt-jni/scala_2.10/sbt_0.13/1.2.6/) |
 | 1.x         | ch.jodersky    | [1.4.1](https://scala.jfrog.io/artifactory/sbt-plugin-releases/ch.jodersky/sbt-jni/scala_2.12/sbt_1.0/1.4.1/) |
-| 1.x         | com.github.sbt | [![Maven Central](https://img.shields.io/maven-central/v/com.github.sbt/sbt-jni-core_3)](https://search.maven.org/search?q=g:com.github.sbt%20AND%20a:sbt-jni)
- |
+| 1.x         | com.github.sbt | [![Maven Central](https://img.shields.io/maven-central/v/com.github.sbt/sbt-jni-core_3)](https://search.maven.org/search?q=g:com.github.sbt%20AND%20a:sbt-jni) |
 
 # SBT-JNI
 
