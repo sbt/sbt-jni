@@ -1,13 +1,24 @@
-[![CI](https://github.com/sbt/sbt-jni/workflows/CI/badge.svg)](https://github.com/sbt/sbt-jni/actions)
+[![CI](https://github.com/sbt/sbt-jni/workflows/CI/badge.svg)](https://github.com/sbt/sbt-jni/actions) [![Maven Central](https://img.shields.io/maven-central/v/com.github.sbt/sbt-jni-core_3)](https://search.maven.org/search?q=g:com.github.sbt%20AND%20a:sbt-jni) [![Snapshots](https://img.shields.io/nexus/s/https/oss.sonatype.org/com.github.sbt/sbt-jni-core_3.svg)](https://oss.sonatype.org/content/repositories/snapshots/com/github/sbt/sbt-jni_2.12_1.0/)
 
-| sbt version | plugin version |
-|-------------|----------------|
-| 0.13.x      | [1.2.6](https://scala.jfrog.io/artifactory/sbt-plugin-releases/ch.jodersky/sbt-jni/scala_2.10/sbt_0.13/1.2.6/) |
-| 1.x         | [1.4.1](https://scala.jfrog.io/artifactory/sbt-plugin-releases/ch.jodersky/sbt-jni/scala_2.12/sbt_1.0/1.4.1/) |
+| sbt version | group id | plugin version |
+|-------------|----------------|----------------|
+| 0.13.x      | ch.jodersky    | [1.2.6](https://scala.jfrog.io/artifactory/sbt-plugin-releases/ch.jodersky/sbt-jni/scala_2.10/sbt_0.13/1.2.6/) |
+| 1.x         | ch.jodersky    | [1.4.1](https://scala.jfrog.io/artifactory/sbt-plugin-releases/ch.jodersky/sbt-jni/scala_2.12/sbt_1.0/1.4.1/) |
+| 1.x         | com.github.sbt | [![Maven Central](https://img.shields.io/maven-central/v/com.github.sbt/sbt-jni-core_3)](https://search.maven.org/search?q=g:com.github.sbt%20AND%20a:sbt-jni)
+ |
 
 # SBT-JNI
 
 A suite of sbt plugins for simplifying creation and distribution of JNI programs.
+
+## Setup
+
+Add sbt-jni as a dependency to `project/plugins.sbt`:
+```scala
+addSbtPlugin("com.github.sbt" % "sbt-jni" % "<latest version>")
+```
+
+where `<latest version>` refers to the version indicated by the badge above.
 
 ## Motivation
 Java Native Interface (JNI), is a framework that enables programs written in a JVM language to interact with native code and vice-versa. Such programs can be divided into two logical parts: the JVM part, consisting of sources that will be compiled to bytecode (e.g. Scala or Java), and the native part, consisting of sources that will be compiled to machine-native code (e.g. C, C++ or assembly).
@@ -28,13 +39,6 @@ The second point, portability, is inherent to JNI and thus unavoidable. However 
 | JniLoad    | Makes `@nativeLoader` annotation available, that injects code to transparently load native libraries.  |
 | JniNative  | Adds sbt wrapper tasks around native build tools to ease building and integrating native libraries.    |
 | JniPackage | Packages native libraries into multi-platform fat jars. No more manual library installation!     |
-
-All plugins are made available by adding the following to `project/plugins.sbt`:
-```scala
-
-addSbtPlugin("ch.jodersky" % "sbt-jni" % "<latest version>")
-```
-where `<latest version>` refers to the version indicated by the download badge above, or, equivalently, to the [latest version available on jFrog](https://scala.jfrog.io/artifactory/sbt-plugin-releases/ch.jodersky/sbt-jni/scala_2.12/sbt_1.0/).
 
 Note that most plugins are enabled in projects by default. Disabling their functionality can be achieved by adding `disablePlugins(<plugin>)` to the corresponding project definition (for example, should you wish to disable packaging of native libraries).
 
@@ -227,4 +231,6 @@ The differing Scala versions make it necessary to always cross-compile and cross
 Run `sbt +publishLocal` to build and use this plugin locally.
 
 ## Copying
-This project is released under the terms of the 3-clause BSD license. See LICENSE for details.
+This project is released under the terms of the 3-clause BSD license. See [LICENSE](./LICENSE) for details.
+
+`javah` is released under the terms of the MIT license since it uses Glavo's [gjavah](https://github.com/Glavo/gjavah). See [LICENSE](./plugin/src/main/java/ch/jodersky/sbt/jni/javah/LICENSE) for details.
