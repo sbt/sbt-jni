@@ -1,25 +1,57 @@
 name: CI
-on: [push, pull_request]
+on:
+  pull_request:
+    branches: ['**']
+  push:
+    branches: ['**']
+    tags: [v*]
 jobs:
-  test:
+  build:
+    name: ${{ matrix.os }} Build and Test
     if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != 'sbt/sbt-jni'
-    name: ${{ matrix.os }} tests
-    runs-on: ${{ matrix.os }}
-    env:
-      JAVA_VERSION: adopt@1.8
     strategy:
-      fail-fast: false
       matrix:
         os: [macOS-latest, ubuntu-latest]
+        java: [adopt@1.8, adopt@1.11]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - uses: coursier/cache-action@v6
       - uses: olafurpg/setup-scala@v11
         with:
-          java-version: ${{ env.JAVA_VERSION }}
+          java-version: ${{ matrix.java }}
 
-      - name: Run scalafmtCheck
+      - name: Check formatting
         run: sbt scalafmtCheckAll
 
       - name: Run tests 
         run: sbt test-plugin
+
+  publish:
+    name: Publish Artifacts
+    needs: [build]
+    if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        java: [adopt@1.8]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: olafurpg/setup-scala@v10
+      - uses: coursier/cache-action@v6
+      - uses: olafurpg/setup-scala@v11
+        with:
+          java-version: ${{ matrix.java }}
+
+      - name: Release
+        run: sbt ci-release
+        env:
+          PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
+          PGP_SECRET: ${{ secrets.PGP_SECRET }}
+          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
