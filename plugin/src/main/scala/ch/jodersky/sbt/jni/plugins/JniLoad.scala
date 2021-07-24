@@ -47,7 +47,7 @@ object JniLoad extends AutoPlugin {
         case _            => Seq()
       }
     },
-    libraryDependencies += "ch.jodersky" %% "sbt-jni-core" % ProjectVersion.Core % sbtJniCoreScope.value
+    libraryDependencies += "com.github.sbt" %% "sbt-jni-core" % ProjectVersion.Core % sbtJniCoreScope.value
   )
 
   override def projectSettings = settings

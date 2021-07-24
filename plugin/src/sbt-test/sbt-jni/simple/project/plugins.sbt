@@ -1,3 +1,3 @@
 ivyLoggingLevel := UpdateLogging.Quiet
 
-addSbtPlugin("ch.jodersky" % "sbt-jni" % System.getProperty("plugin.version"))
+addSbtPlugin("com.github.sbt" % "sbt-jni" % System.getProperty("plugin.version"))

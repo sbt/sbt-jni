@@ -7,7 +7,7 @@ on:
     tags: [v*]
 jobs:
   build:
-    name: ${{ matrix.os }} Build and Test
+    name: Build and Test
     if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != 'sbt/sbt-jni'
     strategy:
       matrix:
@@ -26,7 +26,7 @@ jobs:
       - name: Check formatting
         run: sbt scalafmtCheckAll
 
-      - name: Run tests 
+      - name: Build project
         run: sbt test-plugin
 
   publish:

@@ -4,8 +4,8 @@ val scalaVersions = Seq("3.0.1", "2.13.6", "2.12.14")
 val macrosParadiseVersion = "2.1.1"
 
 // version is derived from latest git tag
-// ThisBuild / version := ("git describe --always --dirty=-SNAPSHOT --match v[0-9].*" !!).tail.trim
-ThisBuild / organization := "ch.jodersky"
+ThisBuild / versionScheme := Some("semver-spec")
+ThisBuild / organization := "com.github.sbt"
 ThisBuild / scalacOptions ++= Seq("-deprecation", "-feature")
 ThisBuild / licenses := Seq(("BSD New", url("http://opensource.org/licenses/BSD-3-Clause")))
 ThisBuild / homepage := Some(url("https://github.com/jodersky/sbt-jni"))
@@ -15,6 +15,12 @@ ThisBuild / developers := List(
     "Jakob Odersky",
     "jakob@odersky.com",
     url("https://jakob.odersky.com")
+  ),
+  Developer(
+    "pomadchin",
+    "Grigory Pomadchin",
+    "@pomadchin",
+    url("https://github.com/pomadchin")
   )
 )
 
