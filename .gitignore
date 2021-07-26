@@ -1,5 +1,44 @@
+# Operating System Files
+
+*.DS_Store
+Thumbs.db
+
+# Ensime
+
 .ensime_cache/
 .ensime
 target/
 *.class
 *~
+
+# Build Files
+
+target
+build/
+
+# IntelliJ IDEA Files
+
+*.iml
+*.ipr
+*.iws
+*.idea
+
+# Sublime files
+
+*.sublime-workspace
+
+# VSCode files
+
+.vscode
+.history
+
+# Metals
+
+.metals
+.bloop
+metals.sbt
+
+# SBT
+
+.bsp
+

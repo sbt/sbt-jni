@@ -2,6 +2,8 @@ package ch.jodersky.sbt.jni.javah;
 
 import java.util.Objects;
 
+import static ch.jodersky.sbt.jni.javah.util.Utils.*;
+
 public final class ClassName {
     private final String moduleName;
     private final String className;
@@ -11,17 +13,18 @@ public final class ClassName {
     public static ClassName of(String moduleName, String className) {
         Objects.requireNonNull(className, "Class name is null");
 
-        if (moduleName != null && !Utils.FULL_NAME_PATTERN.matcher(moduleName).matches()) {
+        if (moduleName != null && !FULL_NAME_PATTERN.matcher(moduleName).matches()) {
             throw new IllegalArgumentException("Illegal module name: " + moduleName);
         }
-        if (!Utils.FULL_NAME_PATTERN.matcher(className).matches()) {
+        if (!FULL_NAME_PATTERN.matcher(className).matches()) {
             throw new IllegalArgumentException("Illegal class name: " + moduleName);
         }
 
         return new ClassName(moduleName, className);
     }
 
-    public static ClassName of(String fullName) {
+    /* Example: "java.base/java.lang.Object" */
+    public static ClassName ofFullName(String fullName) {
         Objects.requireNonNull(fullName, "class name is null");
         int idx = fullName.indexOf('/');
         if (idx == -1) {
@@ -31,11 +34,15 @@ public final class ClassName {
         return ClassName.of(fullName.substring(0, idx), fullName.substring(idx + 1));
     }
 
+    public static ClassName ofInternalName(String name) {
+        return of(null, name.replace('/', '.'));
+    }
+
     private ClassName(String moduleName, String className) {
         this.moduleName = moduleName;
         this.className = className;
         this.simpleName = className.substring(className.lastIndexOf('.') + 1);
-        this.mangledName = Utils.mangleName(className);
+        this.mangledName = mangleName(className);
     }
 
     @Override
@@ -53,10 +60,7 @@ public final class ClassName {
 
     @Override
     public String toString() {
-        if (moduleName == null) {
-            return className;
-        }
-        return moduleName + '/' + className;
+        return moduleName == null ? className : moduleName + '/' + className;
     }
 
 
