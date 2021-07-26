@@ -145,6 +145,7 @@ JniNative adds the capability of building native code (compiling and linking) to
 Since this plugin is basically a command-line wrapper, native build tools must follow certain calling conventions to be compatible. The supported build tools are currently:
 
 - CMake
+- Cargo (Rust)
 
 An initial, compatible build template can be obtained by running `sbt nativeInit <tool>`. Once the native build tool initialised, projects are built by calling the `sbt nativeCompile` task.
 

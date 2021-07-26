@@ -1,0 +1,3 @@
+> nativeInit cargo adder
+> +test
+> +core/run

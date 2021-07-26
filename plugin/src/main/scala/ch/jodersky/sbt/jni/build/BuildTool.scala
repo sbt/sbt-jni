@@ -40,6 +40,7 @@ trait BuildTool {
 
       baseDirectory.mkdir()
       val out = baseDirectory.toPath().resolve(name)
+      Files.createDirectories(out.getParent)
       Files.write(out, replaced.getBytes)
       out.toFile()
     }
@@ -76,4 +77,11 @@ trait BuildTool {
    */
   def getInstance(baseDirectory: File, buildDirectory: File, logger: Logger): Instance
 
+}
+
+object BuildTool {
+  lazy val buildTools: Map[String, BuildTool] = Map(
+    CMake.name.toLowerCase -> CMake,
+    Cargo.release.name.toLowerCase -> Cargo.release
+  )
 }
