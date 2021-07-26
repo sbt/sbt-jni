@@ -62,7 +62,7 @@ object JniNative extends AutoPlugin {
     nativeCompile / sourceDirectory := sourceDirectory.value / "native",
     nativeCompile / target := target.value / "native" / nativePlatform.value,
     nativeBuildTool := {
-      val tools = Seq(CMake)
+      val tools = Seq(CMake, Cargo.release)
 
       val src = (nativeCompile / sourceDirectory).value
 
