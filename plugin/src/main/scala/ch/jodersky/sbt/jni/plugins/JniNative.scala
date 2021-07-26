@@ -126,10 +126,10 @@ object JniNative extends AutoPlugin {
 
       val log = streams.value.log
 
-      def getTool(toolName: String): BuildTool = toolName.toLowerCase match {
-        case "cmake" => CMake
-        case _       => sys.error("Unsupported build tool: " + toolName)
-      }
+      def getTool(toolName: String): BuildTool = BuildTool.buildTools.getOrElse(
+        toolName.toLowerCase,
+        sys.error("Unsupported build tool: " + toolName)
+      )
 
       val args = spaceDelimited("<tool> [<libname>]").parsed.toList
 

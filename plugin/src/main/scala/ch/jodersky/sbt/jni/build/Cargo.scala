@@ -69,4 +69,9 @@ object Cargo {
    * If `release` is `true`, `cargo build` will run with the `--release` flag.
    */
   def make(release: Boolean = true): BuildTool = new Cargo(release)
+
+  /**
+   * Cargo build tool, with the `--release` flag.
+   */
+  lazy val release: BuildTool = make()
 }

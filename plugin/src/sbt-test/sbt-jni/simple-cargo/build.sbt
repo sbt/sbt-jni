@@ -7,5 +7,8 @@ lazy val core = project
   .dependsOn(native % Runtime)
 
 lazy val native = project
-  .settings(nativeCompile / sourceDirectory := sourceDirectory.value)
+  .settings(
+    nativeCompile / sourceDirectory := sourceDirectory.value,
+    nativeBuildTool := Cargo.release
+  )
   .enablePlugins(JniNative)

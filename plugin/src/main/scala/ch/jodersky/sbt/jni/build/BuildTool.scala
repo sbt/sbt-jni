@@ -78,3 +78,10 @@ trait BuildTool {
   def getInstance(baseDirectory: File, buildDirectory: File, logger: Logger): Instance
 
 }
+
+object BuildTool {
+  lazy val buildTools: Map[String, BuildTool] = Map(
+    CMake.name.toLowerCase -> CMake,
+    Cargo.release.name.toLowerCase -> Cargo.release
+  )
+}
