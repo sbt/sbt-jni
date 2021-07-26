@@ -157,7 +157,7 @@ nativeCompile / target := target.value / "native" / nativePlatform.value
 
 #### CMake
 
-A regular `CMake` setting for the native subproject usually looks this way:
+A regular `CMake` native project definition usually looks this following way:
 
 ```scala
 lazy val native = project
@@ -176,7 +176,7 @@ Source directory is set to `sourceDirectory.value` since the `CMake` project str
 
 #### Cargo
 
-A regular `Cargo` setting for the native subproject usually looks this way:
+A regular `Cargo` native project definition usually looks this following way:
 
 ```scala
 lazy val native = project
