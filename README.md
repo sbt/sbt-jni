@@ -47,7 +47,7 @@ Note that most plugins are enabled in projects by default. Disabling their funct
 
 | Enabled                        | Source        |
 |--------------------------------|---------------|
-| automatic, for all projects    | [JniJavah.scala](plugin/src/main/scala/ch/jodersky/sbt/jni/plugins/JniJavah.scala)|
+| automatic, for all projects    | [JniJavah.scala](plugin/src/main/scala/com/github/sbt/jni/plugins/JniJavah.scala)|
 
 This plugin wraps the JDK `javah` command [^1].
 
@@ -85,13 +85,13 @@ Note that native methods declared both in Scala and Java are supported. Whereas 
 ### JniLoad
 | Enabled                        | Source        |
 |--------------------------------|---------------|
-| automatic, for all projects    | [JniLoad.scala](plugin/src/main/scala/ch/jodersky/sbt/jni/plugins/JniLoad.scala) |
+| automatic, for all projects    | [JniLoad.scala](plugin/src/main/scala/com/github/sbt/jni/plugins/JniLoad.scala) |
 
 This plugin enables loading native libraries in a safe and transparent manner to the developer (no more explicit, static `System.load("library")` calls required). It does so by providing a class annotation which injects native loading code to all its annottees. Furthermore, in case a native library is not available on the current `java.library.path`, the code injected by the annotation will fall back to loading native libraries packaged according to the rules of `JniPackage`.
 
 #### Example use (Scala 2.x):
 ```scala
-import ch.jodersky.jni.nativeLoader
+import com.github.sbt.jni.nativeLoader
 
 // By adding this annotation, there is no need to call
 // System.load("adder0") before accessing native methods.
@@ -108,7 +108,7 @@ object Main extends App {
 
 Note: this plugin is just a shorthand for adding `sbt-jni-core` (the project in `core/`) and the scala-macros-paradise (on Scala <= 2.13) projects as provided dependencies.
 
-See the [annotation's implementation](core/src/main/scala/ch/jodersky/jni/annotations.scala) for details about the injected code.
+See the [annotation's implementation](core/src/main/scala/com/github/sbt/jni/annotations.scala) for details about the injected code.
 
 #### Example use (Scala 3.x / Scala 2.x):
 
@@ -124,7 +124,7 @@ sbtJniCoreScope := <Configuration>
 ```scala
 // to make the code below work the core project should be included as a dependency via
 // sbtJniCoreScope := Compile
-import ch.jodersky.jni.syntax.NativeLoader
+import com.github.sbt.jni.syntax.NativeLoader
 
 // By adding this annotation, there is no need to call
 // System.load("adder0") before accessing native methods.
@@ -138,7 +138,7 @@ class Adder(val base: Int) extends NativeLoader("adder0"):
 ### JniNative
 | Enabled                        | Source        |
 |--------------------------------|---------------|
-| manual                         | [JniNative.scala](plugin/src/main/scala/ch/jodersky/sbt/jni/plugins/JniNative.scala) |
+| manual                         | [JniNative.scala](plugin/src/main/scala/com/github/sbt/jni/plugins/JniNative.scala) |
 
 JniNative adds the capability of building native code (compiling and linking) to sbt, by interfacing with commonly used build tools.
 
@@ -158,7 +158,7 @@ nativeCompile / target := target.value / "native" / (nativePlatform).value,
 ### JniPackage
 | Enabled                        | Source        |
 |--------------------------------|---------------|
-| automatic, when JniNative enabled | [JniPackage.scala](plugin/src/main/scala/ch/jodersky/sbt/jni/plugins/JniPackage.scala) |
+| automatic, when JniNative enabled | [JniPackage.scala](plugin/src/main/scala/com/github/sbt/jni/plugins/JniPackage.scala) |
 
 This plugin packages native libraries produced by JniNative in a way that they can be transparently loaded with JniLoad. It uses the notion of a native "platform", defined as the architecture-kernel values returned by `uname -sm`. A native binary of a given platform is assumed to be executable on any machines of the same platform.
 
@@ -233,4 +233,4 @@ Run `sbt +publishLocal` to build and use this plugin locally.
 ## Copying
 This project is released under the terms of the 3-clause BSD license. See [LICENSE](./LICENSE) for details.
 
-`javah` is released under the terms of the MIT license since it uses Glavo's [gjavah](https://github.com/Glavo/gjavah). See [LICENSE](./plugin/src/main/java/ch/jodersky/sbt/jni/javah/LICENSE) for details.
+`javah` is released under the terms of the MIT license since it uses Glavo's [gjavah](https://github.com/Glavo/gjavah). See [LICENSE](./plugin/src/main/java/com/github/sbt/jni/javah/LICENSE) for details.
