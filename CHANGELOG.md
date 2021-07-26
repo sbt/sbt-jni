@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.0] - 2021-07-26
+
 ### Added
 
 - Add support for Cargo (Rust) [#42](https://github.com/sbt/sbt-jni/pull/42) (@sideeffffect)
@@ -27,5 +29,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.4.1] - 2019-12-13
 
-[Unreleased]: https://github.com/sbt/sbt-jni/compare/v1.4.1...HEAD
+[Unreleased]: https://github.com/sbt/sbt-jni/compare/v1.5.0...HEAD
+[1.5.0]: https://github.com/sbt/sbt-jni/compare/v1.4.1...v1.5.0
 [1.4.1]: https://github.com/sbt/sbt-jni/compare/v1.4.0...v1.4.1

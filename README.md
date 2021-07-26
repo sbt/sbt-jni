@@ -19,6 +19,8 @@ addSbtPlugin("com.github.sbt" % "sbt-jni" % "<latest version>")
 
 where `<latest version>` refers to the version indicated by the badge above.
 
+*Note: We changed the organization from `ch.jodersky` to `com.github.sbt`*
+
 ## Motivation
 Java Native Interface (JNI), is a framework that enables programs written in a JVM language to interact with native code and vice-versa. Such programs can be divided into two logical parts: the JVM part, consisting of sources that will be compiled to bytecode (e.g. Scala or Java), and the native part, consisting of sources that will be compiled to machine-native code (e.g. C, C++ or assembly).
 
@@ -89,7 +91,7 @@ Note that native methods declared both in Scala and Java are supported. Whereas 
 
 This plugin enables loading native libraries in a safe and transparent manner to the developer (no more explicit, static `System.load("library")` calls required). It does so by providing a class annotation which injects native loading code to all its annottees. Furthermore, in case a native library is not available on the current `java.library.path`, the code injected by the annotation will fall back to loading native libraries packaged according to the rules of `JniPackage`.
 
-#### Example use (Scala 2.x):
+#### Usage example (Scala 2.x):
 ```scala
 import com.github.sbt.jni.nativeLoader
 
@@ -110,7 +112,7 @@ Note: this plugin is just a shorthand for adding `sbt-jni-core` (the project in 
 
 See the [annotation's implementation](core/src/main/scala/com/github/sbt/jni/annotations.scala) for details about the injected code.
 
-#### Example use (Scala 3.x / Scala 2.x):
+#### Usage example (Scala 3.x / Scala 2.x):
 
 Scala 3 has no macro annotations support. As a solution we don't need this to be a macro function anymore. As the result, this option requires to have an explicit dependency on the [core](./core) sub project.
 

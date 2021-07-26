@@ -3,7 +3,6 @@ import scala.sys.process._
 val scalaVersions = Seq("3.0.1", "2.13.6", "2.12.14")
 val macrosParadiseVersion = "2.1.1"
 
-// version is derived from latest git tag
 ThisBuild / versionScheme := Some("semver-spec")
 ThisBuild / organization := "com.github.sbt"
 ThisBuild / scalacOptions ++= Seq("-deprecation", "-feature")
