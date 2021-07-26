@@ -14,7 +14,7 @@ class Cargo(protected val release: Boolean = true) extends BuildTool {
 
   protected def templateMappings: List[(String, String)] = List(
     "/ch/jodersky/sbt/jni/templates/Cargo.toml" -> "Cargo.toml",
-    "/ch/jodersky/sbt/jni/templates/src/lib.rs" -> "src/lib.rs",
+    "/ch/jodersky/sbt/jni/templates/src/lib.rs" -> "src/lib.rs"
   )
 
   def getInstance(baseDirectory: File, buildDirectory: File, logger: sbt.Logger): Instance =
@@ -36,7 +36,7 @@ class Cargo(protected val release: Boolean = true) extends BuildTool {
       val ev =
         Process(
           s"cargo build $releaseFlag--target-dir ${targetDirectory.getAbsolutePath}",
-          baseDirectory,
+          baseDirectory
         ) ! log
       if (ev != 0) sys.error(s"Building native library failed. Exit code: $ev")
 
@@ -49,14 +49,14 @@ class Cargo(protected val release: Boolean = true) extends BuildTool {
         case Nil =>
           sys.error(
             s"No files were created during compilation, " +
-              s"something went wrong with the $name configuration.",
+              s"something went wrong with the $name configuration."
           )
         case head :: Nil =>
           head
         case head :: _ =>
           logger.warn(
             "More than one file was created during compilation, " +
-              s"only the first one (${head.getAbsolutePath}) will be used.",
+              s"only the first one (${head.getAbsolutePath}) will be used."
           )
           head
       }
@@ -65,6 +65,9 @@ class Cargo(protected val release: Boolean = true) extends BuildTool {
 }
 
 object Cargo {
-  /** If `release` is `true`, `cargo build` will run with the `--release` flag. */
+
+  /**
+   * If `release` is `true`, `cargo build` will run with the `--release` flag.
+   */
   def make(release: Boolean = true): BuildTool = new Cargo(release)
 }
