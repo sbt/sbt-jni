@@ -5,6 +5,8 @@ on:
   push:
     branches: ['**']
     tags: [v*]
+  release:
+    types: [published]
 jobs:
   build:
     name: Build and Test
@@ -32,7 +34,7 @@ jobs:
   publish:
     name: Publish Artifacts
     needs: [build]
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
+    if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
     strategy:
       matrix:
         os: [ubuntu-latest]

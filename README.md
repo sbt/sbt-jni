@@ -194,7 +194,7 @@ Source directory is set to `baseDirectory.value` since the `Cargo` project struc
 
 ```
 
-By default, `Cargo` build is launched with the `--release` flag. It is possible to configure `Cargo` profile by overriding the `nativeBuildTool`:
+By default, `Cargo` build is launched with the `--release` flag. It is possible to configure `Cargo` profile by overriding the `nativeBuildTool` setting:
 
 ```scala
 nativeBuildTool := Cargo.make(release = false)

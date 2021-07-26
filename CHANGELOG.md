@@ -7,18 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Scala 3 support [#45](https://github.com/sbt/sbt-jni/issues/45)
-- Add CMake support of versions < 3.15 [#51](https://github.com/sbt/sbt-jni/pull/51)
-- Add support for Rust/Cargo [#42](https://github.com/sbt/sbt-jni/pull/42)
+
+- Add support for Cargo (Rust) [#42](https://github.com/sbt/sbt-jni/pull/42) (@sideeffffect)
+- Add CMake support of versions < 3.15 [#51](https://github.com/sbt/sbt-jni/pull/51) (@pomadchin)
+- Scala 3 API & project cross compilation [#48](https://github.com/sbt/sbt-jni/pull/48) (@pomadchin)
+- Use cmake platform build tool [#40](https://github.com/sbt/sbt-jni/pull/40) (@kammoh)
 
 ### Changed
-- Upgrade gjavah [#43](https://github.com/sbt/sbt-jni/pull/43)
-- Use cmake platform build tool [#40](https://github.com/sbt/sbt-jni/issues/40)
-- Rename macro project to core and simplify Scala 3 support [#52](https://github.com/sbt/sbt-jni/pull/52)
-- ch.jodersky => com.github.sbt packages rename [#55](https://github.com/sbt/sbt-jni/pull/55)
+
+- ch.jodersky => com.github.sbt packages rename [#55](https://github.com/sbt/sbt-jni/pull/55) (@pomadchin)
+- Change the way sbt-jni-core scope is defined [#53](https://github.com/sbt/sbt-jni/pull/53) (@pomadchin)
+- Rename macro project to core and simplify Scala 3 support [#52](https://github.com/sbt/sbt-jni/pull/52) (@pomadchin)
+- Upgrade gjavah [#43](https://github.com/sbt/sbt-jni/pull/43) (@sideeffffect)
+- Add scalafmt, upd SBT version, add CHANGELOG, adjust CI [#47](https://github.com/sbt/sbt-jni/pull/47) (@pomadchin)
 
 ### Fixed
-- javah failed with ClassCastException [#38](https://github.com/sbt/sbt-jni/issues/38)
+
+- fix for #38: sbt 1.4.x [#39](https://github.com/sbt/sbt-jni/pull/39) (@kammoh)
 
 ## [1.4.1] - 2019-12-13
 

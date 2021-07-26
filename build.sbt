@@ -79,7 +79,7 @@ lazy val plugin = project
                     |  final val Core = "${version.value}"
                     |}
                     |""".stripMargin
-      val file = sourceManaged.value / "ch" / "jodersky" / "sbt" / "jni" / "ProjectVersion.scala"
+      val file = sourceManaged.value / "com" / "github" / "sbt" / "jni" / "ProjectVersion.scala"
       IO.write(file, src)
       Seq(file)
     }.taskValue,
