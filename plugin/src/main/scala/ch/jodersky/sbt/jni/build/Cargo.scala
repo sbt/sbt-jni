@@ -13,8 +13,7 @@ class Cargo(protected val release: Boolean = true) extends BuildTool {
     baseDirectory.list().contains("Cargo.toml")
 
   protected def templateMappings: List[(String, String)] = List(
-    "/ch/jodersky/sbt/jni/templates/Cargo.toml" -> "Cargo.toml",
-    "/ch/jodersky/sbt/jni/templates/src/lib.rs" -> "src/lib.rs"
+    "/ch/jodersky/sbt/jni/templates/Cargo.toml" -> "Cargo.toml"
   )
 
   def getInstance(baseDirectory: File, buildDirectory: File, logger: sbt.Logger): Instance =
