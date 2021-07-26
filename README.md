@@ -144,15 +144,60 @@ JniNative adds the capability of building native code (compiling and linking) to
 
 Since this plugin is basically a command-line wrapper, native build tools must follow certain calling conventions to be compatible. The supported build tools are currently:
 
-- CMake
-- Cargo (Rust)
+- [CMake](#cmake)
+- [Cargo (Rust)](#cargo)
 
 An initial, compatible build template can be obtained by running `sbt nativeInit <tool>`. Once the native build tool initialised, projects are built by calling the `sbt nativeCompile` task.
 
 Source and output directories are configurable
 ```scala
-nativeCompile / sourceDirectory := sourceDirectory.value / "native",
-nativeCompile / target := target.value / "native" / (nativePlatform).value,
+nativeCompile / sourceDirectory := sourceDirectory.value / "native"
+nativeCompile / target := target.value / "native" / nativePlatform.value
+```
+
+#### CMake
+
+A regular `CMake` setting for the native subproject usually looks this way:
+
+```scala
+lazy val native = project
+  // sourceDirectory = <project_root>/native/src
+  .settings(nativeCompile / sourceDirectory := sourceDirectory.value)
+  .enablePlugins(JniNative)
+```
+
+Source directory is set to `sourceDirectory.value` since the `CMake` project structure is of the following shape:
+
+```
+├── src/
+│   ├── CMakeLists.txt
+│   ├── lib.cpp
+```
+
+#### Cargo
+
+A regular `Cargo` setting for the native subproject usually looks this way:
+
+```scala
+lazy val native = project
+  // baseDirectory = <project_root>/native
+  .settings(nativeCompile / sourceDirectory := baseDirectory.value)
+  .enablePlugins(JniNative)
+```
+
+Source directory is set to `baseDirectory.value` since the `Cargo` project structure is of the following shape:
+
+```
+├── Cargo.lock
+├── src/
+│   ├── lib.rs
+
+```
+
+By default, `Cargo` build is launched with the `--release` flag. It is possible to configure `Cargo` profile by overriding the `nativeBuildTool`:
+
+```scala
+nativeBuildTool := Cargo.make(release = false)
 ```
 
 ### JniPackage
