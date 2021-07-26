@@ -1,6 +1,6 @@
 package simple
 
-import ch.jodersky.jni.syntax.NativeLoader
+import com.github.sbt.jni.syntax.NativeLoader
 
 object Library extends NativeLoader("demo0") {
 

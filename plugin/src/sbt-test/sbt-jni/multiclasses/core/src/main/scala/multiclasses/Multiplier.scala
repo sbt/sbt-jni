@@ -1,6 +1,6 @@
 package multiclasses
 
-import ch.jodersky.jni.nativeLoader
+import com.github.sbt.jni.nativeLoader
 
 @nativeLoader("multiplier1")
 abstract class Multiplier {

@@ -1,6 +1,6 @@
 package multiclasses
 
-import ch.jodersky.jni.nativeLoader
+import com.github.sbt.jni.nativeLoader
 
 case class Value(x: Int)
 
