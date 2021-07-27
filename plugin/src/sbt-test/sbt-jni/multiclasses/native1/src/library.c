@@ -1,6 +1,6 @@
 #include <jni.h>
 #include "multiclasses_Adder.h"
-#include "multiclasses_Adder__.h"
+#include "multiclasses_Adder_00024.h"
 
 /*
  * Class:     multiclasses_Adder
