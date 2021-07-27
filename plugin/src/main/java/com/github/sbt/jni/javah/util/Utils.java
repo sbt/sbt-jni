@@ -46,23 +46,41 @@ public final class Utils {
         }
     });
 
+    public static String mangleChar(char ch) {
+        if (ch == '.') {
+            return "_";
+        } else if (ch == '_') {
+            return "_1";
+        } else if (ch == ';') {
+            return "_2";
+        } else if (ch == '[') {
+            return "_3";
+        } else if ((ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'z') || (ch >= 'A' && (ch <= 'Z'))) {
+            return String.valueOf(ch);
+        } else {
+            return String.format("_0%04x", (int) ch);
+        }
+    }
+
     public static String mangleName(String name) {
         StringBuilder builder = new StringBuilder(name.length() * 2);
         int len = name.length();
         for (int i = 0; i < len; i++) {
             char ch = name.charAt(i);
-            if (ch == '.') {
-                builder.append('_');
-            } else if (ch == '_') {
-                builder.append("_1");
-            } else if (ch == ';') {
-                builder.append("_2");
-            } else if (ch == '[') {
-                builder.append("_3");
-            } else if ((ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'z') || (ch >= 'A' && (ch <= 'Z'))) {
-                builder.append(ch);
+            builder.append(mangleChar(ch));
+        }
+        return builder.toString();
+    }
+
+    public static String mangleHeaderName(String name) {
+        StringBuilder builder = new StringBuilder(name.length() * 2);
+        int len = name.length();
+        for (int i = 0; i < len; i++) {
+            char ch = name.charAt(i);
+            if (ch == '$') {
+                builder.append("__");
             } else {
-                builder.append(String.format("_0%04x", (int) ch));
+                builder.append(mangleChar(ch));
             }
         }
         return builder.toString();

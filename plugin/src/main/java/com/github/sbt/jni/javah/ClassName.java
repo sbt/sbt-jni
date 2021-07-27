@@ -9,6 +9,7 @@ public final class ClassName {
     private final String className;
     private final String simpleName;
     private final String mangledName;
+    private final String mangledHeaderName;
 
     public static ClassName of(String moduleName, String className) {
         Objects.requireNonNull(className, "Class name is null");
@@ -43,6 +44,7 @@ public final class ClassName {
         this.className = className;
         this.simpleName = className.substring(className.lastIndexOf('.') + 1);
         this.mangledName = mangleName(className);
+        this.mangledHeaderName = mangleHeaderName(className);
     }
 
     @Override
@@ -82,6 +84,10 @@ public final class ClassName {
 
     public final String mangledName() {
         return mangledName;
+    }
+
+    public final String mangledHeaderName() {
+        return mangledHeaderName;
     }
 
     public final String relativePath() {

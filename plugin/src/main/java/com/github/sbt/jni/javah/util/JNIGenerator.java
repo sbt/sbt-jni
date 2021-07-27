@@ -56,7 +56,7 @@ public class JNIGenerator {
                 return;
             }
         }
-        Path op = outputDir.resolve(name.mangledName() + ".h");
+        Path op = outputDir.resolve(name.mangledHeaderName() + ".h");
         try (PrintWriter out = new PrintWriter(Files.newBufferedWriter(op))) {
             generateTo(name, out);
         } catch (Exception ex) {
