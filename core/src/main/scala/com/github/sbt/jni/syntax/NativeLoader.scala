@@ -50,7 +50,7 @@ object NativeLoader {
     def load(): Unit = try {
       System.loadLibrary(nativeLibrary)
     } catch {
-      case ex: UnsatisfiedLinkError => loadPackaged()
+      case _: UnsatisfiedLinkError => loadPackaged()
     }
 
     load()

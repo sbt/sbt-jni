@@ -44,9 +44,9 @@ class nativeLoaderAnnotationMacro(val c: Context) {
               val tmp: Path = Files.createTempDirectory("jni-")
               val plat: String = {
                 val line = try {
-                  scala.sys.process.Process("uname -sm").lineStream.head
+                  scala.sys.process.Process("uname -sm").!!.linesIterator.next()
                 } catch {
-                  case ex: Exception => sys.error("Error running `uname` command")
+                  case _: Exception => sys.error("Error running `uname` command")
                 }
                 val parts = line.split(" ")
                 if (parts.length != 2) {
@@ -80,7 +80,7 @@ class nativeLoaderAnnotationMacro(val c: Context) {
             def load(): Unit = try {
               System.loadLibrary($nativeLibrary)
             } catch {
-              case ex: UnsatisfiedLinkError => loadPackaged()
+              case _: UnsatisfiedLinkError => loadPackaged()
             }
 
             load()

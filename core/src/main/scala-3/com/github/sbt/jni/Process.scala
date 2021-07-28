@@ -5,6 +5,6 @@ object Process {
     try {
       scala.sys.process.Process("uname -sm").lazyLines.head
     } catch {
-      case ex: Exception => sys.error("Error running `uname` command")
+      case _: Exception => sys.error("Error running `uname` command")
     }
 }

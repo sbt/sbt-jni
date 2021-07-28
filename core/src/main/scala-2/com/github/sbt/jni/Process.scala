@@ -3,8 +3,8 @@ package com.github.sbt.jni
 object Process {
   def out(command: String): String =
     try {
-      scala.sys.process.Process("uname -sm").lineStream.head
+      scala.sys.process.Process("uname -sm").!!.linesIterator.next()
     } catch {
-      case ex: Exception => sys.error("Error running `uname` command")
+      case _: Exception => sys.error("Error running `uname` command")
     }
 }
