@@ -1,7 +1,5 @@
 package com.github.sbt.jni.syntax
 
-import com.github.sbt.jni.Process
-
 import java.nio.file.{Files, Path}
 
 class NativeLoader(nativeLibrary: String) {
