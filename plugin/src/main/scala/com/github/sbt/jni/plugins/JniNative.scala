@@ -53,7 +53,7 @@ object JniNative extends AutoPlugin {
           arch + "-" + kernel
         }
       } catch {
-        case ex: Exception =>
+        case _: Exception =>
           sLog.value.error("Error trying to determine platform.")
           sLog.value.warn("Cannot determine platform! It will be set to 'unknown'.")
           "unknown-unknown"
