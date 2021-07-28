@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.2] - 2021-07-28
+
+### Fixed
+
+- Fix warning (not only) in users' code [#59](https://github.com/sbt/sbt-jni/pull/59) (@sideeffffect)
+
 ## [1.5.1] - 2021-07-27
 
 ### Fixed
@@ -35,7 +41,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.4.1] - 2019-12-13
 
-[Unreleased]: https://github.com/sbt/sbt-jni/compare/v1.5.1...HEAD
+[Unreleased]: https://github.com/sbt/sbt-jni/compare/v1.5.2...HEAD
+[1.5.2]: https://github.com/sbt/sbt-jni/compare/v1.5.1...v1.5.2
 [1.5.1]: https://github.com/sbt/sbt-jni/compare/v1.5.0...v1.5.1
 [1.5.0]: https://github.com/sbt/sbt-jni/compare/v1.4.1...v1.5.0
 [1.4.1]: https://github.com/sbt/sbt-jni/compare/v1.4.0...v1.4.1
