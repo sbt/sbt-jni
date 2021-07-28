@@ -16,7 +16,12 @@ object NativeLoader {
 
       val tmp: Path = Files.createTempDirectory("jni-")
       val plat: String = {
-        val line = Process.out("uname -sm")
+        val line =
+          try {
+            scala.sys.process.Process("uname -sm").!!.linesIterator.next()
+          } catch {
+            case _: Exception => sys.error("Error running `uname` command")
+          }
         val parts = line.split(" ")
         if (parts.length != 2) {
           sys.error("Could not determine platform: 'uname -sm' returned unexpected string: " + line)
