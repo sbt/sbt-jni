@@ -258,6 +258,7 @@ The [plugins' unit tests](plugin/src/sbt-test/sbt-jni) offer some simple example
 Real-world use-cases of sbt-jni include:
 
 - [serial communication library for scala](https://github.com/jodersky/akka-serial)
+- [PDAL Java bindings](https://github.com/PDAL/java)
 
 ## Requirements and Dependencies
 
