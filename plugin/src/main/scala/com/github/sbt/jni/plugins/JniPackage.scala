@@ -1,6 +1,7 @@
 package com.github.sbt.jni
 package plugins
 
+import util.CollectionOps
 import sbt._
 import sbt.Keys._
 import sbt.io.Path._
@@ -29,6 +30,13 @@ object JniPackage extends AutoPlugin {
         "the x86_64 architecture and running the Linux kernel."
     )
 
+    val unmanagedPlatformDependentNativeDirectories = settingKey[Seq[(String, File)]](
+      "Unmanaged directories containing native libraries. The libraries must be regular files " +
+        "contained in a subdirectory corresponding to a platform. For example " +
+        "`<unmanagedNativeDirectory>/x86_64-linux/libfoo.so` is an unmanaged library for machines having " +
+        "the x86_64 architecture and running the Linux kernel."
+    )
+
     val unmanagedNativeLibraries = taskKey[Seq[(File, String)]](
       "Reads `unmanagedNativeDirectories` and maps libraries to their locations on the classpath " +
         "(i.e. their path in a fat jar)."
@@ -45,16 +53,23 @@ object JniPackage extends AutoPlugin {
   }
   import autoImport._
   import JniNative.autoImport._
+  import CollectionOps._
 
   lazy val settings: Seq[Setting[_]] = Seq(
     enableNativeCompilation := true,
     unmanagedNativeDirectories := Seq(baseDirectory.value / "lib_native"),
+    unmanagedPlatformDependentNativeDirectories := Seq(nativePlatform.value -> baseDirectory.value / "lib_native"),
     unmanagedNativeLibraries := {
       val mappings: Seq[(File, String)] = unmanagedNativeDirectories.value.flatMap { dir =>
         val files: Seq[File] = (dir ** "*").get.filter(_.isFile)
         files.pair(rebase(dir, "/native"))
       }
-      mappings
+      val mappingsPlatform: Seq[(File, String)] = unmanagedPlatformDependentNativeDirectories.value.flatMap {
+        case (platform, dir) =>
+          val files: Seq[File] = (dir ** "*").get.filter(_.isFile)
+          files.pair(rebase(dir, s"/native/$platform"))
+      }
+      mappings ++ mappingsPlatform
     },
     managedNativeLibraries := Def
       .taskDyn[Seq[(File, String)]] {
@@ -71,7 +86,7 @@ object JniPackage extends AutoPlugin {
           }
       }
       .value,
-    nativeLibraries := unmanagedNativeLibraries.value ++ managedNativeLibraries.value,
+    nativeLibraries := (unmanagedNativeLibraries.value ++ managedNativeLibraries.value).distinctBy(_._2),
     resourceGenerators += Def.task {
       val libraries: Seq[(File, String)] = nativeLibraries.value
       val resources: Seq[File] = for ((file, path) <- libraries) yield {
