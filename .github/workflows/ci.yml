@@ -21,7 +21,7 @@ jobs:
         with:
           fetch-depth: 0
       - uses: coursier/cache-action@v6
-      - uses: olafurpg/setup-scala@v11
+      - uses: olafurpg/setup-scala@v13
         with:
           java-version: ${{ matrix.java }}
 
@@ -45,7 +45,7 @@ jobs:
         with:
           fetch-depth: 0
       - uses: coursier/cache-action@v6
-      - uses: olafurpg/setup-scala@v11
+      - uses: olafurpg/setup-scala@v13
         with:
           java-version: ${{ matrix.java }}
 
