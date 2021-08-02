@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.5.3] - 2021-08-01
 
-### Changed
+### Added
 
 - Add unmanagedPlatformDependentNativeDirectories [#60](https://github.com/sbt/sbt-jni/pull/60) (@pomadchin)
 
