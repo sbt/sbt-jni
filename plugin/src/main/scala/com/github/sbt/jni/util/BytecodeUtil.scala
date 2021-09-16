@@ -2,7 +2,7 @@ package com.github.sbt.jni
 package util
 
 import java.io.{Closeable, File, FileInputStream}
-import scala.collection.mutable.{HashSet}
+import scala.collection.mutable.HashSet
 
 import org.objectweb.asm.{ClassReader, ClassVisitor, MethodVisitor, Opcodes}
 
@@ -16,22 +16,11 @@ object BytecodeUtil {
 
     private var fullyQualifiedName: String = ""
 
-    override def visit(version: Int,
-                       access: Int,
-                       name: String,
-                       signature: String,
-                       superName: String,
-                       interfaces: Array[String]
-    ): Unit = {
+    override def visit(version: Int, access: Int, name: String, signature: String, superName: String, interfaces: Array[String]): Unit = {
       fullyQualifiedName = name.replaceAll("/", ".")
     }
 
-    override def visitMethod(access: Int,
-                             name: String,
-                             desc: String,
-                             signature: String,
-                             exceptions: Array[String]
-    ): MethodVisitor = {
+    override def visitMethod(access: Int, name: String, desc: String, signature: String, exceptions: Array[String]): MethodVisitor = {
 
       val isNative = (access & Opcodes.ACC_NATIVE) != 0
 

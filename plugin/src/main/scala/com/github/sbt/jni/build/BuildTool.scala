@@ -16,16 +16,16 @@ trait BuildTool {
   def name: String
 
   /**
-   * Detect if this build tool is configured in the given directory. E.g. for the Make build tool, this would return
-   * true if a Makefile is present in the given directory.
+   * Detect if this build tool is configured in the given directory. E.g. for the Make build tool, this would return true if a Makefile is present in
+   * the given directory.
    */
   def detect(baseDirectory: File): Boolean
 
   protected def templateMappings: Seq[(String, String)]
 
   /**
-   * Initialize the given directory with a minimal, functioning configuration for this build tool. E.g. for the Make
-   * build tool, this would create a Makefile in the given directory that is compatible with sbt-jni.
+   * Initialize the given directory with a minimal, functioning configuration for this build tool. E.g. for the Make build tool, this would create a
+   * Makefile in the given directory that is compatible with sbt-jni.
    * @return
    *   all created files
    */
