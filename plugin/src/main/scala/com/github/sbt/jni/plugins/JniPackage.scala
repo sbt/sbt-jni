@@ -64,10 +64,9 @@ object JniPackage extends AutoPlugin {
         val files: Seq[File] = (dir ** "*").get.filter(_.isFile)
         files.pair(rebase(dir, "/native"))
       }
-      val mappingsPlatform: Seq[(File, String)] = unmanagedPlatformDependentNativeDirectories.value.flatMap {
-        case (platform, dir) =>
-          val files: Seq[File] = (dir ** "*").get.filter(_.isFile)
-          files.pair(rebase(dir, s"/native/$platform"))
+      val mappingsPlatform: Seq[(File, String)] = unmanagedPlatformDependentNativeDirectories.value.flatMap { case (platform, dir) =>
+        val files: Seq[File] = (dir ** "*").get.filter(_.isFile)
+        files.pair(rebase(dir, s"/native/$platform"))
       }
       mappings ++ mappingsPlatform
     },
