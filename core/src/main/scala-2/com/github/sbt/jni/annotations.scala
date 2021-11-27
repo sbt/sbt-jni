@@ -32,7 +32,7 @@ class nativeLoaderAnnotationMacro(val c: Context) {
 
         ClassDef(mods, name, tparams, Template(parents, self, body :+ extra)) :: module
 
-      //q"$mods object $name extends ..$parents {$self => ..$body }" :: Nil =>
+      // q"$mods object $name extends ..$parents {$self => ..$body }" :: Nil =>
       case ModuleDef(mods, name, Template(parents, self, body)) :: Nil =>
         val extra = q"""
           {

@@ -13,7 +13,7 @@ object JniNative extends AutoPlugin {
 
   object autoImport {
 
-    //Main task, inspect this first
+    // Main task, inspect this first
     val nativeCompile = taskKey[File](
       "Builds a native library by calling the native build tool."
     )
