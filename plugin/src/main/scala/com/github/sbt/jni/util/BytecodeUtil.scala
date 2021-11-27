@@ -28,7 +28,7 @@ object BytecodeUtil {
         _nativeClasses += fullyQualifiedName
       }
 
-      null //return null, do not visit method further
+      null // return null, do not visit method further
     }
 
   }
