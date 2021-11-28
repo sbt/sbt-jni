@@ -8,6 +8,7 @@ categories:
     labels:
       - 'enhancement'
       - 'dependency-update'
+      - 'dependencies'
   - title: 'Fixed'
     labels:
       - 'fix'
@@ -17,6 +18,7 @@ include-labels:
   - 'feature'
   - 'enhancement'
   - 'dependency-update'
+  - 'dependencies'
   - 'fix'
   - 'bugfix'
   - 'bug'
