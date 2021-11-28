@@ -8,11 +8,20 @@ categories:
     labels:
       - 'enhancement'
       - 'dependency-update'
+      - 'dependencies'
   - title: 'Fixed'
     labels:
       - 'fix'
       - 'bugfix'
       - 'bug'
+include-labels:
+  - 'feature'
+  - 'enhancement'
+  - 'dependency-update'
+  - 'dependencies'
+  - 'fix'
+  - 'bugfix'
+  - 'bug'
 exclude-labels:
   - 'skip-changelog'
   - 'docs'
