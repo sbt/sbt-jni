@@ -5,7 +5,7 @@ val macrosParadiseVersion = "2.1.1"
 
 ThisBuild / versionScheme := Some("semver-spec")
 ThisBuild / organization := "com.github.sbt"
-ThisBuild / scalacOptions ++= Seq("-deprecation", "-feature", "-Xfatal-warnings")
+ThisBuild / scalacOptions ++= Seq("-deprecation", "-feature", "-Xfatal-warnings", "-target:jvm-1.8")
 ThisBuild / licenses := Seq(("BSD New", url("http://opensource.org/licenses/BSD-3-Clause")))
 ThisBuild / homepage := Some(url("https://github.com/jodersky/sbt-jni"))
 ThisBuild / developers := List(
