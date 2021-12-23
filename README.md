@@ -190,7 +190,7 @@ lazy val native = project
 Source directory is set to `baseDirectory.value` since the `Cargo` project structure is of the following shape:
 
 ```
-├── Cargo.lock
+├── Cargo.toml
 ├── src/
 │   ├── lib.rs
 
