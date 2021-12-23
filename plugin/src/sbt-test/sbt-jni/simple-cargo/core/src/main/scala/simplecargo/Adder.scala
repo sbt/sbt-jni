@@ -1,8 +1,8 @@
 package simplecargo
 
 import com.github.sbt.jni.nativeLoader
+import com.github.sbt.jni.syntax.NativeLoader
 
-@nativeLoader("adder")
-class Adder(val base: Int) {
+class Adder(val base: Int) extends NativeLoader("adder") {
   @native def plus(term: Int): Int // implemented in libadder.so
 }
