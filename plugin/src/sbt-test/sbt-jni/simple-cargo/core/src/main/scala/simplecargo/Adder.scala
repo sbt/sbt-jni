@@ -1,6 +1,5 @@
 package simplecargo
 
-import com.github.sbt.jni.nativeLoader
 import com.github.sbt.jni.syntax.NativeLoader
 
 class Adder(val base: Int) extends NativeLoader("adder") {
