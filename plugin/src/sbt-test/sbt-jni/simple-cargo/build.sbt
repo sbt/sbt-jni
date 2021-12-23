@@ -5,8 +5,7 @@ lazy val root = (project in file(".")).aggregate(core, native)
 lazy val core = project
   .settings(
     libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.9" % Test,
-    sbtJniCoreScope := Compile,
-    classLoaderLayeringStrategy := ClassLoaderLayeringStrategy.Flat // otherwise you get java.lang.UnsatisfiedLinkError: 'int simplecargo.Adder.plus(int)'
+    sbtJniCoreScope := Compile
   )
   .dependsOn(native % Runtime)
 

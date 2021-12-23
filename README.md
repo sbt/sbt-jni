@@ -114,7 +114,7 @@ See the [annotation's implementation](core/src/main/scala/com/github/sbt/jni/ann
 
 #### Usage example (Scala 3.x / Scala 2.x):
 
-Scala 3 has no macro annotations support. As a solution we don't need this to be a macro function anymore. As the result, this option requires to have an explicit dependency on the [sbt-jni-core](./core) library. If you want to run or test the project from sbt, you have to change the `classLoaderLayeringStrategy` to `ClassLoaderLayeringStrategy.Flat`, otherwise you will get `UnsatisfiedLinkError`, like `java.lang.UnsatisfiedLinkError: 'int simple.Adder.plus(int)'`.
+Scala 3 has no macro annotations support. As a solution we don't need this to be a macro function anymore. As the result, this option requires to have an explicit dependency on the [sbt-jni-core](./core) library. If you want to run or test the project from sbt and have `ThisBuild / turbo := true`, you have to change the `classLoaderLayeringStrategy` to `ClassLoaderLayeringStrategy.Flat`, otherwise you will get `UnsatisfiedLinkError`, like `java.lang.UnsatisfiedLinkError: 'int simple.Adder.plus(int)'`.
 
 This plugin behavior is configurable via:
 
@@ -123,7 +123,7 @@ lazy val core = project
   .settings(
     // ...
     sbtJniCoreScope := Compile, // set to `Provided` by default
-    classLoaderLayeringStrategy := ClassLoaderLayeringStrategy.Flat // to enable running/testing from sbt, default causes `UnsatisfiedLinkError`
+    classLoaderLayeringStrategy := ClassLoaderLayeringStrategy.Flat // if you have `turbo` mode on
   )
 ```
 
