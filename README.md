@@ -114,13 +114,15 @@ See the [annotation's implementation](core/src/main/scala/com/github/sbt/jni/ann
 
 #### Usage example (Scala 3.x / Scala 2.x):
 
-Scala 3 has no macro annotations support. As a solution we don't need this to be a macro function anymore. As the result, this option requires to have an explicit dependency on the [core](./core) sub project.
+Scala 3 has no macro annotations support. As a solution we don't need this to be a macro function anymore. As the result, this option requires to have an explicit dependency on the [sbt-jni-core](./core) library.
+
+Note that if you want to run or test the project from sbt and have `ThisBuild / turbo := true`, you have to change the `classLoaderLayeringStrategy` to `ClassLoaderLayeringStrategy.Flat`, otherwise you will get `UnsatisfiedLinkError`, like `java.lang.UnsatisfiedLinkError: 'int simple.Adder.plus(int)'`.
 
 This plugin behavior is configurable via:
 
-```scala
-// set to Provided by default
-sbtJniCoreScope := <Configuration>
+```sbt
+// set to `Provided` by default, `Compile` is needed to use syntax (`extends NativeLoader`)
+sbtJniCoreScope := Compile
 ```
 
 ```scala
