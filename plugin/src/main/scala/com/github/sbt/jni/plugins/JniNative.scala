@@ -71,11 +71,13 @@ object JniNative extends AutoPlugin {
       } else {
         None
       }
-      tool getOrElse sys.error(
-        "No supported native build tool detected. " +
-          s"Check that the setting 'nativeCompile / sourceDirectory' (currently set to $src) " +
-          "points to a directory containing a supported build script. Supported build tools are: " +
-          tools.map(_.name).mkString(",")
+      tool.getOrElse(
+        sys.error(
+          "No supported native build tool detected. " +
+            s"Check that the setting 'nativeCompile / sourceDirectory' (currently set to $src) " +
+            "points to a directory containing a supported build script. Supported build tools are: " +
+            tools.map(_.name).mkString(",")
+        )
       )
 
     },
