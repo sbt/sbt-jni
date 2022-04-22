@@ -218,10 +218,10 @@ This plugin packages native libraries produced by JniNative in a way that they c
 1. Define separate sub-projects for JVM and native sources. In `myproject/build.sbt`:
 
    ```scala
-   lazy val core = project in file("myproject-core") // regular scala code with @native methods
+   lazy val core = (project in file("myproject-core")) // regular scala code with @native methods
      .dependsOn(native % Runtime) // remove this if `core` is a library, leave choice to end-user
 
-   lazy val native = project in file("myproject-native") // native code and build script
+   lazy val native = (project in file("myproject-native")) // native code and build script
      .enablePlugin(JniNative) // JniNative needs to be explicitly enabled
    ```
    Note that separate projects are not strictly required. They are strongly recommended nevertheless, as a portability-convenience tradeoff: programs written in a JVM language are expected to run anywhere without recompilation, but including native libraries in jars limits this portability to only platforms of the packaged libraries. Having a separate native project enables the users to easily swap out the native library with their own implementation.
