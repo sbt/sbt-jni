@@ -222,7 +222,7 @@ This plugin packages native libraries produced by JniNative in a way that they c
      .dependsOn(native % Runtime) // remove this if `core` is a library, leave choice to end-user
 
    lazy val native = (project in file("myproject-native")) // native code and build script
-     .enablePlugin(JniNative) // JniNative needs to be explicitly enabled
+     .enablePlugins(JniNative) // JniNative needs to be explicitly enabled
    ```
    Note that separate projects are not strictly required. They are strongly recommended nevertheless, as a portability-convenience tradeoff: programs written in a JVM language are expected to run anywhere without recompilation, but including native libraries in jars limits this portability to only platforms of the packaged libraries. Having a separate native project enables the users to easily swap out the native library with their own implementation.
 
