@@ -29,22 +29,22 @@ object JniLoad extends AutoPlugin {
     // (hence the "Provided" configuration).
     libraryDependencies ++= {
       CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, n)) if n >= 13 => Seq()
-        case Some((2, n)) =>
+        case Some(2, n) if n >= 13 => Seq()
+        case Some(2, n) =>
           Seq(compilerPlugin(("org.scalamacros" % "paradise" % ProjectVersion.MacrosParadise).cross(CrossVersion.full)))
         case _ => Seq()
       }
     },
     Compile / scalacOptions ++= {
       CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, n)) if n >= 13 => Seq("-Ymacro-annotations")
-        case _                       => Seq()
+        case Some(2, n) if n >= 13 => Seq("-Ymacro-annotations")
+        case _                     => Seq()
       }
     },
     libraryDependencies ++= {
       CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, n)) => Seq("org.scala-lang" % "scala-reflect" % scalaVersion.value % Provided)
-        case _            => Seq()
+        case Some(2, n) => Seq("org.scala-lang" % "scala-reflect" % scalaVersion.value % Provided)
+        case _          => Seq()
       }
     },
     libraryDependencies += "com.github.sbt" %% "sbt-jni-core" % ProjectVersion.Core % sbtJniCoreScope.value

@@ -42,12 +42,12 @@ object JniJavah extends AutoPlugin {
         .asScala
         .keySet
         .map { vf =>
-          (vf.names() match {
+          vf.names() match {
             case Array(prefix, first, more @ _*) if prefix.startsWith("${") =>
               Paths.get(first, more: _*)
             case _ =>
               Paths.get(URI.create("file:///" + vf.id().stripPrefix("/")))
-          }).toFile()
+          }.toFile()
         }
         .toSet
       val nativeClasses = classFiles.flatMap { file =>

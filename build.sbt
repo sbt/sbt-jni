@@ -40,7 +40,7 @@ lazy val core = project
     crossScalaVersions := scalaVersions,
     libraryDependencies ++= {
       CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, n)) =>
+        case Some(2, n) =>
           Seq(
             "org.scala-lang" % "scala-compiler" % scalaVersion.value % Provided,
             "org.scala-lang" % "scala-reflect" % scalaVersion.value
@@ -50,15 +50,15 @@ lazy val core = project
     },
     libraryDependencies ++= {
       CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, n)) if n < 13 =>
+        case Some(2, n) if n < 13 =>
           Seq(compilerPlugin(("org.scalamacros" % "paradise" % macrosParadiseVersion).cross(CrossVersion.full)))
         case _ => Seq()
       }
     },
     Compile / scalacOptions ++= {
       CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, n)) if n >= 13 => Seq("-Ymacro-annotations")
-        case _                       => Seq()
+        case Some(2, n) if n >= 13 => Seq("-Ymacro-annotations")
+        case _                     => Seq()
       }
     }
   )

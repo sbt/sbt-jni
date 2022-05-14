@@ -27,9 +27,9 @@ trait ConfigureMakeInstall { self: BuildTool =>
       targetDirectory: File
     ): File = {
 
-      val ev: Int = (
+      val ev: Int =
         configure(targetDirectory) #&& make() #&& install()
-      ) ! log
+          ! log
 
       if (ev != 0) sys.error(s"Building native library failed. Exit code: ${ev}")
 
