@@ -16,7 +16,7 @@ object NativeLoader {
       val plat: String = {
         val line =
           try {
-            scala.sys.process.Process("uname -sm").!!.linesIterator.next()
+            scala.io.Source.fromString(scala.sys.process.Process("uname -sm").!!).getLines().next()
           } catch {
             case _: Exception => sys.error("Error running `uname` command")
           }
