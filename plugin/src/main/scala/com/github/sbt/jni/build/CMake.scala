@@ -42,6 +42,7 @@ object CMake extends BuildTool with ConfigureMakeInstall {
       s"-DCMAKE_INSTALL_PREFIX:PATH=${target.getAbsolutePath}",
       "-DCMAKE_BUILD_TYPE=Release",
       "-DSBT:BOOLEAN=true",
+      s"-DJAVA_HOME=${scala.sys.props.get("java.home").get}",
       cmakeVersion.toString,
       baseDirectory.getAbsolutePath
     )
