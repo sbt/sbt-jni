@@ -14,7 +14,7 @@ public class ClassMetaInfo extends ClassVisitor {
     ClassName name;
 
     public ClassMetaInfo() {
-        super(Opcodes.ASM7);
+        super(Opcodes.ASM9);
     }
 
     @Override
