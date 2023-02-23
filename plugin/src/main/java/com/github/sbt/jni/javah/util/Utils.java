@@ -46,23 +46,47 @@ public final class Utils {
         }
     });
 
+    private static void addChar(char ch, StringBuilder builder) {
+        if (ch == '.') {
+            builder.append('_');
+        } else if (ch == '_') {
+            builder.append("_1");
+        } else if (ch == ';') {
+            builder.append("_2");
+        } else if (ch == '[') {
+            builder.append("_3");
+        } else if ((ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'z') || (ch >= 'A' && (ch <= 'Z'))) {
+            builder.append(ch);
+        } else {
+            builder.append(String.format("_0%04x", (int) ch));
+        }
+    }
+
     public static String mangleName(String name) {
         StringBuilder builder = new StringBuilder(name.length() * 2);
         int len = name.length();
         for (int i = 0; i < len; i++) {
-            char ch = name.charAt(i);
-            if (ch == '.') {
+            addChar(name.charAt(i), builder);
+        }
+        return builder.toString();
+    }
+
+    public static String mangleArguments(String arguments) {
+        boolean inObjectType = false;
+        StringBuilder builder = new StringBuilder(arguments.length() * 2);
+        int len = arguments.length();
+        for (int i = 0; i < len; i++) {
+            char ch = arguments.charAt(i);
+            if (inObjectType && ch == ';') {
+                addChar(ch, builder);
+                inObjectType = false;
+            } else if (inObjectType && ch == '/') {
                 builder.append('_');
-            } else if (ch == '_') {
-                builder.append("_1");
-            } else if (ch == ';') {
-                builder.append("_2");
-            } else if (ch == '[') {
-                builder.append("_3");
-            } else if ((ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'z') || (ch >= 'A' && (ch <= 'Z'))) {
-                builder.append(ch);
+            } else if (!inObjectType && ch == 'L') {
+                inObjectType = true;
+                addChar(ch, builder);
             } else {
-                builder.append(String.format("_0%04x", (int) ch));
+                addChar(ch, builder);
             }
         }
         return builder.toString();
