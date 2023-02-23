@@ -92,7 +92,7 @@ public final class Utils {
         return builder.toString();
     }
 
-                public static String escape(String unicode) {
+    public static String escape(String unicode) {
         Objects.requireNonNull(unicode);
         int len = unicode.length();
         StringBuilder builder = new StringBuilder(len);

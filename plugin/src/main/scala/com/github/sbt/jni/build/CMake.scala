@@ -37,14 +37,14 @@ object CMake extends BuildTool with ConfigureMakeInstall {
       if (cmakeVersion >= 312) Seq("--parallel", parallelJobs.toString())
       else Seq.empty
 
-    override def configure(target: File) = {
+    override def configure(target: File) = cmakeProcess(
       // disable producing versioned library files, not needed for fat jars
-      val args = Seq(s"-DCMAKE_INSTALL_PREFIX:PATH=${target.getAbsolutePath}", "-DCMAKE_BUILD_TYPE=Release", "-DSBT:BOOLEAN=true") ++ scala.sys.props
-        .get("java.home")
-        .toSeq
-        .map(jh => s"-DJAVA_HOME=${jh}") ++ Seq(cmakeVersion.toString, baseDirectory.getAbsolutePath)
-      cmakeProcess(args: _*)
-    }
+      s"-DCMAKE_INSTALL_PREFIX:PATH=${target.getAbsolutePath}",
+      "-DCMAKE_BUILD_TYPE=Release",
+      "-DSBT:BOOLEAN=true",
+      cmakeVersion.toString,
+      baseDirectory.getAbsolutePath
+    )
 
     override def clean(): Unit = cmakeProcess(
       "--build",

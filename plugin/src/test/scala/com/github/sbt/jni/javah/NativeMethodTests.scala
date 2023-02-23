@@ -26,18 +26,15 @@ class NativeMethodTests extends AnyWordSpec with Matchers {
   }
 }
 
-object NativeMethodTests {
+object NativeMethodTests { self =>
   lazy val classMeta: ClassMetaInfo = {
-    val resource = classOf[NativeMethodTests].getResource("Overloads.class").getPath
-    val f = new File(resource)
+    val resource = self.getClass.getResource("Overloads.class").getPath
     val meta = new ClassMetaInfo()
-    val stream = Files.newInputStream(f.toPath)
+    val stream = Files.newInputStream(new File(resource).toPath)
     try {
       val reader = new ClassReader(stream)
       reader.accept(meta, ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES)
-    } finally {
-      stream.close()
-    }
+    } finally stream.close()
     meta
   }
 }
