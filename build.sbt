@@ -1,6 +1,6 @@
 import scala.sys.process._
 
-val scalaVersions = Seq("3.2.1", "2.13.10", "2.12.17", "2.11.12")
+val scalaVersions = Seq("3.2.2", "2.13.10", "2.12.17", "2.11.12")
 val macrosParadiseVersion = "2.1.1"
 
 ThisBuild / versionScheme := Some("semver-spec")
