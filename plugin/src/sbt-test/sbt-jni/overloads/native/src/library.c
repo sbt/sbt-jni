@@ -54,6 +54,8 @@ JNIEXPORT jint JNICALL Java_simple_Library_00024_say___3Ljava_lang_String_2
     jstring message = (jstring) ((*env)->GetObjectArrayElement(env, messages, i));
     const char *msg = (*env)->GetStringUTFChars(env, message, 0);
     fprintf(stdout, "Printing from native library: %s\n", msg);
+    (*env)->ReleaseStringUTFChars(env, message, msg);
   }
+  fflush(stdout);
   return 45;
 }
