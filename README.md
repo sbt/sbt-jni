@@ -178,6 +178,17 @@ Source directory is set to `sourceDirectory.value` since the `CMake` project str
 │   ├── lib.cpp
 ```
 
+By default, `CMake` build is launched the following flags:
+
+* `-DCMAKE_BUILD_TYPE=Release` 
+* `-DSBT:BOOLEAN=true`
+
+It is possible to configure `CMake` by overriding the `nativeBuildTool` setting:
+
+```scala
+nativeBuildTool := CMake.make(Seq("-DCMAKE_BUILD_TYPE=Debug", "-DSBT:BOOLEAN=true"))
+```
+
 #### Cargo
 
 A regular `Cargo` native project definition usually looks this following way:
@@ -201,7 +212,7 @@ Source directory is set to `baseDirectory.value` since the `Cargo` project struc
 By default, `Cargo` build is launched with the `--release` flag. It is possible to configure `Cargo` profile by overriding the `nativeBuildTool` setting:
 
 ```scala
-nativeBuildTool := Cargo.make(release = false)
+nativeBuildTool := Cargo.make(Nil)
 ```
 
 ### JniPackage

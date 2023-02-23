@@ -83,7 +83,7 @@ trait BuildTool {
 
 object BuildTool {
   lazy val buildTools: Map[String, BuildTool] = Map(
-    CMake.name.toLowerCase -> CMake,
-    Cargo.release.name.toLowerCase -> Cargo.release
+    CMake.name.toLowerCase -> CMake.release,
+    Cargo.name.toLowerCase -> Cargo.release
   )
 }

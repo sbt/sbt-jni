@@ -5,9 +5,9 @@ import sbt._
 import java.io.File
 import scala.sys.process._
 
-class Cargo(protected val release: Boolean = true) extends BuildTool {
+class Cargo(protected val configuration: Seq[String]) extends BuildTool {
 
-  def name: String = "Cargo"
+  val name: String = Cargo.name
 
   def detect(baseDirectory: File): Boolean =
     baseDirectory.list().contains("Cargo.toml")
@@ -15,6 +15,8 @@ class Cargo(protected val release: Boolean = true) extends BuildTool {
   protected def templateMappings: List[(String, String)] = List(
     "/com/github/sbt/jni/templates/Cargo.toml" -> "Cargo.toml"
   )
+
+  def release: Boolean = configuration.exists(_.toLowerCase.contains("release"))
 
   def getInstance(baseDirectory: File, buildDirectory: File, logger: sbt.Logger): Instance =
     new Instance(baseDirectory, logger)
@@ -27,14 +29,13 @@ class Cargo(protected val release: Boolean = true) extends BuildTool {
       def buffer[T](f: => T): T = f
     }
 
-    def clean(): Unit =
-      Process("cargo clean", baseDirectory) ! log
+    def clean(): Unit = Process("cargo clean", baseDirectory) ! log
 
     def library(targetDirectory: File): File = {
-      val releaseFlag = if (release) "--release " else ""
+      val configurationString = (configuration ++ Seq("--target-dir", targetDirectory.getAbsolutePath)).mkString(" ").trim
       val ev =
         Process(
-          s"cargo build $releaseFlag--target-dir ${targetDirectory.getAbsolutePath}",
+          s"cargo build $configurationString",
           baseDirectory
         ) ! log
       if (ev != 0) sys.error(s"Building native library failed. Exit code: $ev")
@@ -64,11 +65,13 @@ class Cargo(protected val release: Boolean = true) extends BuildTool {
 }
 
 object Cargo {
+  val name: String = "Cargo"
+  val DEFAULT_CONFIGURATION = Seq("--release")
 
   /**
-   * If `release` is `true`, `cargo build` will run with the `--release` flag.
+   * List of cargo parameters passed, target-dir is not configurable.
    */
-  def make(release: Boolean = true): BuildTool = new Cargo(release)
+  def make(configuration: Seq[String] = DEFAULT_CONFIGURATION): BuildTool = new Cargo(configuration)
 
   /**
    * Cargo build tool, with the `--release` flag.

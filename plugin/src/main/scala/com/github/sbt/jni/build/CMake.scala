@@ -4,9 +4,9 @@ package build
 import sbt._
 import sys.process._
 
-object CMake extends BuildTool with ConfigureMakeInstall {
+class CMake(protected val configuration: Seq[String]) extends BuildTool with ConfigureMakeInstall {
 
-  override val name = "CMake"
+  override val name = CMake.name
 
   override def detect(baseDirectory: File) = baseDirectory.list().contains("CMakeLists.txt")
 
@@ -34,17 +34,18 @@ object CMake extends BuildTool with ConfigureMakeInstall {
       }
 
     def parallelOptions: Seq[String] =
-      if (cmakeVersion >= 312) Seq("--parallel", parallelJobs.toString())
+      if (cmakeVersion >= 312) Seq("--parallel", parallelJobs.toString)
       else Seq.empty
 
-    override def configure(target: File) = cmakeProcess(
+    override def configure(target: File) = {
       // disable producing versioned library files, not needed for fat jars
-      s"-DCMAKE_INSTALL_PREFIX:PATH=${target.getAbsolutePath}",
-      "-DCMAKE_BUILD_TYPE=Release",
-      "-DSBT:BOOLEAN=true",
-      cmakeVersion.toString,
-      baseDirectory.getAbsolutePath
-    )
+      cmakeProcess(
+        (s"-DCMAKE_INSTALL_PREFIX:PATH=${target.getAbsolutePath}" +: configuration) ++ Seq(
+          cmakeVersion.toString,
+          baseDirectory.getAbsolutePath
+        ): _*
+      )
+    }
 
     override def clean(): Unit = cmakeProcess(
       "--build",
@@ -64,4 +65,19 @@ object CMake extends BuildTool with ConfigureMakeInstall {
       else Process("make install", buildDirectory)
   }
 
+}
+
+object CMake {
+  val name = "CMake"
+  val DEFAULT_CONFIGURATION = Seq("-DCMAKE_BUILD_TYPE=Release", "-DSBT:BOOLEAN=true")
+
+  /**
+   * List of CMake passed, CMake version, base and target directory paths are not configurable.
+   */
+  def make(configuration: Seq[String] = DEFAULT_CONFIGURATION): BuildTool = new CMake(configuration)
+
+  /**
+   * CMake build tool, with the Release flag.
+   */
+  lazy val release: BuildTool = make()
 }
