@@ -40,7 +40,7 @@ object JniNative extends AutoPlugin {
     nativePlatform := {
       try {
         val lines = Process("uname -sm").lineStream
-        if (lines.length == 0) {
+        if (lines.isEmpty) {
           sys.error("Error occured trying to run `uname`")
         }
         // uname -sm returns "<kernel> <hardware name>"
