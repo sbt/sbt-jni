@@ -186,7 +186,12 @@ By default, `CMake` build is launched the following flags:
 It is possible to configure `CMake` by overriding the `nativeBuildTool` setting:
 
 ```scala
+// default 
+nativeBuildTool := CMake.make(Seq("-DCMAKE_BUILD_TYPE=Release", "-DSBT:BOOLEAN=true"))
+// debug mode
 nativeBuildTool := CMake.make(Seq("-DCMAKE_BUILD_TYPE=Debug", "-DSBT:BOOLEAN=true"))
+// no flags passed
+nativeBuildTool := CMake.make(Nil)
 ```
 
 #### Cargo
@@ -212,6 +217,11 @@ Source directory is set to `baseDirectory.value` since the `Cargo` project struc
 By default, `Cargo` build is launched with the `--release` flag. It is possible to configure `Cargo` profile by overriding the `nativeBuildTool` setting:
 
 ```scala
+// default
+nativeBuildTool := Cargo.make(Seq("--release"))
+// extra flags passed
+nativeBuildTool := Cargo.make(Seq("--release", "--ignore-rust-version"))
+// no flags passed, debug mode
 nativeBuildTool := Cargo.make(Nil)
 ```
 
@@ -275,8 +285,8 @@ Real-world use-cases of sbt-jni include:
 
 ## Requirements and Dependencies
 
-- projects using `JniLoad` must use Scala versions 2.11, 2.12 or 2.13
-- projects using `JniLoad` with Scala 3 should use it with 
+- projects using `JniLoad` must use Scala versions 2.11, 2.12, 2.13 or 3.2
+  - projects using `JniLoad` with Scala 3 should use it with the `sbtJniCoreScope := Compile` SBT key set
 - only POSIX platforms are supported (actually, any platform that has the `uname` command available)
 
 The goal of sbt-jni is to be the least intrusive possible. No transitive dependencies are added to projects using any plugin (some dependencies are added to the `provided` configuration, however these do not affect any downstream projects).
@@ -284,7 +294,7 @@ The goal of sbt-jni is to be the least intrusive possible. No transitive depende
 ## Building
 Both the core (former macros) library (`sbt-jni-core`) and the sbt plugins (`sbt-jni`) are published. Cross-building happens on a per-project basis:
 
-- sbt-jni-core is built against Scala 2.11, 2.12 and 2.13
+- sbt-jni-core is built against Scala 2.11, 2.12, 2.13, and 3.2
 - sbt-jni is built against Scala 2.12 (the Scala version that sbt 1.x uses)
 
 The differing Scala versions make it necessary to always cross-compile and cross-publish this project, i.e. append a "+" before every task.
