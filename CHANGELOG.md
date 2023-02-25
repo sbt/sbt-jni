@@ -6,9 +6,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## Changed
+## [1.6.0] - 2023-02-25
+## Added
 
 - Expose BuildTools parameters [#141](https://github.com/sbt/sbt-jni/pull/141) (@pomadchin)
+
+## Changed
+
+- Update scala3-compiler, scala3-library to 3.2.2 [#138](https://github.com/sbt/sbt-jni/pull/138) (@scala-steward)
+- Update sbt, scripted-plugin to 1.8.2 [#135](https://github.com/sbt/sbt-jni/pull/135) (@scala-steward)
+- Update scala3-compiler, scala3-library to 3.2.1 [#131](https://github.com/sbt/sbt-jni/pull/131) (@scala-steward)
+- Update sbt, scripted-plugin to 1.7.3 [#129](https://github.com/sbt/sbt-jni/pull/129) (@scala-steward)
+- Update scala3-compiler, scala3-library to 3.2.0 [#121](https://github.com/sbt/sbt-jni/pull/121) (@scala-steward)
+- Update sbt, scripted-plugin to 1.7.2 [#126](https://github.com/sbt/sbt-jni/pull/126) (@scala-steward)
+- Update asm to 9.4 [#124](https://github.com/sbt/sbt-jni/pull/124) (@scala-steward)
+- Update scala-compiler, scala-library, ... to 2.12.17 [#122](https://github.com/sbt/sbt-jni/pull/122) (@scala-steward)
 
 ## Fixed
 
@@ -74,7 +86,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.4.1] - 2019-12-13
 
-[Unreleased]: https://github.com/sbt/sbt-jni/compare/v1.5.4...HEAD
+[Unreleased]: https://github.com/sbt/sbt-jni/compare/v1.6.0...HEAD
+[1.6.0]: https://github.com/sbt/sbt-jni/compare/v1.5.4...v1.6.0
 [1.5.4]: https://github.com/sbt/sbt-jni/compare/v1.5.3...v1.5.4
 [1.5.3]: https://github.com/sbt/sbt-jni/compare/v1.5.2...v1.5.3
 [1.5.2]: https://github.com/sbt/sbt-jni/compare/v1.5.1...v1.5.2
