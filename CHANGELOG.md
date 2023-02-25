@@ -6,6 +6,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## Changed
+
+- Expose BuildTools parameters [#141](https://github.com/sbt/sbt-jni/pull/141) (@pomadchin)
+
+## Fixed
+
+- Fix names of overloaded methods with ref type parameters [#139](https://github.com/sbt/sbt-jni/pull/139) (@berkeleybarry)
+
+
+## [1.5.4] - 2022-07-24
+## Added
+
+- Enable building on Scala 2.11 [#119](https://github.com/sbt/sbt-jni/pull/119) (@michaelmior)
+
+## Changed
+
+- Update scala3-compiler, scala3-library to 3.1.3 [#115](https://github.com/sbt/sbt-jni/pull/115) (@scala-steward)
+- Update scala-compiler, scala-library, ... to 2.12.16 [#114](https://github.com/sbt/sbt-jni/pull/114) (@scala-steward)
+- Update asm to 9.3 [#105](https://github.com/sbt/sbt-jni/pull/105) (@scala-steward)
+- Update scala-compiler, scala-library, ... to 2.13.8 [#94](https://github.com/sbt/sbt-jni/pull/94) (@scala-steward)
+- Bump Scala and asm versions up [#62](https://github.com/sbt/sbt-jni/pull/62) (@pomadchin)
+
+## Fixed
+
+- Fix sbt test on java 11 [#112](https://github.com/sbt/sbt-jni/pull/112) (@MasseGuillaume)
+
+
 ## [1.5.3] - 2021-08-01
 
 ### Added
@@ -47,7 +74,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.4.1] - 2019-12-13
 
-[Unreleased]: https://github.com/sbt/sbt-jni/compare/v1.5.3...HEAD
+[Unreleased]: https://github.com/sbt/sbt-jni/compare/v1.5.4...HEAD
+[1.5.4]: https://github.com/sbt/sbt-jni/compare/v1.5.3...v1.5.4
 [1.5.3]: https://github.com/sbt/sbt-jni/compare/v1.5.2...v1.5.3
 [1.5.2]: https://github.com/sbt/sbt-jni/compare/v1.5.1...v1.5.2
 [1.5.1]: https://github.com/sbt/sbt-jni/compare/v1.5.0...v1.5.1
