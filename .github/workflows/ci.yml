@@ -26,6 +26,7 @@ jobs:
         with:
           distribution: ${{ matrix.distribution }}
           java-version: ${{ matrix.java }}
+      - run: python3 -m pip install meson ninja
 
       - name: Check formatting
         run: sbt scalafmtCheckAll
