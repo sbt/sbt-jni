@@ -4,7 +4,7 @@ lazy val root = (project in file(".")).aggregate(core, native)
 
 lazy val core = project
   .settings(
-    libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.15" % Test,
+    libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.16" % Test,
     sbtJniCoreScope := Compile
   )
   .dependsOn(native % Runtime)
