@@ -225,6 +225,38 @@ nativeBuildTool := Cargo.make(Seq("--release", "--ignore-rust-version"))
 nativeBuildTool := Cargo.make(Nil)
 ```
 
+#### Meson
+
+A regular `Meson` native project definition usually looks this following way:
+
+```scala
+lazy val native = project
+  // baseDirectory = <project_root>/native
+  .settings(nativeCompile / sourceDirectory := baseDirectory.value)
+  .enablePlugins(JniNative)
+```
+
+Source directory is set to `baseDirectory.value` since the `Meson` project structure is of the following shape:
+
+```
+├── meson.build
+├── meson.options
+├── src/
+│   ├── library.c
+
+```
+
+By default, `Meson` build is launched with the `--buildtype=release` flag. It is possible to configure `Meson` by overriding the `nativeBuildTool` setting:
+
+```scala
+// default
+nativeBuildTool := Meson.make(Seq("--buildtype=release"))
+// extra flags passed
+nativeBuildTool := Meson.make(Seq("--buildtype=release", "--fatal-meson-warnings"))
+// no flags passed, debug mode
+nativeBuildTool := Meson.make(Nil)
+```
+
 ### JniPackage
 | Enabled                        | Source        |
 |--------------------------------|---------------|

@@ -1,0 +1,2 @@
+# Note: Meson >= 1.1.0 Required
+option('sbt', type : 'boolean', value : false, description : 'Set if invoked from sbt-jni')

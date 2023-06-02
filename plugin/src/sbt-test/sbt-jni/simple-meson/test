@@ -1,0 +1,5 @@
+> +javah
+$ exists native/src/include/simple_Library_00024.h
+> nativeInit meson demo
+> +test
+> +core/run
