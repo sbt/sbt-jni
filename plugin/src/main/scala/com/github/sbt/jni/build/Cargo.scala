@@ -32,7 +32,7 @@ class Cargo(protected val configuration: Seq[String]) extends BuildTool {
     def clean(): Unit = Process("cargo clean", baseDirectory) ! log
 
     def library(targetDirectory: File): File = {
-      val configurationString = (configuration ++ Seq("--target-dir", targetDirectory.getAbsolutePath)).mkString(" ").trim
+      val configurationString = (configuration ++ Seq("--target-dir", targetDirectory.getAbsolutePath.enquoted)).mkString(" ").trim
       val ev =
         Process(
           s"cargo build $configurationString",

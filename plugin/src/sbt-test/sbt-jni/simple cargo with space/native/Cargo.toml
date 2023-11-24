@@ -1,0 +1,11 @@
+[package]
+name = "adder"
+version = "0.1.0"
+authors = ["John Doe <john.doe@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+jni = "0.19"
+
+[lib]
+crate_type = ["cdylib"]
