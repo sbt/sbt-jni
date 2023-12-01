@@ -74,10 +74,8 @@ object JniPackage extends AutoPlugin {
       .taskDyn[Seq[(File, String)]] {
         val enableManaged = enableNativeCompilation.value
         if (enableManaged) Def.task {
-          val library: File = nativeCompile.value
           val platform = nativePlatform.value
-
-          Seq(library -> s"/native/$platform/${library.name}")
+          nativeCompile.value.map { library => library -> s"/native/$platform/${library.name}" }
         }
         else
           Def.task {

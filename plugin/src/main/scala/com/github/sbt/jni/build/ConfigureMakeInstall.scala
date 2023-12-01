@@ -25,7 +25,7 @@ trait ConfigureMakeInstall { self: BuildTool =>
 
     def library(
       targetDirectory: File
-    ): File = {
+    ): List[File] = {
 
       val ev: Int = (
         configure(targetDirectory) #&& make() #&& install()
@@ -43,14 +43,14 @@ trait ConfigureMakeInstall { self: BuildTool =>
             s"No files were created during compilation, " +
               s"something went wrong with the ${name} configuration."
           )
-        case head :: Nil =>
-          head
-        case head :: tail =>
+        case list @ _ :: Nil =>
+          list
+        case list =>
           log.warn(
-            "More than one file was created during compilation, " +
-              s"only the first one (${head.getAbsolutePath}) will be used."
+            "More than one file was created during compilation: " +
+              s"${list.map(_.getAbsolutePath).mkString(", ")}."
           )
-          head
+          list
       }
     }
   }

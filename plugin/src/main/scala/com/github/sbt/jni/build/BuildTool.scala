@@ -70,7 +70,7 @@ trait BuildTool {
      */
     def library(
       targetDirectory: File
-    ): File
+    ): List[File]
 
   }
 

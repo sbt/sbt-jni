@@ -14,7 +14,7 @@ object JniNative extends AutoPlugin {
   object autoImport {
 
     // Main task, inspect this first
-    val nativeCompile = taskKey[File](
+    val nativeCompile = taskKey[Seq[File]](
       "Builds a native library by calling the native build tool."
     )
 
@@ -114,9 +114,9 @@ object JniNative extends AutoPlugin {
       IO.createDirectory(targetDir)
 
       log.info(s"Building library with native build tool ${tool.name}")
-      val lib = toolInstance.library(targetDir)
-      log.success(s"Library built in ${lib.getAbsolutePath}")
-      lib
+      val libs = toolInstance.library(targetDir)
+      log.success(s"Libraries built in ${libs.map(_.getAbsolutePath).mkString(", ")}")
+      libs
     },
 
     // also clean native sources
