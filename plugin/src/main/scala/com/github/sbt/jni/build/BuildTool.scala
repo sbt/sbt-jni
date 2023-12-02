@@ -92,10 +92,7 @@ trait BuildTool {
       case list @ _ :: Nil =>
         list
       case list =>
-        logger.info(
-          "More than one file was created during compilation: " +
-            s"${list.map(_.getAbsolutePath).mkString(", ")}."
-        )
+        logger.info("More than one file was created during compilation.")
         list
     }
   }
