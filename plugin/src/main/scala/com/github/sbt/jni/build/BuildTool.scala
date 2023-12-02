@@ -70,15 +70,42 @@ trait BuildTool {
      */
     def library(
       targetDirectory: File
-    ): File
+    ): List[File]
 
   }
 
   /**
    * Get an instance (build configuration) of this tool, in the specified directory.
    */
-  def getInstance(baseDirectory: File, buildDirectory: File, logger: Logger): Instance
+  def getInstance(baseDirectory: File, buildDirectory: File, logger: Logger, multipleOutputs: Boolean): Instance
 
+  /**
+   * At least one produced library is expected.
+   */
+  def validate(list: List[File], multipleOutputs: Boolean, logger: Logger): List[File] = {
+    list match {
+      case Nil =>
+        sys.error(
+          s"No files were created during compilation, " +
+            s"something went wrong with the $name configuration."
+        )
+      case list @ _ :: Nil =>
+        list
+
+      case head :: _ if !multipleOutputs =>
+        logger.warn(
+          s"""
+             |More than one file was created during compilation, only the first one (${head.getAbsolutePath}) will be used.
+             |Consider setting nativeMultipleOutputs := true.
+             |""".stripMargin
+        )
+        List(head)
+
+      case list =>
+        logger.info("More than one file was created during compilation.")
+        list
+    }
+  }
 }
 
 object BuildTool {

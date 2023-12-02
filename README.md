@@ -153,10 +153,16 @@ Since this plugin is basically a command-line wrapper, native build tools must f
 
 An initial, compatible build template can be obtained by running `sbt nativeInit <tool>`. Once the native build tool initialised, projects are built by calling the `sbt nativeCompile` task.
 
-Source and output directories are configurable
+Source and output directories are configurable:
 ```scala
 nativeCompile / sourceDirectory := sourceDirectory.value / "native"
 nativeCompile / target := target.value / "native" / nativePlatform.value
+```
+
+Some JNI projects may produce more than a single output. If that's an intended behavior it's possible to include all of the produced 
+binaries into the native package:
+```scala
+nativeMultipleOutputs := true
 ```
 
 #### CMake

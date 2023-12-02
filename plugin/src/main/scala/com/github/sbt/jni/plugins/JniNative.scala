@@ -14,7 +14,7 @@ object JniNative extends AutoPlugin {
   object autoImport {
 
     // Main task, inspect this first
-    val nativeCompile = taskKey[File](
+    val nativeCompile = taskKey[Seq[File]](
       "Builds a native library by calling the native build tool."
     )
 
@@ -28,6 +28,10 @@ object JniNative extends AutoPlugin {
 
     val nativeInit = inputKey[Seq[File]](
       "Initialize a native build script from a template."
+    )
+
+    val nativeMultipleOutputs = taskKey[Boolean](
+      "Enable multiple native outputs support. Disabled by default."
     )
 
   }
@@ -79,8 +83,8 @@ object JniNative extends AutoPlugin {
             tools.map(_.name).mkString(",")
         )
       )
-
     },
+    nativeMultipleOutputs := false,
     nativeBuildToolInstance := {
       val tool = nativeBuildTool.value
       val srcDir = (nativeCompile / sourceDirectory).value
@@ -89,7 +93,8 @@ object JniNative extends AutoPlugin {
       tool.getInstance(
         baseDirectory = srcDir,
         buildDirectory = buildDir,
-        logger = streams.value.log
+        logger = streams.value.log,
+        multipleOutputs = nativeMultipleOutputs.value
       )
     },
     nativeCompile / clean := {
@@ -114,9 +119,9 @@ object JniNative extends AutoPlugin {
       IO.createDirectory(targetDir)
 
       log.info(s"Building library with native build tool ${tool.name}")
-      val lib = toolInstance.library(targetDir)
-      log.success(s"Library built in ${lib.getAbsolutePath}")
-      lib
+      val libs = toolInstance.library(targetDir)
+      log.success(s"Libraries built in ${libs.map(_.getAbsolutePath).mkString(", ")}")
+      libs
     },
 
     // also clean native sources

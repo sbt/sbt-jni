@@ -13,6 +13,7 @@ trait ConfigureMakeInstall { self: BuildTool =>
   trait Instance extends self.Instance {
 
     def log: Logger
+    def multipleOutputs: Boolean
     def baseDirectory: File
     def buildDirectory: File
 
@@ -25,7 +26,7 @@ trait ConfigureMakeInstall { self: BuildTool =>
 
     def library(
       targetDirectory: File
-    ): File = {
+    ): List[File] = {
 
       val ev: Int = (
         configure(targetDirectory) #&& make() #&& install()
@@ -36,22 +37,7 @@ trait ConfigureMakeInstall { self: BuildTool =>
       val products: List[File] =
         (targetDirectory ** ("*.so" | "*.dylib")).get.filter(_.isFile).toList
 
-      // only one produced library is expected
-      products match {
-        case Nil =>
-          sys.error(
-            s"No files were created during compilation, " +
-              s"something went wrong with the ${name} configuration."
-          )
-        case head :: Nil =>
-          head
-        case head :: tail =>
-          log.warn(
-            "More than one file was created during compilation, " +
-              s"only the first one (${head.getAbsolutePath}) will be used."
-          )
-          head
-      }
+      validate(products, multipleOutputs, log)
     }
   }
 
