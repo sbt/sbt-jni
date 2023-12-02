@@ -79,6 +79,26 @@ trait BuildTool {
    */
   def getInstance(baseDirectory: File, buildDirectory: File, logger: Logger): Instance
 
+  /**
+   * At least one produced library is expected.
+   */
+  def validate(list: List[File], logger: Logger): List[File] = {
+    list match {
+      case Nil =>
+        sys.error(
+          s"No files were created during compilation, " +
+            s"something went wrong with the $name configuration."
+        )
+      case list @ _ :: Nil =>
+        list
+      case list =>
+        logger.info(
+          "More than one file was created during compilation: " +
+            s"${list.map(_.getAbsolutePath).mkString(", ")}."
+        )
+        list
+    }
+  }
 }
 
 object BuildTool {

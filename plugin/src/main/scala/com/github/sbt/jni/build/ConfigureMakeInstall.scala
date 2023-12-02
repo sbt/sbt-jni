@@ -36,22 +36,7 @@ trait ConfigureMakeInstall { self: BuildTool =>
       val products: List[File] =
         (targetDirectory ** ("*.so" | "*.dylib")).get.filter(_.isFile).toList
 
-      // only one produced library is expected
-      products match {
-        case Nil =>
-          sys.error(
-            s"No files were created during compilation, " +
-              s"something went wrong with the ${name} configuration."
-          )
-        case list @ _ :: Nil =>
-          list
-        case list =>
-          log.warn(
-            "More than one file was created during compilation: " +
-              s"${list.map(_.getAbsolutePath).mkString(", ")}."
-          )
-          list
-      }
+      validate(products, log)
     }
   }
 
