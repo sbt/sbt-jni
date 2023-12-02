@@ -30,6 +30,10 @@ object JniNative extends AutoPlugin {
       "Initialize a native build script from a template."
     )
 
+    val nativeMultipleOutputs = taskKey[Boolean](
+      "Enable multiple native outputs support. Disabled by default."
+    )
+
   }
   import autoImport._
 
@@ -79,8 +83,8 @@ object JniNative extends AutoPlugin {
             tools.map(_.name).mkString(",")
         )
       )
-
     },
+    nativeMultipleOutputs := false,
     nativeBuildToolInstance := {
       val tool = nativeBuildTool.value
       val srcDir = (nativeCompile / sourceDirectory).value
@@ -89,7 +93,8 @@ object JniNative extends AutoPlugin {
       tool.getInstance(
         baseDirectory = srcDir,
         buildDirectory = buildDir,
-        logger = streams.value.log
+        logger = streams.value.log,
+        multipleOutputs = nativeMultipleOutputs.value
       )
     },
     nativeCompile / clean := {

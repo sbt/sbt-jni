@@ -15,11 +15,12 @@ class Meson(protected val configuration: Seq[String]) extends BuildTool with Con
     "/com/github/sbt/jni/templates/meson.options" -> "meson.options"
   )
 
-  override def getInstance(baseDir: File, buildDir: File, logger: Logger) = new Instance {
+  override def getInstance(baseDir: File, buildDir: File, logger: Logger, nativeMultipleOutputs: Boolean) = new Instance {
 
     override def log = logger
     override def baseDirectory = baseDir
     override def buildDirectory = buildDir
+    override def multipleOutputs = nativeMultipleOutputs
 
     def mesonProcess(args: String*): ProcessBuilder = Process("meson" +: args, buildDirectory)
 

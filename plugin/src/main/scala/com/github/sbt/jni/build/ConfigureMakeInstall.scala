@@ -13,6 +13,7 @@ trait ConfigureMakeInstall { self: BuildTool =>
   trait Instance extends self.Instance {
 
     def log: Logger
+    def multipleOutputs: Boolean
     def baseDirectory: File
     def buildDirectory: File
 
@@ -36,7 +37,7 @@ trait ConfigureMakeInstall { self: BuildTool =>
       val products: List[File] =
         (targetDirectory ** ("*.so" | "*.dylib")).get.filter(_.isFile).toList
 
-      validate(products, log)
+      validate(products, multipleOutputs, log)
     }
   }
 

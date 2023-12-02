@@ -18,10 +18,10 @@ class Cargo(protected val configuration: Seq[String]) extends BuildTool {
 
   def release: Boolean = configuration.exists(_.toLowerCase.contains("release"))
 
-  def getInstance(baseDirectory: File, buildDirectory: File, logger: sbt.Logger): Instance =
-    new Instance(baseDirectory, logger)
+  def getInstance(baseDirectory: File, buildDirectory: File, logger: sbt.Logger, multipleOutputs: Boolean): Instance =
+    new Instance(baseDirectory, logger, multipleOutputs)
 
-  class Instance(protected val baseDirectory: File, protected val logger: sbt.Logger) extends super.Instance {
+  class Instance(protected val baseDirectory: File, protected val logger: sbt.Logger, protected val multipleOutputs: Boolean) extends super.Instance {
     // IntelliJ friendly logger, IntelliJ doesn't start tests if a line is printed as "error", which Cargo does for regular output
     protected val log: ProcessLogger = new ProcessLogger {
       def out(s: => String): Unit = logger.info(s)
@@ -44,7 +44,7 @@ class Cargo(protected val configuration: Seq[String]) extends BuildTool {
       val products: List[File] =
         (targetDirectory / subdir * ("*.so" | "*.dylib")).get.filter(_.isFile).toList
 
-      validate(products, logger)
+      validate(products, multipleOutputs, logger)
     }
   }
 }

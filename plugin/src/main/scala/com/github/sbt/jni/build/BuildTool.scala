@@ -77,12 +77,12 @@ trait BuildTool {
   /**
    * Get an instance (build configuration) of this tool, in the specified directory.
    */
-  def getInstance(baseDirectory: File, buildDirectory: File, logger: Logger): Instance
+  def getInstance(baseDirectory: File, buildDirectory: File, logger: Logger, multipleOutputs: Boolean): Instance
 
   /**
    * At least one produced library is expected.
    */
-  def validate(list: List[File], logger: Logger): List[File] = {
+  def validate(list: List[File], multipleOutputs: Boolean, logger: Logger): List[File] = {
     list match {
       case Nil =>
         sys.error(
@@ -91,6 +91,16 @@ trait BuildTool {
         )
       case list @ _ :: Nil =>
         list
+
+      case head :: _ if !multipleOutputs =>
+        logger.warn(
+          s"""
+             |More than one file was created during compilation, only the first one (${head.getAbsolutePath}) will be used.
+             |Consider setting nativeMultipleOutputs := true.
+             |""".stripMargin
+        )
+        List(head)
+
       case list =>
         logger.info("More than one file was created during compilation.")
         list
