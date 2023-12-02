@@ -6,6 +6,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## Added
+
+- Add support of multiple native outputs [#186](https://github.com/sbt/sbt-jni/pull/186) (@pomadchin)
+- Add support for Meson build tool [#147](https://github.com/sbt/sbt-jni/pull/147) (@mihnea-s)
+
+## Changed
+
+- Update sbt, scripted-plugin to 1.9.7 [#181](https://github.com/sbt/sbt-jni/pull/181) (@scala-steward)
+- Update asm to 9.6 [#179](https://github.com/sbt/sbt-jni/pull/179) (@scala-steward)
+- Update sbt, scripted-plugin to 1.9.6 [#172](https://github.com/sbt/sbt-jni/pull/172) (@scala-steward)
+- Update scala3-compiler, scala3-library to 3.3.1 [#168](https://github.com/sbt/sbt-jni/pull/168) (@scala-steward)
+- Update scalatest to 3.2.17 [#171](https://github.com/sbt/sbt-jni/pull/171) (@scala-steward)
+- Update scalafmt-core to 3.7.14 [#170](https://github.com/sbt/sbt-jni/pull/170) (@scala-steward)
+- Update sbt-scalafmt to 2.5.2 [#169](https://github.com/sbt/sbt-jni/pull/169) (@scala-steward)
+- Update scala-compiler, scala-library, ... to 2.13.12 [#167](https://github.com/sbt/sbt-jni/pull/167) (@scala-steward)
+- Update sbt, scripted-plugin to 1.9.4 [#166](https://github.com/sbt/sbt-jni/pull/166) (@scala-steward)
+- Update sbt, scripted-plugin to 1.9.3 [#163](https://github.com/sbt/sbt-jni/pull/163) (@scala-steward)
+- Update sbt, scripted-plugin to 1.9.2 [#159](https://github.com/sbt/sbt-jni/pull/159) (@scala-steward)
+- Update scala-compiler, scala-library, ... to 2.13.11 [#154](https://github.com/sbt/sbt-jni/pull/154) (@scala-steward)
+- Update scala-compiler, scala-library, ... to 2.12.18 [#153](https://github.com/sbt/sbt-jni/pull/153) (@scala-steward)
+- Update sbt, scripted-plugin to 1.9.0 [#152](https://github.com/sbt/sbt-jni/pull/152) (@scala-steward)
+- Update scala3-compiler, scala3-library to 3.3.0 [#150](https://github.com/sbt/sbt-jni/pull/150) (@scala-steward)
+- Update sbt, scripted-plugin to 1.8.3 [#148](https://github.com/sbt/sbt-jni/pull/148) (@scala-steward)
+- Update scalatest to 3.2.16 [#149](https://github.com/sbt/sbt-jni/pull/149) (@scala-steward)
+- Update asm to 9.5 [#143](https://github.com/sbt/sbt-jni/pull/143) (@scala-steward)
+
 ## [1.6.0] - 2023-02-25
 ## Added
 
