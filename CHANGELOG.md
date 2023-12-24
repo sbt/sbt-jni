@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.0] - 2023-12-24
 ## Added
 
 - Add support of multiple native outputs [#186](https://github.com/sbt/sbt-jni/pull/186) (@pomadchin)
@@ -13,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Changed
 
+- Bump actions/setup-java from 3 to 4 [#187](https://github.com/sbt/sbt-jni/pull/187) (@dependabot)
 - Update sbt, scripted-plugin to 1.9.7 [#181](https://github.com/sbt/sbt-jni/pull/181) (@scala-steward)
 - Update asm to 9.6 [#179](https://github.com/sbt/sbt-jni/pull/179) (@scala-steward)
 - Update sbt, scripted-plugin to 1.9.6 [#172](https://github.com/sbt/sbt-jni/pull/172) (@scala-steward)
@@ -112,7 +114,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.4.1] - 2019-12-13
 
-[Unreleased]: https://github.com/sbt/sbt-jni/compare/v1.6.0...HEAD
+[Unreleased]: https://github.com/sbt/sbt-jni/compare/v1.7.0...HEAD
+[1.7.0]: https://github.com/sbt/sbt-jni/compare/v1.6.0...v1.7.0
 [1.6.0]: https://github.com/sbt/sbt-jni/compare/v1.5.4...v1.6.0
 [1.5.4]: https://github.com/sbt/sbt-jni/compare/v1.5.3...v1.5.4
 [1.5.3]: https://github.com/sbt/sbt-jni/compare/v1.5.2...v1.5.3
