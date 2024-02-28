@@ -8,7 +8,7 @@ object ScriptedHelper extends AutoPlugin {
 
   override def projectSettings = Seq(
     scalacOptions ++= Seq("-feature", "-deprecation"),
-    crossScalaVersions := Seq("2.13.12", "2.12.14"),
+    crossScalaVersions := Seq("2.13.13", "2.12.14"),
     scalaVersion := crossScalaVersions.value.head
   )
 
