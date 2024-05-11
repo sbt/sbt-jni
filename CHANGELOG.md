@@ -6,6 +6,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.1] - 2024-05-11
+## Changed
+
+- Update scala3-compiler, scala3-library to 3.4.1 [#199](https://github.com/sbt/sbt-jni/pull/199) (@scala-steward)
+- Update scalafmt-core to 3.8.1 [#200](https://github.com/sbt/sbt-jni/pull/200) (@scala-steward)
+- Update asm to 9.7 [#198](https://github.com/sbt/sbt-jni/pull/198) (@scala-steward)
+- Update scala-compiler, scala-library, ... to 2.13.13 [#196](https://github.com/sbt/sbt-jni/pull/196) (@scala-steward)
+- Update scala3-compiler, scala3-library to 3.3.3 [#197](https://github.com/sbt/sbt-jni/pull/197) (@scala-steward)
+- Update sbt, scripted-plugin to 1.9.9 [#194](https://github.com/sbt/sbt-jni/pull/194) (@scala-steward)
+- Update scala-compiler, scala-library, ... to 2.12.19 [#195](https://github.com/sbt/sbt-jni/pull/195) (@scala-steward)
+- Update scalatest to 3.2.18 [#193](https://github.com/sbt/sbt-jni/pull/193) (@scala-steward)
+- Update scalafmt-core to 3.8.0 [#192](https://github.com/sbt/sbt-jni/pull/192) (@scala-steward)
+- Bump release-drafter/release-drafter from 5.25.0 to 6.0.0 [#191](https://github.com/sbt/sbt-jni/pull/191) (@dependabot)
+- Bump hmarr/auto-approve-action from 3 to 4 [#190](https://github.com/sbt/sbt-jni/pull/190) (@dependabot)
+
+## Fixed
+
+- Fix Rust target-dir with spaces [#173](https://github.com/sbt/sbt-jni/pull/173) (@pomadchin)
+
 ## [1.7.0] - 2023-12-24
 ## Added
 
