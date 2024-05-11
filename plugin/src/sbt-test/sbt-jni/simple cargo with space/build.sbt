@@ -1,0 +1,1 @@
+../simple-cargo/build.sbt
