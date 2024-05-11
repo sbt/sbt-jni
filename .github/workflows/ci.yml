@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest]
-        java: [8, 11, 17]
+        java: [11, 17, 21]
         distribution: [temurin]
     runs-on: ${{ matrix.os }}
     steps:
@@ -26,7 +26,15 @@ jobs:
         with:
           distribution: ${{ matrix.distribution }}
           java-version: ${{ matrix.java }}
+      
+      - run: brew install sbt
+        if: ${{ matrix.os == 'macos-latest' }}
+
+      - run: python3 -m pip install --break-system-packages meson ninja
+        if: ${{ matrix.os == 'macos-latest' }}
+      
       - run: python3 -m pip install meson ninja
+        if: ${{ matrix.os == 'ubuntu-latest' }}
 
       - name: Check formatting
         run: sbt scalafmtCheckAll
@@ -41,7 +49,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        java: [8]
+        java: [11]
         distribution: [temurin]
     runs-on: ${{ matrix.os }}
     steps:
