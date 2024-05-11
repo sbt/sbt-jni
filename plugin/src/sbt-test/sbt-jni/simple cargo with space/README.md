@@ -1,1 +1,1 @@
-Very basic Rust/Cargo test.
+../simple-cargo/README.md
