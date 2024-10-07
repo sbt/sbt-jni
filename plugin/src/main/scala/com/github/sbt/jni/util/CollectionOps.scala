@@ -23,5 +23,5 @@ class CollectionOps[A, Repr](xs: IterableLike[A, Repr]) {
 }
 
 object CollectionOps {
-  implicit def toCollectionOps[A, Repr](xs: IterableLike[A, Repr]) = new CollectionOps(xs)
+  implicit def toCollectionOps[A, Repr](xs: IterableLike[A, Repr]): CollectionOps[A, Repr] = new CollectionOps(xs)
 }
