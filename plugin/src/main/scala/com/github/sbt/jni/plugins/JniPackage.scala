@@ -61,11 +61,11 @@ object JniPackage extends AutoPlugin {
     unmanagedPlatformDependentNativeDirectories := Seq(nativePlatform.value -> baseDirectory.value / "lib_native"),
     unmanagedNativeLibraries := {
       val mappings: Seq[(File, String)] = unmanagedNativeDirectories.value.flatMap { dir =>
-        val files: Seq[File] = (dir ** "*").get.filter(_.isFile)
+        val files: Seq[File] = (dir ** "*").get().filter(_.isFile)
         files.pair(rebase(dir, "/native"))
       }
       val mappingsPlatform: Seq[(File, String)] = unmanagedPlatformDependentNativeDirectories.value.flatMap { case (platform, dir) =>
-        val files: Seq[File] = (dir ** "*").get.filter(_.isFile)
+        val files: Seq[File] = (dir ** "*").get().filter(_.isFile)
         files.pair(rebase(dir, s"/native/$platform"))
       }
       mappings ++ mappingsPlatform
