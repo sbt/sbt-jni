@@ -27,8 +27,8 @@ jobs:
           distribution: ${{ matrix.distribution }}
           java-version: ${{ matrix.java }}
       
-      - run: brew install sbt
-        if: ${{ matrix.os == 'macos-latest' }}
+      - name: Install sbt
+        uses: sbt/setup-sbt@v1
 
       - run: python3 -m pip install --break-system-packages meson ninja
         if: ${{ matrix.os == 'macos-latest' }}
@@ -61,6 +61,9 @@ jobs:
         with:
           distribution: ${{ matrix.distribution }}
           java-version: ${{ matrix.java }}
+
+      - name: Install sbt
+        uses: sbt/setup-sbt@v1
 
       - name: Release
         run: sbt ci-release
