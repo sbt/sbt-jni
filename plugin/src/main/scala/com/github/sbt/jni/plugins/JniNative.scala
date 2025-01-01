@@ -43,19 +43,8 @@ object JniNative extends AutoPlugin {
     // the value retruned must match that of `com.github.sbt.jni.PlatformMacros#current()` of project `macros`
     nativePlatform := {
       try {
-        val lines = Process("uname -sm").lineStream
-        if (lines.isEmpty) {
-          sys.error("Error occured trying to run `uname`")
-        }
-        // uname -sm returns "<kernel> <hardware name>"
-        val parts = lines.head.split(" ")
-        if (parts.length != 2) {
-          sys.error("'uname -sm' returned unexpected string: " + lines.head)
-        } else {
-          val arch = parts(1).toLowerCase.replaceAll("\\s", "")
-          val kernel = parts(0).toLowerCase.replaceAll("\\s", "")
-          arch + "-" + kernel
-        }
+        val (kernel, arch) = determinePlatform()
+        arch + "-" + kernel
       } catch {
         case _: Exception =>
           sLog.value.error("Error trying to determine platform.")
@@ -154,6 +143,21 @@ object JniNative extends AutoPlugin {
       files
     }
   )
+
+  private def determinePlatform(): (String, String) = {
+    val os = System.getProperty("os.name").toLowerCase match {
+      case s if s.contains("win") => "windows"
+      case s if s.contains("mac") => "darwin"
+      case _                      => "linux"
+    }
+
+    val arch = System.getProperty("os.arch").toLowerCase match {
+      case "arm64" | "aarch64" => "arm64"
+      case _                   => "x86_64"
+    }
+
+    (os, arch)
+  }
 
   override lazy val projectSettings = settings
 
