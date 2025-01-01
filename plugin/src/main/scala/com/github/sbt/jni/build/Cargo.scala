@@ -42,7 +42,7 @@ class Cargo(protected val configuration: Seq[String]) extends BuildTool {
 
       val subdir = if (release) "release" else "debug"
       val products: List[File] =
-        (targetDirectory / subdir * ("*.so" | "*.dylib")).get().filter(_.isFile).toList
+        (targetDirectory / subdir * ("*.so" | "*.dylib" | "*.dll")).get().filter(_.isFile).toList
 
       validate(products, multipleOutputs, logger)
     }

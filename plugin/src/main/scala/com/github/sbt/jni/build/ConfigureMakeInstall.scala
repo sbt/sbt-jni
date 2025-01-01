@@ -35,7 +35,7 @@ trait ConfigureMakeInstall { self: BuildTool =>
       if (ev != 0) sys.error(s"Building native library failed. Exit code: ${ev}")
 
       val products: List[File] =
-        (targetDirectory ** ("*.so" | "*.dylib")).get.filter(_.isFile).toList
+        (targetDirectory ** ("*.so" | "*.dylib" | "*.dll")).get.filter(_.isFile).toList
 
       validate(products, multipleOutputs, log)
     }
