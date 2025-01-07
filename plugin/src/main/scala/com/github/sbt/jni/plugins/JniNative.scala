@@ -145,18 +145,36 @@ object JniNative extends AutoPlugin {
   )
 
   private def determinePlatform(): (String, String) = {
-    val os = System.getProperty("os.name").toLowerCase match {
-      case s if s.contains("win") => "windows"
-      case s if s.contains("mac") => "darwin"
-      case _                      => "linux"
-    }
+    try {
+      val line =
+        try {
+          scala.io.Source.fromString(scala.sys.process.Process("uname -sm").!!).getLines().next()
+        } catch {
+          case _: Exception => sys.error("Error running `uname` command")
+        }
+      val parts = line.split(" ")
+      if (parts.length != 2) {
+        sys.error("Could not determine platform: 'uname -sm' returned unexpected string: " + line)
+      } else {
+        val arch = parts(1).toLowerCase.replaceAll("\\s", "")
+        val kernel = parts(0).toLowerCase.replaceAll("\\s", "")
+        (arch, kernel)
+      }
+    } catch {
+      case _: Exception =>
+        val os = System.getProperty("os.name").toLowerCase match {
+          case s if s.contains("win") => "windows"
+          case s if s.contains("mac") => "darwin"
+          case _                      => "linux"
+        }
 
-    val arch = System.getProperty("os.arch").toLowerCase match {
-      case "arm64" | "aarch64" => "arm64"
-      case _                   => "x86_64"
-    }
+        val arch = System.getProperty("os.arch").toLowerCase match {
+          case "arm64" | "aarch64" => "arm64"
+          case _                   => "x86_64"
+        }
 
-    (os, arch)
+        (os, arch)
+    }
   }
 
   override lazy val projectSettings = settings

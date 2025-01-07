@@ -268,7 +268,7 @@ nativeBuildTool := Meson.make(Nil)
 |--------------------------------|---------------|
 | automatic, when JniNative enabled | [JniPackage.scala](plugin/src/main/scala/com/github/sbt/jni/plugins/JniPackage.scala) |
 
-This plugin packages native libraries produced by JniNative in a way that they can be transparently loaded with JniLoad. It uses the notion of a native "platform", defined using the `os.name` and `os.arch` properties. A native binary of a given platform is assumed to be executable on any machines of the same platform.
+This plugin packages native libraries produced by JniNative in a way that they can be transparently loaded with JniLoad. It uses the notion of a native "platform", defined as the architecture-kernel values returned by `uname -sm`, or using the `os.name` and `os.arch` properties if the `uname` command is not available. A native binary of a given platform is assumed to be executable on any machines of the same platform.
 
 ## Canonical Use
 
