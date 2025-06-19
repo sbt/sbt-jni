@@ -1,4 +1,4 @@
-[![CI](https://github.com/sbt/sbt-jni/workflows/CI/badge.svg)](https://github.com/sbt/sbt-jni/actions) [![Maven Central](https://img.shields.io/maven-central/v/com.github.sbt/sbt-jni-core_3)](https://search.maven.org/search?q=g:com.github.sbt%20AND%20a:sbt-jni) [![Snapshots](https://img.shields.io/nexus/s/https/oss.sonatype.org/com.github.sbt/sbt-jni-core_3.svg)](https://oss.sonatype.org/content/repositories/snapshots/com/github/sbt/sbt-jni_2.12_1.0/)
+[![CI](https://github.com/sbt/sbt-jni/workflows/CI/badge.svg)](https://github.com/sbt/sbt-jni/actions) [![Maven Central](https://img.shields.io/maven-central/v/com.github.sbt/sbt-jni-core_3)](https://search.maven.org/search?q=g:com.github.sbt%20AND%20a:sbt-jni) [![Snapshots](https://img.shields.io/badge/snapshots-available-orange)](https://central.sonatype.com/service/rest/repository/browse/maven-snapshots/com/github/sbt/sbt-jni_2.12_1.0/)
 
 | sbt version | group id | plugin version |
 |-------------|----------------|----------------|
