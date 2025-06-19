@@ -30,7 +30,7 @@ object JniLoad extends AutoPlugin {
     libraryDependencies ++= {
       CrossVersion.partialVersion(scalaVersion.value) match {
         case Some((2, n)) if n >= 13 => Seq()
-        case Some((2, n)) =>
+        case Some((2, n))            =>
           Seq(compilerPlugin(("org.scalamacros" % "paradise" % ProjectVersion.MacrosParadise).cross(CrossVersion.full)))
         case _ => Seq()
       }

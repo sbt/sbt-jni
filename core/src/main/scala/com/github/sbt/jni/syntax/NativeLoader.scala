@@ -33,7 +33,7 @@ object NativeLoader {
       val resourcePath: String = "/native/" + plat + "/" + lib
       val resourceStream = Option(this.getClass.getResourceAsStream(resourcePath)) match {
         case Some(s) => s
-        case None =>
+        case None    =>
           throw new UnsatisfiedLinkError(
             "Native library " + lib + " (" + resourcePath + ") cannot be found on the classpath."
           )
