@@ -39,7 +39,7 @@ object JniNative extends AutoPlugin {
 
   val nativeBuildToolInstance = taskKey[BuildTool#Instance]("Get an instance of the current native build tool.")
 
-  lazy val settings: Seq[Setting[_]] = Seq(
+  lazy val settings: Seq[Setting[?]] = Seq(
     // the value retruned must match that of `com.github.sbt.jni.PlatformMacros#current()` of project `macros`
     nativePlatform := {
       try {

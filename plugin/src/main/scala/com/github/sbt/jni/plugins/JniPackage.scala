@@ -55,7 +55,7 @@ object JniPackage extends AutoPlugin {
   import JniNative.autoImport._
   import CollectionOps._
 
-  lazy val settings: Seq[Setting[_]] = Seq(
+  lazy val settings: Seq[Setting[?]] = Seq(
     enableNativeCompilation := true,
     unmanagedNativeDirectories := Seq(baseDirectory.value / "lib_native"),
     unmanagedPlatformDependentNativeDirectories := Seq(nativePlatform.value -> baseDirectory.value / "lib_native"),
