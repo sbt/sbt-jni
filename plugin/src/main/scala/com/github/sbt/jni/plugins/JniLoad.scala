@@ -22,7 +22,7 @@ object JniLoad extends AutoPlugin {
 
   import autoImport._
 
-  lazy val settings: Seq[Setting[_]] = Seq(
+  lazy val settings: Seq[Setting[?]] = Seq(
     sbtJniCoreScope := Provided,
     // Macro Paradise plugin and dependencies are needed to expand annotation macros.
     // Once expanded however, downstream projects don't need these dependencies anymore

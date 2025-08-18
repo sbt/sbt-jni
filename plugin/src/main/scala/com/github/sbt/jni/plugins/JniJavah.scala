@@ -32,7 +32,7 @@ object JniJavah extends AutoPlugin {
   }
   import autoImport._
 
-  lazy val mainSettings: Seq[Setting[_]] = Seq(
+  lazy val mainSettings: Seq[Setting[?]] = Seq(
     javah / javahClasses := {
       import xsbti.compile._
       val compiled: CompileAnalysis = (Compile / compile).value
@@ -43,8 +43,8 @@ object JniJavah extends AutoPlugin {
         .keySet
         .map { vf =>
           (vf.names() match {
-            case Array(prefix, first, more @ _*) if prefix.startsWith("${") =>
-              Paths.get(first, more: _*)
+            case Array(prefix, first, more*) if prefix.startsWith("${") =>
+              Paths.get(first, more*)
             case _ =>
               Paths.get(URI.create("file:///" + vf.id().stripPrefix("/")))
           }).toFile()
