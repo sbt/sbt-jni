@@ -5,7 +5,8 @@ val macrosParadiseVersion = "2.1.1"
 
 ThisBuild / versionScheme := Some("semver-spec")
 ThisBuild / organization := "com.github.sbt"
-ThisBuild / scalacOptions ++= Seq("-deprecation", "-feature", "-Xfatal-warnings")
+ThisBuild / scalacOptions += "-deprecation"
+ThisBuild / scalacOptions += "-feature"
 ThisBuild / licenses := Seq(("BSD New", url("http://opensource.org/licenses/BSD-3-Clause")))
 ThisBuild / homepage := Some(url("https://github.com/jodersky/sbt-jni"))
 ThisBuild / developers := List(
@@ -38,6 +39,12 @@ lazy val core = project
     name := "sbt-jni-core",
     scalaVersion := scalaVersions.head,
     crossScalaVersions := scalaVersions,
+    scalacOptions += {
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((3, _)) => "-Werror"
+        case _            => "-Xfatal-warnings"
+      }
+    },
     libraryDependencies ++= {
       CrossVersion.partialVersion(scalaVersion.value) match {
         case Some((2, n)) =>
@@ -67,6 +74,7 @@ lazy val plugin = project
   .enablePlugins(SbtPlugin)
   .settings(
     name := "sbt-jni",
+    scalacOptions += "-Xfatal-warnings",
     libraryDependencies ++= Seq("org.ow2.asm" % "asm" % "9.9.1", "org.scalatest" %% "scalatest" % "3.2.20" % Test),
     // make project settings available to source
     Compile / sourceGenerators += Def.task {
