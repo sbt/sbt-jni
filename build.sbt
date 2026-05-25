@@ -1,11 +1,12 @@
 import scala.sys.process._
 
-val scalaVersions = Seq("3.7.4", "2.13.18", "2.12.21", "2.11.12")
+val scalaVersions = Seq("3.8.3", "2.13.18", "2.12.21", "2.11.12")
 val macrosParadiseVersion = "2.1.1"
 
 ThisBuild / versionScheme := Some("semver-spec")
 ThisBuild / organization := "com.github.sbt"
-ThisBuild / scalacOptions ++= Seq("-deprecation", "-feature", "-Xfatal-warnings")
+ThisBuild / scalacOptions ++= Seq("-deprecation", "-feature")
+ThisBuild / javacOptions ++= Seq("--release", "11")
 ThisBuild / licenses := Seq(("BSD New", url("http://opensource.org/licenses/BSD-3-Clause")))
 ThisBuild / homepage := Some(url("https://github.com/jodersky/sbt-jni"))
 ThisBuild / developers := List(
@@ -38,6 +39,19 @@ lazy val core = project
     name := "sbt-jni-core",
     scalaVersion := scalaVersions.head,
     crossScalaVersions := scalaVersions,
+    scalacOptions += {
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((3, _)) => "-Werror"
+        case _            => "-Xfatal-warnings"
+      }
+    },
+    scalacOptions ++= {
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, n)) if n <= 11 => Seq("-target:jvm-1.8")
+        case Some((2, _))            => Seq("-release", "11")
+        case _                       => Seq("-release", "17")
+      }
+    },
     libraryDependencies ++= {
       CrossVersion.partialVersion(scalaVersion.value) match {
         case Some((2, n)) =>
@@ -67,6 +81,7 @@ lazy val plugin = project
   .enablePlugins(SbtPlugin)
   .settings(
     name := "sbt-jni",
+    scalacOptions += "-Xfatal-warnings",
     libraryDependencies ++= Seq("org.ow2.asm" % "asm" % "9.10", "org.scalatest" %% "scalatest" % "3.2.20" % Test),
     // make project settings available to source
     Compile / sourceGenerators += Def.task {
