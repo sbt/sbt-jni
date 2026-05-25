@@ -6,6 +6,7 @@ val macrosParadiseVersion = "2.1.1"
 ThisBuild / versionScheme := Some("semver-spec")
 ThisBuild / organization := "com.github.sbt"
 ThisBuild / scalacOptions ++= Seq("-deprecation", "-feature")
+ThisBuild / javacOptions ++= Seq("--release", "11")
 ThisBuild / licenses := Seq(("BSD New", url("http://opensource.org/licenses/BSD-3-Clause")))
 ThisBuild / homepage := Some(url("https://github.com/jodersky/sbt-jni"))
 ThisBuild / developers := List(
@@ -42,6 +43,13 @@ lazy val core = project
       CrossVersion.partialVersion(scalaVersion.value) match {
         case Some((3, _)) => "-Werror"
         case _            => "-Xfatal-warnings"
+      }
+    },
+    scalacOptions ++= {
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, n)) if n <= 11 => Seq("-target:jvm-1.8")
+        case Some((2, _))            => Seq("-release", "11")
+        case _                       => Seq("-release", "17")
       }
     },
     libraryDependencies ++= {
