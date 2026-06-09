@@ -102,7 +102,9 @@ lazy val plugin = project
       CrossVersion.partialVersion(scalaVersion.value) match {
         // `ProcessBuilder#lineStream` is deprecated on 2.13+ (use `lazyLines`), but `lazyLines`
         // does not exist on 2.12, so silence that single deprecation on the Scala 3 axis.
-        case Some((3, _)) => Seq("-Werror", "-Wconf:msg=lineStream:s")
+        // Likewise keep the `xs: _*` vararg-splice syntax (still required on 2.12) by silencing
+        // its Scala 3 migration warning.
+        case Some((3, _)) => Seq("-Werror", "-Wconf:msg=lineStream:s", "-Wconf:msg=vararg splices:s")
         case _            => Seq("-Xfatal-warnings")
       }
     },

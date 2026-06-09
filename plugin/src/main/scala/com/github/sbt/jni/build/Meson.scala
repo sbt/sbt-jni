@@ -22,9 +22,9 @@ class Meson(protected val configuration: Seq[String]) extends BuildTool with Con
     override def buildDirectory = buildDir
     override def multipleOutputs = nativeMultipleOutputs
 
-    def mesonProcess(args: Seq[String]): ProcessBuilder = Process("meson" +: args, buildDirectory)
+    def mesonProcess(args: String*): ProcessBuilder = Process("meson" +: args, buildDirectory)
 
-    lazy val mesonVersion = mesonProcess(Seq("--version")).lineStream.head.replace('.', '_')
+    lazy val mesonVersion = mesonProcess("--version").lineStream.head.replace('.', '_')
 
     lazy val mesonBuildDir = buildDirectory / mesonVersion
 
@@ -33,35 +33,29 @@ class Meson(protected val configuration: Seq[String]) extends BuildTool with Con
         Seq("setup", "--prefix", target.getAbsolutePath) ++ configuration ++ Seq(
           mesonVersion,
           baseDirectory.getAbsolutePath
-        )
+        ): _*
       )
     }
 
     override def clean(): Unit = mesonProcess(
-      Seq(
-        "compile",
-        "-C",
-        mesonBuildDir.getAbsolutePath,
-        "--clean"
-      )
+      "compile",
+      "-C",
+      mesonBuildDir.getAbsolutePath,
+      "--clean"
     ).run(log)
 
     override def make(): ProcessBuilder = mesonProcess(
-      Seq(
-        "compile",
-        "-C",
-        mesonBuildDir.getAbsolutePath,
-        "--jobs",
-        parallelJobs.toString
-      )
+      "compile",
+      "-C",
+      mesonBuildDir.getAbsolutePath,
+      "--jobs",
+      parallelJobs.toString
     )
 
     override def install(): ProcessBuilder = mesonProcess(
-      Seq(
-        "install",
-        "-C",
-        mesonBuildDir.getAbsolutePath
-      )
+      "install",
+      "-C",
+      mesonBuildDir.getAbsolutePath
     )
   }
 

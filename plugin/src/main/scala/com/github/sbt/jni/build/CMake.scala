@@ -21,10 +21,10 @@ class CMake(protected val configuration: Seq[String]) extends BuildTool with Con
     override def buildDirectory = buildDir
     override def multipleOutputs = nativeMultipleOutputs
 
-    def cmakeProcess(args: Seq[String]): ProcessBuilder = Process("cmake" +: args, buildDirectory)
+    def cmakeProcess(args: String*): ProcessBuilder = Process("cmake" +: args, buildDirectory)
 
     lazy val cmakeVersion =
-      cmakeProcess(Seq("--version")).lineStream.head
+      cmakeProcess("--version").lineStream.head
         .split("\\s+")
         .last
         .split("\\.") match {
@@ -44,27 +44,25 @@ class CMake(protected val configuration: Seq[String]) extends BuildTool with Con
         (s"-DCMAKE_INSTALL_PREFIX:PATH=${target.getAbsolutePath}" +: configuration) ++ Seq(
           cmakeVersion.toString,
           baseDirectory.getAbsolutePath
-        )
+        ): _*
       )
     }
 
     override def clean(): Unit = cmakeProcess(
-      Seq(
-        "--build",
-        buildDirectory.getAbsolutePath,
-        "--target",
-        "clean"
-      )
+      "--build",
+      buildDirectory.getAbsolutePath,
+      "--target",
+      "clean"
     ).run(log)
 
     override def make(): ProcessBuilder = cmakeProcess(
-      Seq("--build", buildDirectory.getAbsolutePath) ++ parallelOptions
+      Seq("--build", buildDirectory.getAbsolutePath) ++ parallelOptions: _*
     )
 
     override def install(): ProcessBuilder =
       // https://cmake.org/cmake/help/v3.15/release/3.15.html#id6
       // Beginning with version 3.15, CMake introduced the install switch
-      if (cmakeVersion >= 315) cmakeProcess(Seq("--install", buildDirectory.getAbsolutePath))
+      if (cmakeVersion >= 315) cmakeProcess("--install", buildDirectory.getAbsolutePath)
       else Process("make install", buildDirectory)
   }
 
