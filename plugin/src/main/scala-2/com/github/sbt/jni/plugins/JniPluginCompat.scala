@@ -7,11 +7,6 @@ import xsbti.compile.CompileAnalysis
 
 import java.io.File
 
-/**
- * sbt 1.x (Scala 2.12) flavour of the cross-version compatibility helpers.
- *
- * On sbt 1.x classpath entries are plain `File`s and the file converter is a no-op here.
- */
 private[jni] object JniPluginCompat {
 
   def toFile(entry: Attributed[File], converter: FileConverter): File =

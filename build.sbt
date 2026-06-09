@@ -3,7 +3,6 @@ import scala.sys.process._
 val scalaVersions = Seq("3.8.4", "2.13.18", "2.12.21", "2.11.12")
 val macrosParadiseVersion = "2.1.1"
 
-// Scala versions the plugin is cross-built with: 2.12 -> sbt 1.x, 3.x -> sbt 2.x
 val sbt1PluginScala = "2.12.21"
 val sbt2PluginScala = "3.8.4"
 
@@ -35,8 +34,6 @@ lazy val root = (project in file("."))
     publishLocal := {},
     // make sbt-pgp happy
     publishTo := Some(Resolver.file("Unused transient repository", target.value / "unusedrepo")),
-    // `test-plugin` runs scripted on the current axis (scriptedSbt follows pluginCrossBuild / sbtVersion);
-    // the -sbt1 / -sbt2 variants pin the axis explicitly.
     addCommandAlias("test-plugin", ";+core/publishLocal;scripted"),
     addCommandAlias("test-plugin-sbt1", s";++$sbt1PluginScala;+core/publishLocal;scripted"),
     addCommandAlias("test-plugin-sbt2", s";++$sbt2PluginScala;+core/publishLocal;scripted")
@@ -100,10 +97,7 @@ lazy val plugin = project
     },
     scalacOptions ++= {
       CrossVersion.partialVersion(scalaVersion.value) match {
-        // `ProcessBuilder#lineStream` is deprecated on 2.13+ (use `lazyLines`), but `lazyLines`
-        // does not exist on 2.12, so silence that single deprecation on the Scala 3 axis.
-        // Likewise keep the `xs: _*` vararg-splice syntax (still required on 2.12) by silencing
-        // its Scala 3 migration warning.
+        // `lineStream` and vararg-splice warnings for cross-building with 2.12.
         case Some((3, _)) => Seq("-Werror", "-Wconf:msg=lineStream:s", "-Wconf:msg=vararg splices:s")
         case _            => Seq("-Xfatal-warnings")
       }
@@ -125,9 +119,6 @@ lazy val plugin = project
     }.taskValue,
     scriptedLaunchOpts := Seq(
       "-Dplugin.version=" + version.value,
-      // boot each scripted test on the sbt version matching the current axis
-      // (sbt 1.x on the 2.12 build, sbt 2.x on the Scala 3 build), so a single set
-      // of example projects can be exercised against both sbt 1 and sbt 2.
       "-Dsbt.version=" + (pluginCrossBuild / sbtVersion).value,
       "-Xmx2g",
       "-Xss2m"
