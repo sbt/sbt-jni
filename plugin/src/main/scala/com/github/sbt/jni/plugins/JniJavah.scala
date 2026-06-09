@@ -46,7 +46,11 @@ object JniJavah extends AutoPlugin {
       }
       nativeClasses
     },
-    javah / target := target.value / "native" / "include",
+    // Anchor generated headers to a location that is stable across sbt versions
+    // (`<project>/target/native/include`). On sbt 1 this matches `target.value`; on sbt 2
+    // it avoids the per-Scala `target/out/jvm/<scala>/...` layout so that native build
+    // scripts referencing the header directory keep working after upgrading.
+    javah / target := baseDirectory.value / "target" / "native" / "include",
     javah := Def.uncached {
       val out = (javah / target).value
 
