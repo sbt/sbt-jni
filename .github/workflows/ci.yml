@@ -37,7 +37,7 @@ jobs:
         if: ${{ matrix.os == 'ubuntu-latest' }}
 
       - name: Check formatting
-        run: sbt scalafmtCheckAll "++3.8.4" "plugin/scalafmtCheckAll"
+        run: sbt scalafmtCheckAll
 
       - name: Compile and unit-test (sbt 1 and sbt 2)
         run: sbt "+ plugin/test"
