@@ -15,16 +15,16 @@ class Meson(protected val configuration: Seq[String]) extends BuildTool with Con
     "/com/github/sbt/jni/templates/meson.options" -> "meson.options"
   )
 
-  override def getInstance(baseDir: File, buildDir: File, logger: Logger, nativeMultipleOutputs: Boolean) = new Instance {
+  override def getInstance(baseDir: File, buildDir: File, logger: Logger, nativeMultipleOutputs: Boolean) = new ConfigureMakeInstance {
 
     override def log = logger
     override def baseDirectory = baseDir
     override def buildDirectory = buildDir
     override def multipleOutputs = nativeMultipleOutputs
 
-    def mesonProcess(args: String*): ProcessBuilder = Process("meson" +: args, buildDirectory)
+    def mesonProcess(args: Seq[String]): ProcessBuilder = Process("meson" +: args, buildDirectory)
 
-    lazy val mesonVersion = mesonProcess("--version").lineStream.head.replace('.', '_')
+    lazy val mesonVersion = mesonProcess(Seq("--version")).lineStream.head.replace('.', '_')
 
     lazy val mesonBuildDir = buildDirectory / mesonVersion
 
@@ -33,29 +33,35 @@ class Meson(protected val configuration: Seq[String]) extends BuildTool with Con
         Seq("setup", "--prefix", target.getAbsolutePath) ++ configuration ++ Seq(
           mesonVersion,
           baseDirectory.getAbsolutePath
-        ): _*
+        )
       )
     }
 
     override def clean(): Unit = mesonProcess(
-      "compile",
-      "-C",
-      mesonBuildDir.getAbsolutePath,
-      "--clean"
+      Seq(
+        "compile",
+        "-C",
+        mesonBuildDir.getAbsolutePath,
+        "--clean"
+      )
     ).run(log)
 
     override def make(): ProcessBuilder = mesonProcess(
-      "compile",
-      "-C",
-      mesonBuildDir.getAbsolutePath,
-      "--jobs",
-      parallelJobs.toString
+      Seq(
+        "compile",
+        "-C",
+        mesonBuildDir.getAbsolutePath,
+        "--jobs",
+        parallelJobs.toString
+      )
     )
 
     override def install(): ProcessBuilder = mesonProcess(
-      "install",
-      "-C",
-      mesonBuildDir.getAbsolutePath
+      Seq(
+        "install",
+        "-C",
+        mesonBuildDir.getAbsolutePath
+      )
     )
   }
 

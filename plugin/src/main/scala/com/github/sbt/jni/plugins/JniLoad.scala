@@ -1,6 +1,7 @@
 package com.github.sbt.jni
 package plugins
 
+import com.github.sbt.jni.plugins.JniPluginCompat._
 import sbt._
 import sbt.Keys._
 
@@ -35,7 +36,7 @@ object JniLoad extends AutoPlugin {
         case _ => Seq()
       }
     },
-    Compile / scalacOptions ++= {
+    Compile / scalacOptions ++= Def.uncached {
       CrossVersion.partialVersion(scalaVersion.value) match {
         case Some((2, n)) if n >= 13 => Seq("-Ymacro-annotations")
         case _                       => Seq()

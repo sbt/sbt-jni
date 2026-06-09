@@ -1,12 +1,11 @@
 package com.github.sbt.jni
 package plugins
 
-import java.net.URI
 import java.nio.file.Paths
 
-import collection.JavaConverters._
 import util.BytecodeUtil
 
+import com.github.sbt.jni.plugins.JniPluginCompat._
 import sbt._
 import sbt.Keys._
 import xsbti.compile.CompileAnalysis
@@ -33,22 +32,14 @@ object JniJavah extends AutoPlugin {
   import autoImport._
 
   lazy val mainSettings: Seq[Setting[?]] = Seq(
-    javah / javahClasses := {
-      import xsbti.compile._
+    javah / javahClasses := Def.uncached {
       val compiled: CompileAnalysis = (Compile / compile).value
-      val classFiles: Set[File] = compiled
-        .readStamps()
-        .getAllProductStamps()
-        .asScala
-        .keySet
-        .map { vf =>
-          (vf.names() match {
-            case Array(prefix, first, more*) if prefix.startsWith("${") =>
-              Paths.get(first, more*)
-            case _ =>
-              Paths.get(URI.create("file:///" + vf.id().stripPrefix("/")))
-          }).toFile()
-        }
+      // resolve product class files through the build's FileConverter so that virtual-file
+      // roots such as `${OUT}` are expanded to real paths (works on both sbt 1.x and sbt 2.x)
+      val converter = fileConverter.value
+      val classFiles: Set[File] = JniPluginCompat
+        .productKeys(compiled)
+        .map(vf => converter.toPath(vf).toFile)
         .toSet
       val nativeClasses = classFiles.flatMap { file =>
         BytecodeUtil.nativeClasses(file)
@@ -56,7 +47,7 @@ object JniJavah extends AutoPlugin {
       nativeClasses
     },
     javah / target := target.value / "native" / "include",
-    javah := {
+    javah := Def.uncached {
       val out = (javah / target).value
 
       val task = new com.github.sbt.jni.javah.JavahTask
@@ -72,7 +63,9 @@ object JniJavah extends AutoPlugin {
       // fullClasspath can't be used here since it also generates resources. In
       // a project combining JniJavah and JniPackage, we would have a chicken-and-egg
       // problem.
-      val jcp: Seq[File] = (Compile / dependencyClasspath).value.map(_.data) :+ (Compile / classDirectory).value
+      val converter = fileConverter.value
+      val jcp: Seq[File] =
+        (Compile / dependencyClasspath).value.map(JniPluginCompat.toFile(_, converter)) :+ (Compile / classDirectory).value
       jcp.foreach(cp => task.addClassPath(cp.toPath))
 
       task.addRuntimeSearchPath()

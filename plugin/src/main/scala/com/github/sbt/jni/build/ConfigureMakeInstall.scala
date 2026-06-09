@@ -10,7 +10,7 @@ trait ConfigureMakeInstall { self: BuildTool =>
   /* API for native build tools that use a standard 'configure && make && make install' process,
    * where the configure step is left ab
    stract. */
-  trait Instance extends self.Instance {
+  trait ConfigureMakeInstance extends self.Instance {
 
     def log: Logger
     def multipleOutputs: Boolean
@@ -35,7 +35,7 @@ trait ConfigureMakeInstall { self: BuildTool =>
       if (ev != 0) sys.error(s"Building native library failed. Exit code: ${ev}")
 
       val products: List[File] =
-        (targetDirectory ** ("*.so" | "*.dylib" | "*.dll")).get.filter(_.isFile).toList
+        (targetDirectory ** ("*.so" | "*.dylib" | "*.dll")).get().filter(_.isFile).toList
 
       validate(products, multipleOutputs, log)
     }

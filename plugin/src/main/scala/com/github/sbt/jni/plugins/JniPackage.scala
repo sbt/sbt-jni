@@ -2,6 +2,7 @@ package com.github.sbt.jni
 package plugins
 
 import util.CollectionOps
+import com.github.sbt.jni.plugins.JniPluginCompat._
 import sbt._
 import sbt.Keys._
 import sbt.io.Path._
@@ -59,7 +60,7 @@ object JniPackage extends AutoPlugin {
     enableNativeCompilation := true,
     unmanagedNativeDirectories := Seq(baseDirectory.value / "lib_native"),
     unmanagedPlatformDependentNativeDirectories := Seq(nativePlatform.value -> baseDirectory.value / "lib_native"),
-    unmanagedNativeLibraries := {
+    unmanagedNativeLibraries := Def.uncached {
       val mappings: Seq[(File, String)] = unmanagedNativeDirectories.value.flatMap { dir =>
         val files: Seq[File] = (dir ** "*").get().filter(_.isFile)
         files.pair(rebase(dir, "/native"))
@@ -70,20 +71,22 @@ object JniPackage extends AutoPlugin {
       }
       mappings ++ mappingsPlatform
     },
-    managedNativeLibraries := Def
-      .taskDyn[Seq[(File, String)]] {
-        val enableManaged = enableNativeCompilation.value
-        if (enableManaged) Def.task {
-          val platform = nativePlatform.value
-          nativeCompile.value.map { library => library -> s"/native/$platform/${library.name}" }
-        }
-        else
-          Def.task {
-            Seq.empty
+    managedNativeLibraries := Def.uncached {
+      Def
+        .taskDyn[Seq[(File, String)]] {
+          val enableManaged = enableNativeCompilation.value
+          if (enableManaged) Def.task {
+            val platform = nativePlatform.value
+            nativeCompile.value.map { library => library -> s"/native/$platform/${library.name}" }
           }
-      }
-      .value,
-    nativeLibraries := (unmanagedNativeLibraries.value ++ managedNativeLibraries.value).distinctBy(_._2),
+          else
+            Def.task {
+              Seq.empty
+            }
+        }
+        .value
+    },
+    nativeLibraries := Def.uncached((unmanagedNativeLibraries.value ++ managedNativeLibraries.value).distinctBy(_._2)),
     resourceGenerators += Def.task {
       val libraries: Seq[(File, String)] = nativeLibraries.value
       val resources: Seq[File] = for ((file, path) <- libraries) yield {

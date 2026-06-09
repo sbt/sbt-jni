@@ -2,6 +2,7 @@ package com.github.sbt.jni
 package plugins
 
 import build._
+import com.github.sbt.jni.plugins.JniPluginCompat._
 import sbt._
 import sbt.Keys._
 import sys.process._
@@ -65,7 +66,7 @@ object JniNative extends AutoPlugin {
     },
     nativeCompile / sourceDirectory := sourceDirectory.value / "native",
     nativeCompile / target := target.value / "native" / nativePlatform.value,
-    nativeBuildTool := {
+    nativeBuildTool := Def.uncached {
       val tools = BuildTool.buildTools.values.toList
 
       val src = (nativeCompile / sourceDirectory).value
@@ -84,8 +85,8 @@ object JniNative extends AutoPlugin {
         )
       )
     },
-    nativeMultipleOutputs := false,
-    nativeBuildToolInstance := {
+    nativeMultipleOutputs := Def.uncached(false),
+    nativeBuildToolInstance := Def.uncached {
       val tool = nativeBuildTool.value
       val srcDir = (nativeCompile / sourceDirectory).value
       val buildDir = (nativeCompile / target).value / "build"
@@ -97,7 +98,7 @@ object JniNative extends AutoPlugin {
         multipleOutputs = nativeMultipleOutputs.value
       )
     },
-    nativeCompile / clean := {
+    nativeCompile / clean := Def.uncached {
       val log = streams.value.log
 
       log.debug("Cleaning native build")
@@ -110,7 +111,7 @@ object JniNative extends AutoPlugin {
       }
 
     },
-    nativeCompile := {
+    nativeCompile := Def.uncached {
       val tool = nativeBuildTool.value
       val toolInstance = nativeBuildToolInstance.value
       val targetDir = (nativeCompile / target).value / "bin"
@@ -125,7 +126,7 @@ object JniNative extends AutoPlugin {
     },
 
     // also clean native sources
-    clean := {
+    clean := Def.uncached {
       clean.dependsOn(nativeCompile / clean).value
     },
     nativeInit := {
