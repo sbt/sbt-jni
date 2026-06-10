@@ -37,10 +37,16 @@ jobs:
         if: ${{ matrix.os == 'ubuntu-latest' }}
 
       - name: Check formatting
-        run: sbt scalafmtCheckAll
+        run: sbt "+ scalafmtCheckAll"
 
-      - name: Build project
-        run: sbt test-plugin
+      - name: Compile and unit-test (sbt 1 and sbt 2)
+        run: sbt "+ plugin/test"
+
+      - name: Scripted tests against sbt 1
+        run: sbt test-plugin-sbt1
+
+      - name: Scripted tests against sbt 2
+        run: sbt test-plugin-sbt2
 
   publish:
     name: Publish Artifacts

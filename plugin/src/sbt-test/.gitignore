@@ -1,0 +1,12 @@
+# javah-generated JNI headers
+**/include/
+
+# nativeInit-generated build files
+Cargo.toml
+meson.build
+meson.options
+
+# compiled native libraries
+*.so
+*.dylib
+*.dll

@@ -14,7 +14,7 @@ class CMake(protected val configuration: Seq[String]) extends BuildTool with Con
     "/com/github/sbt/jni/templates/CMakeLists.txt" -> "CMakeLists.txt"
   )
 
-  override def getInstance(baseDir: File, buildDir: File, logger: Logger, nativeMultipleOutputs: Boolean) = new Instance {
+  override def getInstance(baseDir: File, buildDir: File, logger: Logger, nativeMultipleOutputs: Boolean) = new ConfigureMakeInstance {
 
     override def log = logger
     override def baseDirectory = baseDir

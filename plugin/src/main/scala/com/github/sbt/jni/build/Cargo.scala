@@ -19,9 +19,10 @@ class Cargo(protected val configuration: Seq[String]) extends BuildTool {
   def release: Boolean = configuration.exists(_.toLowerCase.contains("release"))
 
   def getInstance(baseDirectory: File, buildDirectory: File, logger: sbt.Logger, multipleOutputs: Boolean): Instance =
-    new Instance(baseDirectory, logger, multipleOutputs)
+    new CargoInstance(baseDirectory, logger, multipleOutputs)
 
-  class Instance(protected val baseDirectory: File, protected val logger: sbt.Logger, protected val multipleOutputs: Boolean) extends super.Instance {
+  class CargoInstance(protected val baseDirectory: File, protected val logger: sbt.Logger, protected val multipleOutputs: Boolean)
+      extends super.Instance {
     // IntelliJ friendly logger, IntelliJ doesn't start tests if a line is printed as "error", which Cargo does for regular output
     protected val log: ProcessLogger = new ProcessLogger {
       def out(s: => String): Unit = logger.info(s)
