@@ -1,10 +1,10 @@
 import scala.sys.process._
 
-val scalaVersions = Seq("3.8.4", "2.13.18", "2.12.21", "2.11.12")
+val scalaVersions = Seq("3.9.0", "2.13.18", "2.12.21", "2.11.12")
 val macrosParadiseVersion = "2.1.1"
 
 val sbt1PluginScala = "2.12.21"
-val sbt2PluginScala = "3.8.4"
+val sbt2PluginScala = "3.9.0"
 
 ThisBuild / versionScheme := Some("semver-spec")
 ThisBuild / organization := "com.github.sbt"
