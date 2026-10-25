@@ -323,7 +323,7 @@ Real-world use-cases of sbt-jni include:
 
 ## Requirements and Dependencies
 
-- projects using `JniLoad` must use Scala versions 2.11, 2.12, 2.13 or 3.2
+- projects using `JniLoad` must use Scala versions 2.12, 2.13 or 3.8+
   - projects using `JniLoad` with Scala 3 should use it with the `sbtJniCoreScope := Compile` SBT key set
 - only POSIX platforms are supported (actually, any platform that has the `uname` command available)
 
@@ -332,7 +332,7 @@ The goal of sbt-jni is to be the least intrusive possible. No transitive depende
 ## Building
 Both the core (former macros) library (`sbt-jni-core`) and the sbt plugins (`sbt-jni`) are published. Cross-building happens on a per-project basis:
 
-- sbt-jni-core is built against Scala 2.11, 2.12, 2.13, and 3.2
+- sbt-jni-core is built against Scala 2.12, 2.13, and 3.8
 - sbt-jni is built against Scala 3 for sbt 2.x and against Scala 2.12 for sbt 1.x
 
 The build itself runs on sbt 2. The differing Scala versions make it necessary to always cross-compile and cross-publish this project, i.e. append a "+" before every task.

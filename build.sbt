@@ -1,13 +1,13 @@
 import scala.sys.process._
 
-val scalaVersions = Seq("3.8.4", "2.13.18", "2.12.21", "2.11.12")
+val scalaVersions = Seq("3.8.4", "2.13.18", "2.12.21")
 val macrosParadiseVersion = "2.1.1"
 
 val sbt1PluginScala = "2.12.21"
 val sbt2PluginScala = "3.8.4"
 
 val sbt1Version = "1.13.0"
-val sbt2Version = "2.0.6"
+val sbt2Version = "2.0.11"
 
 ThisBuild / versionScheme := Some("semver-spec")
 ThisBuild / organization := "com.github.sbt"
@@ -56,9 +56,8 @@ lazy val core = project
     },
     scalacOptions ++= {
       CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, n)) if n <= 11 => Seq("-target:jvm-1.8")
-        case Some((2, _))            => Seq("-release", "11")
-        case _                       => Seq("-release", "17")
+        case Some((2, _)) => Seq("-release", "11")
+        case _            => Seq("-release", "17")
       }
     },
     libraryDependencies ++= {
