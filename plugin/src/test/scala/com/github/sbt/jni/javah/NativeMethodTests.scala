@@ -6,9 +6,6 @@ import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.must.Matchers
 import scala.jdk.CollectionConverters._
 
-import java.io.File
-import java.nio.file.Files
-
 class NativeMethodTests extends AnyWordSpec with Matchers {
   "NativeMethods" when {
     "a method is overloaded" should {
@@ -28,9 +25,9 @@ class NativeMethodTests extends AnyWordSpec with Matchers {
 
 object NativeMethodTests { self =>
   lazy val classMeta: ClassMetaInfo = {
-    val resource = self.getClass.getResource("Overloads.class").getPath
     val meta = new ClassMetaInfo()
-    val stream = Files.newInputStream(new File(resource).toPath)
+    // test classes may be packaged in a jar (sbt 2), so read the resource as a stream
+    val stream = self.getClass.getResourceAsStream("Overloads.class")
     try {
       val reader = new ClassReader(stream)
       reader.accept(meta, ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES)
