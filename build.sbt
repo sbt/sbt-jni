@@ -6,6 +6,9 @@ val macrosParadiseVersion = "2.1.1"
 val sbt1PluginScala = "2.12.21"
 val sbt2PluginScala = "3.8.4"
 
+val sbt1Version = "1.13.0"
+val sbt2Version = "2.0.6"
+
 ThisBuild / versionScheme := Some("semver-spec")
 ThisBuild / organization := "com.github.sbt"
 ThisBuild / scalacOptions ++= Seq("-deprecation", "-feature")
@@ -30,6 +33,7 @@ ThisBuild / developers := List(
 lazy val root = (project in file("."))
   .aggregate(core, plugin)
   .settings(
+    scalaVersion := sbt2PluginScala,
     publish := {},
     publishLocal := {},
     // make sbt-pgp happy
@@ -86,13 +90,13 @@ lazy val plugin = project
   .enablePlugins(SbtPlugin)
   .settings(
     name := "sbt-jni",
-    scalaVersion := sbt1PluginScala,
-    crossScalaVersions := Seq(sbt1PluginScala, sbt2PluginScala),
+    scalaVersion := sbt2PluginScala,
+    crossScalaVersions := Seq(sbt2PluginScala, sbt1PluginScala),
     // sbt 1.x plugins are built with Scala 2.12, sbt 2.x plugins with Scala 3
     pluginCrossBuild / sbtVersion := {
       scalaBinaryVersion.value match {
-        case "2.12" => (pluginCrossBuild / sbtVersion).value
-        case _      => "2.0.6"
+        case "2.12" => sbt1Version
+        case _      => sbt2Version
       }
     },
     scalacOptions ++= {

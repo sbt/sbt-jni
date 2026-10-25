@@ -333,9 +333,11 @@ The goal of sbt-jni is to be the least intrusive possible. No transitive depende
 Both the core (former macros) library (`sbt-jni-core`) and the sbt plugins (`sbt-jni`) are published. Cross-building happens on a per-project basis:
 
 - sbt-jni-core is built against Scala 2.11, 2.12, 2.13, and 3.2
-- sbt-jni is built against Scala 2.12 (the Scala version that sbt 1.x uses)
+- sbt-jni is built against Scala 3 for sbt 2.x and against Scala 2.12 for sbt 1.x
 
-The differing Scala versions make it necessary to always cross-compile and cross-publish this project, i.e. append a "+" before every task.
+The build itself runs on sbt 2. The differing Scala versions make it necessary to always cross-compile and cross-publish this project, i.e. append a "+" before every task.
+
+Use `sbt test-plugin-sbt1` and `sbt test-plugin-sbt2` to run the scripted tests against sbt 1 and sbt 2 respectively.
 
 Run `sbt +publishLocal` to build and use this plugin locally.
 
