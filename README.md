@@ -268,7 +268,7 @@ nativeBuildTool := Meson.make(Nil)
 |--------------------------------|---------------|
 | automatic, when JniNative enabled | [JniPackage.scala](plugin/src/main/scala/com/github/sbt/jni/plugins/JniPackage.scala) |
 
-This plugin packages native libraries produced by JniNative in a way that they can be transparently loaded with JniLoad. It uses the notion of a native "platform", defined as the architecture-kernel values returned by `uname -sm`. A native binary of a given platform is assumed to be executable on any machines of the same platform.
+This plugin packages native libraries produced by JniNative in a way that they can be transparently loaded with JniLoad. It uses the notion of a native "platform", defined as the architecture-kernel values returned by `uname -sm`. The platform can be set explicitly via the `sbt.jni.platform` system property (i.e. `-Dsbt.jni.platform=x86_64-linux`), in this case `uname` is not used; the property is respected both by the sbt plugin (`nativePlatform`) and by the native libraries loaders at runtime. A native binary of a given platform is assumed to be executable on any machines of the same platform.
 
 ## Canonical Use
 
@@ -325,7 +325,7 @@ Real-world use-cases of sbt-jni include:
 
 - projects using `JniLoad` must use Scala versions 2.12, 2.13 or 3.8+
   - projects using `JniLoad` with Scala 3 should use it with the `sbtJniCoreScope := Compile` SBT key set
-- only POSIX platforms are supported (actually, any platform that has the `uname` command available)
+- only POSIX platforms are supported (actually, any platform that has the `uname` command available, or with the platform set explicitly via `-Dsbt.jni.platform`)
 
 The goal of sbt-jni is to be the least intrusive possible. No transitive dependencies are added to projects using any plugin (some dependencies are added to the `provided` configuration, however these do not affect any downstream projects).
 

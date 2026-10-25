@@ -42,7 +42,8 @@ class nativeLoaderAnnotationMacro(val c: Context) {
               val lib: String = System.mapLibraryName($nativeLibrary)
 
               val tmp: Path = Files.createTempDirectory("jni-")
-              val plat: String = {
+              // `uname` is used only if the platform is not set explicitly, i.e. -Dsbt.jni.platform=x86_64-linux
+              val plat: String = scala.sys.props.get("sbt.jni.platform").map(_.trim).filter(_.nonEmpty).getOrElse {
                 val line = try {
                   scala.sys.process.Process("uname -sm").!!.linesIterator.next()
                 } catch {

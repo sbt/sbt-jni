@@ -42,7 +42,8 @@ object JniNative extends AutoPlugin {
 
   lazy val settings: Seq[Setting[?]] = Seq(
     // the value retruned must match that of `com.github.sbt.jni.PlatformMacros#current()` of project `macros`
-    nativePlatform := {
+    // `uname` is used only if the platform is not set explicitly, i.e. -Dsbt.jni.platform=x86_64-linux
+    nativePlatform := sys.props.get("sbt.jni.platform").map(_.trim).filter(_.nonEmpty).getOrElse {
       try {
         val lines = Process("uname -sm").lineStream
         if (lines.isEmpty) {
