@@ -1,10 +1,10 @@
 import scala.sys.process._
 
-val scalaVersions = Seq("3.8.4", "2.13.18", "2.12.21")
+val scalaVersions = Seq("3.10.1", "2.13.18", "2.12.21")
 val macrosParadiseVersion = "2.1.1"
 
 val sbt1PluginScala = "2.12.21"
-val sbt2PluginScala = "3.8.4"
+val sbt2PluginScala = "3.10.1"
 
 val sbt1Version = "1.13.0"
 val sbt2Version = "2.0.11"
