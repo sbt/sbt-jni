@@ -41,10 +41,10 @@ class CMake(protected val configuration: Seq[String]) extends BuildTool with Con
     override def configure(target: File) = {
       // disable producing versioned library files, not needed for fat jars
       cmakeProcess(
-        (s"-DCMAKE_INSTALL_PREFIX:PATH=${target.getAbsolutePath}" +: configuration) ++ Seq(
+        ((s"-DCMAKE_INSTALL_PREFIX:PATH=${target.getAbsolutePath}" +: configuration) ++ Seq(
           cmakeVersion.toString,
           baseDirectory.getAbsolutePath
-        ): _*
+        ))*
       )
     }
 
@@ -56,7 +56,7 @@ class CMake(protected val configuration: Seq[String]) extends BuildTool with Con
     ).run(log)
 
     override def make(): ProcessBuilder = cmakeProcess(
-      Seq("--build", buildDirectory.getAbsolutePath) ++ parallelOptions: _*
+      (Seq("--build", buildDirectory.getAbsolutePath) ++ parallelOptions)*
     )
 
     override def install(): ProcessBuilder =
