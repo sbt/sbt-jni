@@ -4,10 +4,10 @@ val scalaVersions = Seq("3.8.4", "2.13.18", "2.12.21")
 val macrosParadiseVersion = "2.1.1"
 
 val sbt1PluginScala = "2.12.21"
-val sbt2PluginScala = "3.8.4"
+val sbt2PluginScala = "3.9.0"
 
 val sbt1Version = "1.13.0"
-val sbt2Version = "2.0.11"
+val sbt2Version = "2.1.0"
 
 ThisBuild / versionScheme := Some("semver-spec")
 ThisBuild / organization := "com.github.sbt"
@@ -102,7 +102,7 @@ lazy val plugin = project
       CrossVersion.partialVersion(scalaVersion.value) match {
         // `lineStream` and vararg-splice warnings for cross-building with 2.12.
         case Some((3, _)) => Seq("-Werror", "-Wconf:msg=lineStream:s", "-Wconf:msg=vararg splices:s")
-        case _            => Seq("-Xfatal-warnings")
+        case _            => Seq("-Xsource:3", "-Xfatal-warnings")
       }
     },
     libraryDependencies ++= Seq("org.ow2.asm" % "asm" % "9.11.1", "org.scalatest" %% "scalatest" % "3.2.20" % Test),

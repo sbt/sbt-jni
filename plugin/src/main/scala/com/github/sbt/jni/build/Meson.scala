@@ -30,10 +30,10 @@ class Meson(protected val configuration: Seq[String]) extends BuildTool with Con
 
     override def configure(target: File) = {
       mesonProcess(
-        Seq("setup", "--prefix", target.getAbsolutePath) ++ configuration ++ Seq(
+        (Seq("setup", "--prefix", target.getAbsolutePath) ++ configuration ++ Seq(
           mesonVersion,
           baseDirectory.getAbsolutePath
-        ): _*
+        ))*
       )
     }
 
